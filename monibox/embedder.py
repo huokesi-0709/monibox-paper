@@ -5,8 +5,7 @@ monibox/embedder.py
 - 在构建期（PC）为文本生成 embedding 向量，用于写入 sqlite-vec（rag.db）
 - 支持使用“本地模型目录”，避免重复下载
 
-你现在已把模型放在：
-D:\\代码项目\\MoniBox-KB\\models\\embedding\\bge-small-zh-v1.5
+
 
 推荐做法：
 - 在 .env 里配置 EMBEDDING_MODEL=models/embedding/bge-small-zh-v1.5
@@ -21,8 +20,7 @@ from typing import Any
 
 import numpy as np
 
-from monibox.config import settings
-from monibox.config import PROJECT_ROOT
+from monibox.config import PROJECT_ROOT, settings
 
 _model: Any | None = None
 

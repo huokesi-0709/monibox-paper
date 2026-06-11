@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 # 项目根目录（当前文件 parents[1] => monibox/ 的上级）
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-KNOWLEDGE_SRC = PROJECT_ROOT / "knowledge_src"
+KNOWLEDGE_SRC = PROJECT_ROOT / "knowledge"
 GENERATED_DIR = KNOWLEDGE_SRC / "generated"
 BUILD_DIR = PROJECT_ROOT / "build"
 SQL_DIR = PROJECT_ROOT / "sql"
