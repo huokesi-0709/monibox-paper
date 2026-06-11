@@ -20,7 +20,7 @@ MoniBox 面向的不是普通聊天机器人场景，而是灾害受困、断网
 ## 核心运行链路
 
 ```text
-输入（文本/语音） → MainEngine → MoniSession → 协议匹配 → RAG检索 → 低证据分流/LLM生成 → 安全护栏 → 输出管线 → TTS/播报
+输入（文本/语音） → Engine → Orchestrator → 协议匹配 → RAG检索 → 低证据分流/LLM生成 → 安全护栏 → 响应管线 → TTS/播报
 ```
 
 ## 环境管理（uv）
@@ -47,10 +47,10 @@ uv sync --extra dev
 
 ```bash
 # 文本模式
-uv run python -m apps.runtime_edge --mode text
+uv run monibox --mode text
 
 # 语音模式（单轮验收）
-uv run python -m apps.runtime_edge --mode mic_vad --once
+uv run monibox --mode mic_vad --once
 ```
 
 ### 常用命令
@@ -70,76 +70,72 @@ uv lock                          # 更新 uv.lock
 
 | 文件               | 职责                                                                      |
 | ------------------ | ------------------------------------------------------------------------- |
-| `runtime_edge.py`  | **当前主入口**，支持 `--mode text` 纯文本模式和 `--mode mic_vad` 语音模式 |
+| `runtime_edge.py`  | 兼容入口，指向 `monibox.cli`                                              |
 | `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口                                             |
 | `win_e2e_demo.py`  | Windows 端到端语音验证（早期）                                            |
 | `win_e2e_queue.py` | 队列式音频链路实验入口                                                    |
 
 ### 2. 运行协调层 `monibox/core_loop/`
 
-| 文件                  | 职责                                                                                                           |
-| --------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `main_engine.py`      | **MainEngine**：启动全局资源、创建 MoniSession、调度 ASR/播放/协调线程、管理“监听-识别-播报-暂停-恢复”生命周期 |
-| `models.py`           | 引擎事件与事件类型定义                                                                                         |
-| `queues.py`           | 全局输入/输出队列                                                                                              |
-| `resource_manager.py` | 全局资源预加载与管理                                                                                           |
-| `trace_logger.py`     | 运行时交互追踪与日志                                                                                           |
+| 文件              | 职责                                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `engine.py`       | **Engine**：启动全局资源、创建 Orchestrator、调度 ASR/播放/协调线程、管理“监听-识别-播报-暂停-恢复”生命周期 |
+| `shared.py`       | 共享基础设施：引擎事件类型、全局队列、结构化追踪日志                                                              |
+| `resources.py`    | 全局资源预加载与管理（ASR/TTS/LLM/RAG 延迟加载）                                                                  |
 
 ### 3. 会话与策略层 `monibox/runtime/`（业务核心）
 
-| 文件                     | 职责                                                                                |
-| ------------------------ | ----------------------------------------------------------------------------------- |
-| `session.py`             | **MoniSession**：主编排器，协调 handle() 主流程；组装 RAG、协议、安全、TTS 等子模块 |
-| `protocol_engine.py`     | 协议引擎：做协议判定与状态处理                                                      |
-| `protocol_handler.py`    | 协议 QA 状态机，处理协议命中后的动作与回复                                          |
-| `protocol_context.py`    | 协议上下文解析（地点、是否判断等 slot 抽取）                                        |
-| `rag_engine.py`          | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                                   |
-| `rag_generator.py`       | 将 RAG 检索结果交给 LLM 组织生成回复                                                |
-| `low_evidence_router.py` | 低证据分流：检索证据不足时走保守输出，而非强行生成                                  |
-| `safety_guard.py`        | 安全护栏：对输出内容进行安全过滤与处理                                              |
-| `response_rewriter.py`   | 回复改写，适配语音播报场景                                                          |
-| `output_pipeline.py`     | 输出管线：整合改写、重复抑制、TTS 调度                                              |
-| `text_pipeline.py`       | 文本预处理（去重、句式转换、关键词风控等）                                          |
-| `memory.py`              | 工作记忆（WorkingMemory），维护会话短期上下文                                       |
-| `emotion_strategies.py`  | 情绪策略与策略书                                                                    |
-| `repeat_guard.py`        | 重复抑制，避免连续相同播报                                                          |
-| `variants.py`            | 回复变体生成，防止机械重复                                                          |
-| `runtime_config.py`      | 运行时统一配置，收敛所有环境变量读取                                                |
-| `perf_monitor.py`        | 性能监控                                                                            |
-| `hardware_iface.py`      | 硬件接口抽象（TTS、LED、屏幕），当前以 MockHardware 为主                            |
+| 文件                    | 职责                                                                         |
+| ----------------------- | ---------------------------------------------------------------------------- |
+| `orchestrator.py`       | **Orchestrator**：主编排器，协调 handle() 主流程；组装 RAG、协议、安全、TTS 等子模块 |
+| `protocol_matcher.py`   | 协议匹配引擎：做协议判定与状态处理                                             |
+| `protocol_fsm.py`       | 协议 QA 状态机，处理协议命中后的动作与回复                                     |
+| `slot_parser.py`        | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                |
+| `rag_engine.py`         | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                              |
+| `generator.py`          | RAG 生成器：将检索结果交给 LLM 组织生成回复                                    |
+| `evidence_router.py`    | 低证据路由：检索证据不足时走保守输出，而非强行生成                             |
+| `guard.py`              | 安全护栏：对输出内容进行安全过滤与处理                                         |
+| `rewriter.py`           | 回复改写器：适配语音播报场景                                                   |
+| `response_pipeline.py`  | 响应管线：整合改写、重复抑制、TTS 调度                                         |
+| `preprocessor.py`       | 文本预处理器：去重、句式转换、关键词风控等                                     |
+| `primitives.py`         | 运行时原语：工作记忆、重复抑制、变体库、硬件接口抽象                           |
+| `emotions.py`           | 情绪策略与策略书                                                             |
+| `runtime_config.py`     | 运行时统一配置，收敛所有环境变量读取                                         |
+| `monitor.py`            | 性能与内存监控                                                               |
+| `topic_router.py`       | 主题路由器：基于 taxonomy 做标签路由                                         |
+| `scoring.py`            | 检索结果评分/重排序策略                                                      |
 
 ### 4. 模型能力层
 
 #### LLM `monibox/llm/`
 
-| 文件                | 职责                          |
-| ------------------- | ----------------------------- |
-| `backend.py`        | LLM 后端抽象与工厂            |
-| `llama_cpp_chat.py` | 基于 llama.cpp 的本地聊天实现 |
+| 文件            | 职责                          |
+| --------------- | ----------------------------- |
+| `backends.py`   | LLM 后端抽象与工厂            |
+| `local_chat.py` | 基于 llama.cpp 的本地聊天实现 |
 
 #### ASR `monibox/asr/`
 
-| 文件                    | 职责                        |
-| ----------------------- | --------------------------- |
-| `faster_whisper_asr.py` | Faster-Whisper 语音识别实现 |
-| `asr_worker.py`         | ASR 工作线程封装            |
+| 文件              | 职责                        |
+| ----------------- | --------------------------- |
+| `whisper_asr.py`  | Faster-Whisper 语音识别实现 |
+| `worker.py`       | ASR 工作线程封装            |
 
 #### TTS `monibox/tts/`
 
-| 文件             | 职责                            |
-| ---------------- | ------------------------------- |
-| `pyttsx3_tts.py` | pyttsx3 离线 TTS                |
-| `sapi_tts.py`    | Windows SAPI TTS                |
-| `sherpa_tts.py`  | Sherpa 系列 TTS（端侧主推方案） |
+| 文件        | 职责                            |
+| ----------- | ------------------------------- |
+| `pyttsx3.py`| pyttsx3 离线 TTS                |
+| `sapi.py`   | Windows SAPI TTS                |
+| `sherpa.py` | Sherpa 系列 TTS（端侧主推方案） |
 
 ### 5. 音频与硬件抽象层
 
-| 目录/文件                       | 职责                    |
-| ------------------------------- | ----------------------- |
-| `monibox/audio/base_recorder.py`     | 基础录音                |
-| `monibox/audio/vad.py` | VAD（语音活动检测）录音 |
-| `monibox/hw/player.py`    | 音频播放器              |
-| `monibox/hw/mock_hw.py`         | 硬件 mock（占位）       |
+| 目录/文件                          | 职责                    |
+| ---------------------------------- | ----------------------- |
+| `monibox/audio/base_recorder.py`   | 基础录音                |
+| `monibox/audio/vad.py`             | VAD（语音活动检测）录音 |
+| `monibox/hw/player.py`             | 音频播放器              |
 
 ### 6. 数据与构建层
 
@@ -148,7 +144,6 @@ uv lock                          # 更新 uv.lock
 | `knowledge/`     | 本地知识库资产：协议、策略、标签别名、情感策略、审核策略、chunk 元数据等              |
 | `build/`         | 构建产物：`rag.db`（向量数据库）、`runtime_pack.json`（运行时配置包）、日志与评测结果 |
 | `sql/schema.sql` | SQLite 数据库表结构定义                                                               |
-| `scoring/`       | 评分/重排序策略                                                                       |
 
 ### 7. 配置层 `config/`
 
@@ -169,24 +164,37 @@ uv lock                          # 更新 uv.lock
 | `test_tts_experience.py`                               | TTS 体验测试         |
 | `test_asr_corrections.py`                              | ASR 纠错测试         |
 
+### 9. 构建工具层 `monibox/`（构建期专用）
+
+| 文件              | 职责                              |
+| ----------------- | --------------------------------- |
+| `llm_client.py`   | DeepSeek API 客户端（构建期生成） |
+| `embedder.py`     | Embedding 计算                    |
+| `text_splitter.py`| 文本切分（TTS 适配）              |
+| `taxonomy.py`     | 知识分类体系                      |
+| `schema.py`       | Chunk schema 定义与校验           |
+| `fingerprint.py`  | 文本指纹去重                      |
+| `json_parser.py`  | LLM JSON 输出解析                 |
+| `vector_store.py` | sqlite-vec 向量数据库封装         |
+
 ## 核心调用链（以语音模式为例）
 
 ```text
-apps/runtime_edge.py --mode mic_vad
-  └─ MainEngine.start()
-       ├─ 启动 ASR 线程 (faster_whisper_asr / asr_worker)
+monibox --mode mic_vad
+  └─ Engine.start()
+       ├─ 启动 ASR 线程 (whisper_asr / worker)
        ├─ 启动音频播放线程
-       ├─ 创建 MoniSession
+       ├─ 创建 Orchestrator
        └─ 协调线程调度事件队列
-            └─ MoniSession.handle(user_input)
-                 ├─ ProtocolEngine 协议匹配
-                 │    ├─ 命中 → ProtocolHandler 执行协议动作/回复
+            └─ Orchestrator.handle(user_input)
+                 ├─ ProtocolMatcher 协议匹配
+                 │    ├─ 命中 → ProtocolFsm 执行协议动作/回复
                  │    └─ 未命中 → RagEngine 向量检索
-                 ├─ LowEvidenceRouter 低证据分流
-                 ├─ RagGenerator / LLM 组织回复
-                 ├─ ResponseRewriter 改写
-                 ├─ RepeatGuard + SafetyGuard 重复抑制与安全过滤
-                 └─ OutputPipeline → TTS → 音频播放
+                 ├─ EvidenceRouter 低证据分流
+                 ├─ Generator / LLM 组织回复
+                 ├─ Rewriter 改写
+                 ├─ RepeatGuard + Guard 重复抑制与安全过滤
+                 └─ ResponsePipeline → TTS → 音频播放
 ```
 
 ## 关键设计特点
@@ -195,4 +203,4 @@ apps/runtime_edge.py --mode mic_vad
 2. **离线运行**：ASR、Embedding、LLM、TTS 全部本地部署，不依赖网络。
 3. **RAG 增强**：回答建立在本地 `rag.db` 知识库检索之上。
 4. **低证据分流**：检索证据不足时走保守策略，避免生成幻觉内容。
-5. **硬件预留**：`hardware_iface.py` 已抽象 TTS/LED/屏幕接口，未来可直接对接 Radxa 真实外设。
+5. **硬件预留**：`primitives.py` 中的 `HardwareIface` 已抽象 TTS/LED/屏幕接口，未来可直接对接 Radxa 真实外设。

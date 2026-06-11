@@ -23,9 +23,9 @@ from monibox.runtime.emotions import EmotionStrategy, EmotionStrategyBook
 from monibox.runtime.evidence_router import LowEvidenceRouter
 from monibox.runtime.generator import RagGenerator
 from monibox.runtime.guard import SafetyGuard
+from monibox.runtime.monitor import PerfMonitor
 from monibox.runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
 from monibox.runtime.primitives import (
-    PerfMonitor,
     RepeatGuard,
     WorkingMemory,
     build_default_variant_bank,
