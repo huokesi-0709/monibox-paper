@@ -68,42 +68,42 @@ uv lock                          # 更新 uv.lock
 
 ### 1. 入口层 `apps/`
 
-| 文件               | 职责                                                                      |
-| ------------------ | ------------------------------------------------------------------------- |
-| `runtime_edge.py`  | 兼容入口，指向 `monibox.cli`                                              |
-| `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口                                             |
-| `win_e2e_demo.py`  | Windows 端到端语音验证（早期）                                            |
-| `win_e2e_queue.py` | 队列式音频链路实验入口                                                    |
+| 文件               | 职责                           |
+| ------------------ | ------------------------------ |
+| `runtime_edge.py`  | 兼容入口，指向 `monibox.cli`   |
+| `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口  |
+| `win_e2e_demo.py`  | Windows 端到端语音验证（早期） |
+| `win_e2e_queue.py` | 队列式音频链路实验入口         |
 
 ### 2. 运行协调层 `monibox/core_loop/`
 
-| 文件              | 职责                                                                                                              |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `engine.py`       | **Engine**：启动全局资源、创建 Orchestrator、调度 ASR/播放/协调线程、管理“监听-识别-播报-暂停-恢复”生命周期 |
-| `shared.py`       | 共享基础设施：引擎事件类型、全局队列、结构化追踪日志                                                              |
-| `resources.py`    | 全局资源预加载与管理（ASR/TTS/LLM/RAG 延迟加载）                                                                  |
+| 文件           | 职责                                                                                                        |
+| -------------- | ----------------------------------------------------------------------------------------------------------- |
+| `engine.py`    | **Engine**：启动全局资源、创建 Orchestrator、调度 ASR/播放/协调线程、管理“监听-识别-播报-暂停-恢复”生命周期 |
+| `shared.py`    | 共享基础设施：引擎事件类型、全局队列、结构化追踪日志                                                        |
+| `resources.py` | 全局资源预加载与管理（ASR/TTS/LLM/RAG 延迟加载）                                                            |
 
 ### 3. 会话与策略层 `monibox/runtime/`（业务核心）
 
-| 文件                    | 职责                                                                         |
-| ----------------------- | ---------------------------------------------------------------------------- |
-| `orchestrator.py`       | **Orchestrator**：主编排器，协调 handle() 主流程；组装 RAG、协议、安全、TTS 等子模块 |
-| `protocol_matcher.py`   | 协议匹配引擎：做协议判定与状态处理                                             |
-| `protocol_fsm.py`       | 协议 QA 状态机，处理协议命中后的动作与回复                                     |
-| `slot_parser.py`        | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                |
-| `rag_engine.py`         | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                              |
-| `generator.py`          | RAG 生成器：将检索结果交给 LLM 组织生成回复                                    |
-| `evidence_router.py`    | 低证据路由：检索证据不足时走保守输出，而非强行生成                             |
-| `guard.py`              | 安全护栏：对输出内容进行安全过滤与处理                                         |
-| `rewriter.py`           | 回复改写器：适配语音播报场景                                                   |
-| `response_pipeline.py`  | 响应管线：整合改写、重复抑制、TTS 调度                                         |
-| `preprocessor.py`       | 文本预处理器：去重、句式转换、关键词风控等                                     |
-| `primitives.py`         | 运行时原语：工作记忆、重复抑制、变体库、硬件接口抽象                           |
-| `emotions.py`           | 情绪策略与策略书                                                             |
-| `runtime_config.py`     | 运行时统一配置，收敛所有环境变量读取                                         |
-| `monitor.py`            | 性能与内存监控                                                               |
-| `topic_router.py`       | 主题路由器：基于 taxonomy 做标签路由                                         |
-| `scoring.py`            | 检索结果评分/重排序策略                                                      |
+| 文件                   | 职责                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| `orchestrator.py`      | **Orchestrator**：主编排器，协调 handle() 主流程；组装 RAG、协议、安全、TTS 等子模块 |
+| `protocol_matcher.py`  | 协议匹配引擎：做协议判定与状态处理                                                   |
+| `protocol_fsm.py`      | 协议 QA 状态机，处理协议命中后的动作与回复                                           |
+| `slot_parser.py`       | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                      |
+| `rag_engine.py`        | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                                    |
+| `generator.py`         | RAG 生成器：将检索结果交给 LLM 组织生成回复                                          |
+| `evidence_router.py`   | 低证据路由：检索证据不足时走保守输出，而非强行生成                                   |
+| `guard.py`             | 安全护栏：对输出内容进行安全过滤与处理                                               |
+| `rewriter.py`          | 回复改写器：适配语音播报场景                                                         |
+| `response_pipeline.py` | 响应管线：整合改写、重复抑制、TTS 调度                                               |
+| `preprocessor.py`      | 文本预处理器：去重、句式转换、关键词风控等                                           |
+| `primitives.py`        | 运行时原语：工作记忆、重复抑制、变体库、硬件接口抽象                                 |
+| `emotions.py`          | 情绪策略与策略书                                                                     |
+| `runtime_config.py`    | 运行时统一配置，收敛所有环境变量读取                                                 |
+| `monitor.py`           | 性能与内存监控                                                                       |
+| `topic_router.py`      | 主题路由器：基于 taxonomy 做标签路由                                                 |
+| `scoring.py`           | 检索结果评分/重排序策略                                                              |
 
 ### 4. 模型能力层
 
@@ -116,28 +116,28 @@ uv lock                          # 更新 uv.lock
 
 #### ASR `monibox/asr/`
 
-| 文件              | 职责                        |
-| ----------------- | --------------------------- |
-| `whisper_asr.py`  | Faster-Whisper 语音识别实现 |
-| `worker.py`       | ASR 工作线程封装            |
+| 文件             | 职责                        |
+| ---------------- | --------------------------- |
+| `whisper_asr.py` | Faster-Whisper 语音识别实现 |
+| `worker.py`      | ASR 工作线程封装            |
 
 #### TTS `monibox/tts/`
 
-| 文件        | 职责                            |
-| ----------- | ------------------------------- |
-| `pyttsx3.py`| pyttsx3 离线 TTS                |
-| `sapi.py`   | Windows SAPI TTS                |
-| `sherpa.py` | Sherpa 系列 TTS（端侧主推方案） |
+| 文件         | 职责                            |
+| ------------ | ------------------------------- |
+| `pyttsx3.py` | pyttsx3 离线 TTS                |
+| `sapi.py`    | Windows SAPI TTS                |
+| `sherpa.py`  | Sherpa 系列 TTS（端侧主推方案） |
 
-### 5. 音频与硬件抽象层
+### 音频与硬件抽象层
 
-| 目录/文件                          | 职责                    |
-| ---------------------------------- | ----------------------- |
-| `monibox/audio/base_recorder.py`   | 基础录音                |
-| `monibox/audio/vad.py`             | VAD（语音活动检测）录音 |
-| `monibox/hw/player.py`             | 音频播放器              |
+| 目录/文件                        | 职责                    |
+| -------------------------------- | ----------------------- |
+| `monibox/audio/base_recorder.py` | 基础录音                |
+| `monibox/audio/vad.py`           | VAD（语音活动检测）录音 |
+| `monibox/hw/player.py`           | 音频播放器              |
 
-### 6. 数据与构建层
+### 数据与构建层
 
 | 目录             | 职责                                                                                  |
 | ---------------- | ------------------------------------------------------------------------------------- |
@@ -145,14 +145,14 @@ uv lock                          # 更新 uv.lock
 | `build/`         | 构建产物：`rag.db`（向量数据库）、`runtime_pack.json`（运行时配置包）、日志与评测结果 |
 | `sql/schema.sql` | SQLite 数据库表结构定义                                                               |
 
-### 7. 配置层 `config/`
+### 配置层 `config/`
 
 | 文件                          | 职责                                                      |
 | ----------------------------- | --------------------------------------------------------- |
 | `radxa.yaml` / `windows.yaml` | 平台级基线配置                                            |
 | `profiles/`                   | 运行配置文件（extreme、full、light、text_mvp、voice_mvp） |
 
-### 8. 测试层 `tests/`
+### 测试层 `tests/`
 
 | 文件                                                   | 职责                 |
 | ------------------------------------------------------ | -------------------- |
@@ -164,18 +164,18 @@ uv lock                          # 更新 uv.lock
 | `test_tts_experience.py`                               | TTS 体验测试         |
 | `test_asr_corrections.py`                              | ASR 纠错测试         |
 
-### 9. 构建工具层 `monibox/`（构建期专用）
+### 构建工具层 `monibox/`（构建期专用）
 
-| 文件              | 职责                              |
-| ----------------- | --------------------------------- |
-| `llm_client.py`   | DeepSeek API 客户端（构建期生成） |
-| `embedder.py`     | Embedding 计算                    |
-| `text_splitter.py`| 文本切分（TTS 适配）              |
-| `taxonomy.py`     | 知识分类体系                      |
-| `schema.py`       | Chunk schema 定义与校验           |
-| `fingerprint.py`  | 文本指纹去重                      |
-| `json_parser.py`  | LLM JSON 输出解析                 |
-| `vector_store.py` | sqlite-vec 向量数据库封装         |
+| 文件               | 职责                              |
+| ------------------ | --------------------------------- |
+| `llm_client.py`    | DeepSeek API 客户端（构建期生成） |
+| `embedder.py`      | Embedding 计算                    |
+| `text_splitter.py` | 文本切分（TTS 适配）              |
+| `taxonomy.py`      | 知识分类体系                      |
+| `schema.py`        | Chunk schema 定义与校验           |
+| `fingerprint.py`   | 文本指纹去重                      |
+| `json_parser.py`   | LLM JSON 输出解析                 |
+| `vector_store.py`  | sqlite-vec 向量数据库封装         |
 
 ## 核心调用链（以语音模式为例）
 
