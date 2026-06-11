@@ -1,22 +1,7 @@
 """
 utils_json.py
 
-目标：把 LLM 输出尽可能稳定地解析成 JSON（Python对象）
-因为 LLM 常见问题：
-- 输出带 ```json 围栏
-- JSON 前后夹杂文字
-- 输出被截断（缺少结尾的 ] 或 }）
-- JSON 不严格（单引号、尾逗号、未加引号的 key）
-- 可能输出多个 JSON 对象（例如：{...}\n{...}\n{...}）
-
-策略：
-1) 去围栏
-2) 从文本中截取"第一个 { 或 [ 到最后一个 } 或 ]"的片段（extract_json）
-3) 若括号未闭合：自动补齐缺失的 ] / }
-4) strict json 解析失败就用 json5 兜底
-
-新增：
-- extract_first_json：优先解析"第一个完整闭合 JSON 块"，解决多 JSON 连续输出导致解析失败
+把 LLM 输出尽可能稳定地解析成 JSON（Python对象）
 """
 
 import json

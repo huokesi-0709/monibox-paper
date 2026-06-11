@@ -5,14 +5,13 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from monibox.config import GENERATED_DIR, KNOWLEDGE_SRC
+from app.config import GENERATED_DIR, KNOWLEDGE_SRC
 
 
 def slugify(s: str) -> str:
     s = (s or "").strip().lower().replace("-", "_")
     s = re.sub(r"[^a-z0-9_]+", "_", s)
-    s = re.sub(r"_+", "_", s).strip("_")
-    return s
+    return re.sub(r"_+", "_", s).strip("_")
 
 
 @dataclass

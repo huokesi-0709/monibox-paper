@@ -1,5 +1,5 @@
 """
-monibox/runtime/orchestrator.py
+runtime/orchestrator.py
 
 用途
 -----
@@ -18,37 +18,37 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from monibox.llm.backends import create_llm_backend
-from monibox.runtime.emotions import EmotionStrategy, EmotionStrategyBook
-from monibox.runtime.evidence_router import LowEvidenceRouter
-from monibox.runtime.generator import RagGenerator
-from monibox.runtime.guard import SafetyGuard
-from monibox.runtime.monitor import PerfMonitor
-from monibox.runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
-from monibox.runtime.primitives import (
+from language.backends import create_llm_backend
+from runtime.emotions import EmotionStrategy, EmotionStrategyBook
+from runtime.evidence_router import LowEvidenceRouter
+from runtime.generator import RagGenerator
+from runtime.guard import SafetyGuard
+from runtime.monitor import PerfMonitor
+from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
+from runtime.primitives import (
     RepeatGuard,
     WorkingMemory,
     build_default_variant_bank,
 )
-from monibox.runtime.protocol_fsm import ProtocolHandler
-from monibox.runtime.protocol_matcher import ProtocolEngine
-from monibox.runtime.rag_engine import RagEngine, SearchResult
-from monibox.runtime.response_pipeline import OutputPipeline
-from monibox.runtime.rewriter import ResponseRewriter
-from monibox.runtime.runtime_config import load_runtime_config
-from monibox.runtime.slot_parser import infer_slot_from_text
+from runtime.protocol_fsm import ProtocolHandler
+from runtime.protocol_matcher import ProtocolEngine
+from runtime.rag_engine import RagEngine, SearchResult
+from runtime.response_pipeline import OutputPipeline
+from runtime.rewriter import ResponseRewriter
+from runtime.runtime_config import load_runtime_config
+from runtime.slot_parser import infer_slot_from_text
 
 # NOTE: TTS 模块延迟加载——纯文本模式无需安装 pyttsx3 / pywin32
 try:
-    from monibox.tts.pyttsx3 import Pyttsx3TTS
+    from speech.pyttsx3 import Pyttsx3TTS
 except ImportError:
     Pyttsx3TTS = None  # type: ignore
 try:
-    from monibox.tts.sapi import SapiTTS  # type: ignore
+    from speech.sapi import SapiTTS  # type: ignore
 except Exception:
     SapiTTS = None  # type: ignore
 try:
-    from monibox.tts.sherpa import SherpaTTS
+    from speech.sherpa import SherpaTTS
 except ImportError:
     SherpaTTS = None  # type: ignore
 
@@ -93,7 +93,7 @@ class MoniSession:
         if tts is None and cfg.tts_enabled:
             # 向后兼容老代码
             if self.rt.tts_backend == "sherpa" and SherpaTTS is not None:
-                from monibox.config import resolve_project_path
+                from app.config import resolve_project_path
 
                 model_dir = resolve_project_path(self.rt.tts_sherpa_model_dir)
                 tts = SherpaTTS(
@@ -174,7 +174,7 @@ class MoniSession:
         if time.monotonic() > self.pending_until:
             self.pending_bucket = None
             return None
-        from monibox.runtime.slot_parser import parse_yesno
+        from runtime.slot_parser import parse_yesno
 
         yn = parse_yesno(user_text)
         if yn is None:
@@ -216,7 +216,7 @@ class MoniSession:
         return emotion, max_chars, rewrite_enabled
 
     def _is_localized_pain_query(self, user_text: str) -> bool:
-        from monibox.runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
+        from runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         t = user_text or ""
         body_parts = [
@@ -273,7 +273,7 @@ class MoniSession:
     def _handle(
         self, user_text: str, events: list[str] | None = None, auto_top_tags: int = 2
     ) -> str:
-        from monibox.runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
+        from runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         events = events or []
         user_text = (user_text or "").strip()

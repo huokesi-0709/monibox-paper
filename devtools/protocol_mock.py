@@ -1,12 +1,14 @@
+"""Small CLI for protocol-first runtime smoke checks."""
+
 from __future__ import annotations
 
 import argparse
 
-from monibox.config import settings
-from monibox.runtime.protocol_matcher import ProtocolEngine
-from monibox.runtime.rag_engine import RagEngine
-from monibox.runtime.guard import SafetyGuard
-from monibox.runtime.primitives import MockHardware
+from app.config import settings
+from runtime.guard import SafetyGuard
+from runtime.primitives import MockHardware
+from runtime.protocol_matcher import ProtocolEngine
+from runtime.rag_engine import RagEngine
 
 
 def main():

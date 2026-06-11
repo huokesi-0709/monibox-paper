@@ -1,5 +1,5 @@
 """
-monibox/audio/vad.py
+speech/vad.py
 
 用途
 -----

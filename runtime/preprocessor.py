@@ -1,5 +1,5 @@
 """
-monibox/runtime/preprocessor.py
+runtime/preprocessor.py
 
 用途
 -----
@@ -12,7 +12,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from monibox.json_parser import extract_first_json
+from knowledgekit.parser import extract_first_json
 
 # NOTE: 高危关键词列表，用于判断用户输入是否涉及紧急医疗场景
 HIGH_RISK_KEYWORDS = [

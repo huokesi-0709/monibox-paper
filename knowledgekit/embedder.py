@@ -1,5 +1,5 @@
 """
-monibox/embedder.py
+knowledgekit/embedder.py
 
 作用：
 - 在构建期（PC）为文本生成 embedding 向量，用于写入 sqlite-vec（rag.db）
@@ -20,7 +20,7 @@ from typing import Any
 
 import numpy as np
 
-from monibox.config import PROJECT_ROOT, settings
+from app.config import PROJECT_ROOT, settings
 
 _model: Any | None = None
 

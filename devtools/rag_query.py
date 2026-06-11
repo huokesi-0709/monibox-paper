@@ -1,7 +1,9 @@
+"""Small CLI for inspecting RAG retrieval results."""
+
 import argparse
 
-from monibox.config import settings
-from monibox.runtime.rag_engine import RagEngine
+from app.config import settings
+from runtime.rag_engine import RagEngine
 
 
 def main():

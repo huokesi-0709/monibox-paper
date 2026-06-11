@@ -11,7 +11,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-# 项目根目录（当前文件 parents[1] => monibox/ 的上级）
+# 项目根目录（app/config.py 的上级目录）
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 KNOWLEDGE_SRC = PROJECT_ROOT / "knowledge"

@@ -1,5 +1,5 @@
 """
-monibox/llm/local_chat.py
+language/local.py
 
 用途
 -----
@@ -34,7 +34,7 @@ from pathlib import Path
 
 from llama_cpp import Llama
 
-from monibox.config import PROJECT_ROOT
+from app.config import PROJECT_ROOT
 
 
 @dataclass

@@ -1,6 +1,6 @@
 import hashlib
 
-from monibox.json_parser import clean_text
+from knowledgekit.parser import clean_text
 
 
 def sha256_fp(text: str) -> str:
@@ -9,4 +9,3 @@ def sha256_fp(text: str) -> str:
     """
     t = clean_text(text)
     return "sha256:" + hashlib.sha256(t.encode("utf-8")).hexdigest()
-

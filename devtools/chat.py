@@ -1,13 +1,13 @@
 """
-apps/chat.py
+devtools/chat.py
 
 纯文本交互式对话入口 —— 专注于 RAG 对话质量调试。
 不依赖 ASR / TTS / 麦克风 / 音频设备。
 
 用法：
-    python -m apps.chat                  # 完整模式（RAG + LLM）
-    python -m apps.chat --no_llm         # 仅查看 RAG 检索结果，不加载 LLM
-    python -m apps.chat --query "我好冷"  # 单条查询模式
+    python -m devtools.chat                  # 完整模式（RAG + LLM）
+    python -m devtools.chat --no_llm         # 仅查看 RAG 检索结果，不加载 LLM
+    python -m devtools.chat --query "我好冷"  # 单条查询模式
 """
 
 import argparse
@@ -16,9 +16,9 @@ import sys
 
 from dotenv import load_dotenv
 
-load_dotenv()
+from app.config import settings
 
-from monibox.config import settings
+load_dotenv()
 
 
 def run_rag_only(query: str, rag_db_path: str) -> None:
@@ -26,7 +26,7 @@ def run_rag_only(query: str, rag_db_path: str) -> None:
     仅运行 RAG 检索，显示检索结果，不加载 LLM。
     用于快速验证知识库质量。
     """
-    from monibox.runtime.rag_engine import RagEngine
+    from runtime.rag_engine import RagEngine
 
     rag = RagEngine(rag_db_path)
     rr = rag.router.route(query, top_tags=2)
@@ -67,7 +67,7 @@ def run_rag_only(query: str, rag_db_path: str) -> None:
 
 def run_full(rag_db_path: str, single_query: str = "") -> None:
     """完整模式：RAG + LLM 对话"""
-    from monibox.runtime.orchestrator import MoniSession, SessionConfig
+    from runtime.orchestrator import MoniSession, SessionConfig
 
     llm_path = os.getenv("LLM_GGUF_PATH", "")
     if not llm_path:

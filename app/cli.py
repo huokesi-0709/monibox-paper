@@ -8,9 +8,9 @@ import argparse
 import os
 import time
 
-from monibox.core_loop.shared import EngineEvent, EventType, input_queue
-from monibox.core_loop.engine import MainEngine
-from monibox.log import get_logger, setup_logging
+from core.shared import EngineEvent, EventType, input_queue
+from core.engine import MainEngine
+from app.log import get_logger, setup_logging
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 if not os.getenv("WHISPER_THREADS"):

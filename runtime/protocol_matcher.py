@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from monibox.config import PROJECT_ROOT
+from app.config import PROJECT_ROOT
 
 
 class ProtocolEngine:

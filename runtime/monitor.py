@@ -4,7 +4,7 @@ import time
 
 import psutil
 
-from monibox.core_loop.shared import get_runtime_trace_logger
+from core.shared import get_runtime_trace_logger
 
 
 class PerfMonitor:

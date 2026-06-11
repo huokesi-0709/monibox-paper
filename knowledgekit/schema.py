@@ -5,7 +5,7 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from monibox.config import KNOWLEDGE_SRC
+from app.config import KNOWLEDGE_SRC
 
 CHUNK_SCHEMA_PATH = KNOWLEDGE_SRC / "chunk_schema.json"
 
@@ -165,4 +165,3 @@ def validate_normalized_chunk(
         elif field_type == "boolean" and not isinstance(value, bool):
             errors.append(f"{name}:not_boolean")
     return errors
-

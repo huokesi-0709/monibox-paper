@@ -1,12 +1,12 @@
 """
-monibox/llm/backends.py
+language/backends.py
 
 统一 LLM 接口 —— 通过 LLM_BACKEND 环境变量选择后端：
   - "deepseek"：调用 DeepSeek API（开发阶段，Windows 首选）
   - "llama"   ：调用本地 llama.cpp（部署阶段，Radxa 首选）
 
 用法（在 session.py 等处）：
-    from monibox.llm.backends import create_llm_backend, LLMBackend
+    from language.backends import create_llm_backend, LLMBackend
 
     llm = create_llm_backend()
     reply = llm.generate(system_prompt, user_text)
@@ -126,7 +126,7 @@ class LlamaCppBackend(LLMBackend):
         n_threads: int = 6,
         n_gpu_layers: int = 0,
     ) -> None:
-        from monibox.llm.local_chat import LLMConfig, LlamaCppChat
+        from language.local import LLMConfig, LlamaCppChat
 
         self._llm = LlamaCppChat(
             LLMConfig(
@@ -164,7 +164,7 @@ def create_llm_backend() -> LLMBackend:
     根据 LLM_BACKEND 环境变量创建对应后端。
     默认：若未设置 LLM_GGUF_PATH 则用 deepseek，否则用 llama。
     """
-    from monibox.runtime.runtime_config import load_runtime_config
+    from runtime.runtime_config import load_runtime_config
 
     rt = load_runtime_config()
     backend = (os.getenv("LLM_BACKEND", "auto") or "auto").strip().lower()

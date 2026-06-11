@@ -1,5 +1,5 @@
 """
-monibox/runtime/rewriter.py
+runtime/rewriter.py
 
 用途
 -----
@@ -13,11 +13,11 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from monibox.llm.backends import LLMBackend
-from monibox.json_parser import extract_first_json
+from language.backends import LLMBackend
+from knowledgekit.parser import extract_first_json
 
 if TYPE_CHECKING:
-    from monibox.runtime.runtime_config import RuntimeConfig
+    from runtime.runtime_config import RuntimeConfig
 
 
 def _normalize(s: str) -> str:

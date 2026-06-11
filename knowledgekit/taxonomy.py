@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
-from monibox.config import KNOWLEDGE_SRC
-from monibox.tags.tag_registry import TagRegistry
+from app.config import KNOWLEDGE_SRC
+from knowledgekit.tags import TagRegistry
 
 CATEGORY_FIELD = "知识类别"
 CANONICAL_CATEGORY_FIELD = "category"
@@ -179,4 +179,3 @@ def enrich_chunk_subcategory(
     chunk[SUBCATEGORY_FIELD] = sub_category
     chunk[CANONICAL_SUBCATEGORY_FIELD] = sub_category
     return chunk
-

@@ -32,4 +32,3 @@ def split_by_max_chars(text: str, max_chars: int, min_chars: int) -> list[str]:
         i = cut
 
     return out
-

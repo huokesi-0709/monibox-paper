@@ -775,6 +775,7 @@ name = "monibox"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "comtypes" },
     { name = "dotenv" },
     { name = "faster-whisper" },
     { name = "json5" },
@@ -783,6 +784,7 @@ dependencies = [
     { name = "psutil" },
     { name = "pydantic" },
     { name = "python-dotenv" },
+    { name = "pyttsx3" },
     { name = "requests" },
     { name = "sentence-transformers" },
     { name = "sherpa-onnx" },
@@ -808,6 +810,7 @@ voice = [
 
 [package.metadata]
 requires-dist = [
+    { name = "comtypes", specifier = ">=1.4.16" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "faster-whisper", specifier = ">=1.2.1" },
     { name = "faster-whisper", marker = "extra == 'voice'", specifier = ">=1.0.3" },
@@ -819,6 +822,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.7.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
+    { name = "pyttsx3", specifier = ">=2.99" },
     { name = "pyttsx3", marker = "extra == 'voice'", specifier = ">=2.90" },
     { name = "requests", specifier = ">=2.31.0" },
     { name = "sentence-transformers", specifier = ">=5" },

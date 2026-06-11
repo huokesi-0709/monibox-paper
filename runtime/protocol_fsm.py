@@ -1,5 +1,5 @@
 """
-monibox/runtime/protocol_fsm.py
+runtime/protocol_fsm.py
 
 用途
 -----
@@ -19,15 +19,15 @@ import re
 import time
 from typing import Any
 
-from monibox.runtime.emotions import EmotionStrategyBook
-from monibox.runtime.slot_parser import (
+from runtime.emotions import EmotionStrategyBook
+from runtime.slot_parser import (
     infer_slot_from_text,
     parse_location,
     parse_yesno,
 )
-from monibox.runtime.runtime_config import RuntimeConfig
-from monibox.runtime.guard import SafetyGuard
-from monibox.runtime.preprocessor import (
+from runtime.runtime_config import RuntimeConfig
+from runtime.guard import SafetyGuard
+from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
     smart_cut,

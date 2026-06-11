@@ -12,7 +12,7 @@ import struct
 from pathlib import Path
 from typing import Any
 
-from monibox.config import SQL_DIR
+from app.config import SQL_DIR
 
 try:
     import sqlite_vec  # type: ignore
@@ -33,7 +33,7 @@ def json_text(value: Any) -> str:
 
 def vec_to_f32_blob(vec: list[float]) -> sqlite3.Binary:
     floats = [float(x) for x in vec]
-    blob = struct.pack("<%sf" % len(floats), *floats)
+    blob = struct.pack(f"<{len(floats)}f", *floats)
     return sqlite3.Binary(blob)
 
 

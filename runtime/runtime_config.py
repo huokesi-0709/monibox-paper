@@ -1,5 +1,5 @@
 """
-monibox/runtime/runtime_config.py
+runtime/runtime_config.py
 
 用途
 -----
@@ -9,7 +9,7 @@ os.getenv 调用统一收敛到一处，便于管理、测试和后续端侧部�
 设计决策
 --------
 - 构建侧配置（DeepSeek API、Embedding 模型、RAG DB 路径等）仍由
-  monibox/config.py 管理，本模块只管运行时行为。
+  config.py 管理，本模块只管运行时行为。
 - 使用 dataclass + 工厂函数，支持测试时注入自定义值。
 """
 
@@ -20,7 +20,7 @@ from dataclasses import dataclass, fields
 from pathlib import Path
 from typing import Any
 
-from monibox.config import PROJECT_ROOT
+from app.config import PROJECT_ROOT
 
 PROFILE_ENV = "RUNTIME_PROFILE"
 PROFILE_PATH_ENV = "RUNTIME_CONFIG_PATH"

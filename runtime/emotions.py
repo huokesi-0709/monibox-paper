@@ -5,7 +5,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 
-from monibox.config import KNOWLEDGE_SRC
+from app.config import KNOWLEDGE_SRC
 
 EMOTION_STRATEGIES_PATH = KNOWLEDGE_SRC / "emotion_strategies.json"
 BUCKET_DEFAULT_EMOTIONS = {

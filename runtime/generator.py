@@ -1,5 +1,5 @@
 """
-monibox/runtime/generator.py
+runtime/generator.py
 
 用途
 -----
@@ -12,11 +12,11 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 
-from monibox.llm.backends import LLMBackend
-from monibox.runtime.rag_engine import SearchResult
-from monibox.runtime.runtime_config import RuntimeConfig
-from monibox.runtime.primitives import WorkingMemory
-from monibox.runtime.preprocessor import (
+from language.backends import LLMBackend
+from runtime.rag_engine import SearchResult
+from runtime.runtime_config import RuntimeConfig
+from runtime.primitives import WorkingMemory
+from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
     normalize_payload,

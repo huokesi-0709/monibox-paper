@@ -1,5 +1,5 @@
 """
-monibox/core_loop/resources.py
+core/resources.py
 
 全局资源管理器：在系统启动时一次性加载庞大的模型避免重复载入。
 涵盖：
@@ -14,17 +14,17 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from monibox.llm.backends import create_llm_backend
-from monibox.runtime.runtime_config import load_runtime_config
+from language.backends import create_llm_backend
+from runtime.runtime_config import load_runtime_config
 
 # 延迟导入以防环境未装相关依赖
 try:
-    from monibox.tts.sherpa import SherpaTTS
+    from speech.sherpa import SherpaTTS
 except ImportError:
     SherpaTTS = None
 
 try:
-    from monibox.asr.whisper_asr import (
+    from speech.whisper import (
         FasterWhisperASR as WhisperASR,
         WhisperASRConfig,
         build_default_initial_prompt,
@@ -82,7 +82,7 @@ class ResourceManager:
             asr_model_dir = os.getenv(
                 "WHISPER_MODEL_DIR", "models/asr/faster-whisper-small"
             )
-            from monibox.config import resolve_project_path
+            from app.config import resolve_project_path
 
             resolved_asr = resolve_project_path(asr_model_dir)
             try:
@@ -105,7 +105,7 @@ class ResourceManager:
 
         # 2. RAG (Delay import to avoid Whisper OpenMP/CTranslate2 conflict)
         print("[Resource] 加载 RAG 引擎...")
-        from monibox.runtime.rag_engine import RagEngine
+        from runtime.rag_engine import RagEngine
 
         self.rag = RagEngine(rag_db_path)
 
@@ -117,7 +117,7 @@ class ResourceManager:
         if preload_embedding:
             print("[Resource] 预加载 Embedding 模型...")
             try:
-                from monibox.embedder import get_model as get_embedding_model
+                from knowledgekit.embedder import get_model as get_embedding_model
 
                 get_embedding_model()
             except Exception as e:
@@ -126,7 +126,7 @@ class ResourceManager:
         # 5. TTS
         if enable_tts and self.rt.tts_backend == "sherpa" and SherpaTTS is not None:
             print("[Resource] 加载 Sherpa TTS 音色框架...")
-            from monibox.config import resolve_project_path
+            from app.config import resolve_project_path
 
             model_dir = resolve_project_path(self.rt.tts_sherpa_model_dir)
             self.tts = SherpaTTS(

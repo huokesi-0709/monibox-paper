@@ -57,25 +57,34 @@ uv run monibox --mode mic_vad --once
 
 ```bash
 uv run pytest                    # 运行测试
-uv run python -m apps.chat       # 纯文本调试入口
+uv run monibox-chat --no_llm     # 纯文本 RAG 调试入口
+uv run monibox-rag --q "我好冷"   # 快速查看 RAG 检索结果
 uv pip list                      # 查看已安装包
 uv lock                          # 更新 uv.lock
 ```
 
-> 注：旧版 `requirements.txt` 已迁移至 `pyproject.toml`，后续优先使用 uv 管理依赖。
-
 ## 工程结构
 
-### 入口层 `apps/`
+### 应用入口 `app/`
+
+`monibox` 命令是唯一正式运行入口，负责启动 `MainEngine`，并提供文本模式与 VAD 语音模式。
+
+```bash
+uv run monibox --mode text
+uv run monibox --mode mic_vad --once
+```
+
+### 调试工具 `devtools/`
 
 | 文件               | 职责                           |
 | ------------------ | ------------------------------ |
-| `runtime_edge.py`  | 兼容入口，指向 `monibox.cli`   |
 | `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口  |
+| `rag_query.py`     | 单条查询的 RAG 检索结果查看器  |
+| `protocol_mock.py` | 协议优先链路的轻量 smoke check |
 | `win_e2e_demo.py`  | Windows 端到端语音验证（早期） |
 | `win_e2e_queue.py` | 队列式音频链路实验入口         |
 
-### 运行协调层 `monibox/core_loop/`
+### 运行协调层 `core/`
 
 | 文件           | 职责                                                                                                        |
 | -------------- | ----------------------------------------------------------------------------------------------------------- |
@@ -83,7 +92,7 @@ uv lock                          # 更新 uv.lock
 | `shared.py`    | 共享基础设施：引擎事件类型、全局队列、结构化追踪日志                                                        |
 | `resources.py` | 全局资源预加载与管理（ASR/TTS/LLM/RAG 延迟加载）                                                            |
 
-### 会话与策略层 `monibox/runtime/`（业务核心）
+### 会话与策略层 `runtime/`（业务核心）
 
 | 文件                   | 职责                                                                                 |
 | ---------------------- | ------------------------------------------------------------------------------------ |
@@ -107,35 +116,30 @@ uv lock                          # 更新 uv.lock
 
 ### 模型能力层
 
-#### LLM `monibox/llm/`
+#### 语言模型 `language/`
 
 | 文件            | 职责                          |
 | --------------- | ----------------------------- |
 | `backends.py`   | LLM 后端抽象与工厂            |
-| `local_chat.py` | 基于 llama.cpp 的本地聊天实现 |
+| `local.py`      | 基于 llama.cpp 的本地聊天实现 |
 
-#### ASR `monibox/asr/`
+#### 语音链路 `speech/`
 
 | 文件             | 职责                        |
 | ---------------- | --------------------------- |
-| `whisper_asr.py` | Faster-Whisper 语音识别实现 |
+| `whisper.py`     | Faster-Whisper 语音识别实现 |
 | `worker.py`      | ASR 工作线程封装            |
-
-#### TTS `monibox/tts/`
-
-| 文件         | 职责                            |
-| ------------ | ------------------------------- |
+| `recorder.py`    | 基础录音                    |
+| `vad.py`         | VAD（语音活动检测）录音     |
 | `pyttsx3.py` | pyttsx3 离线 TTS                |
 | `sapi.py`    | Windows SAPI TTS                |
 | `sherpa.py`  | Sherpa 系列 TTS（端侧主推方案） |
 
-### 音频与硬件抽象层
+### 设备抽象层 `devices/`
 
 | 目录/文件                        | 职责                    |
 | -------------------------------- | ----------------------- |
-| `monibox/audio/base_recorder.py` | 基础录音                |
-| `monibox/audio/vad.py`           | VAD（语音活动检测）录音 |
-| `monibox/hw/player.py`           | 音频播放器              |
+| `player.py`                     | 音频播放器              |
 
 ### 数据与构建层
 
@@ -145,44 +149,37 @@ uv lock                          # 更新 uv.lock
 | `build/`         | 构建产物：`rag.db`（向量数据库）、`runtime_pack.json`（运行时配置包）、日志与评测结果 |
 | `sql/schema.sql` | SQLite 数据库表结构定义                                                               |
 
-### 配置层 `config/`
+### 配置层 `profiles/`
 
 | 文件                          | 职责                                                      |
 | ----------------------------- | --------------------------------------------------------- |
 | `radxa.yaml` / `windows.yaml` | 平台级基线配置                                            |
-| `profiles/`                   | 运行配置文件（extreme、full、light、text_mvp、voice_mvp） |
+| `*_mvp.yaml` / `radxa_*.yaml` | 运行配置文件（extreme、full、light、text_mvp、voice_mvp） |
 
 ### 测试层 `tests/`
 
-| 文件                                                   | 职责                 |
-| ------------------------------------------------------ | -------------------- |
-| `test_session_integration.py`                          | 会话集成测试         |
-| `test_protocol_trigger.py`                             | 协议触发测试         |
-| `test_safety_guard.py`                                 | 安全护栏测试         |
-| `test_runtime_config.py` / `test_runtime_trace.py`     | 运行时配置与追踪测试 |
-| `test_stage_2_sources.py` ~ `test_stage_5_emotions.py` | 分阶段验收测试       |
-| `test_tts_experience.py`                               | TTS 体验测试         |
-| `test_asr_corrections.py`                              | ASR 纠错测试         |
+`tests/` 保留给自动化测试；当前仓库没有已跟踪测试文件时，可先使用 `python -m compileall .` 做结构级导入检查。
 
-### 构建工具层 `monibox/`（构建期专用）
+### 知识库工具层 `knowledgekit/`
 
 | 文件               | 职责                              |
 | ------------------ | --------------------------------- |
-| `llm_client.py`    | DeepSeek API 客户端（构建期生成） |
+| `client.py`        | DeepSeek API 客户端（构建期生成） |
 | `embedder.py`      | Embedding 计算                    |
-| `text_splitter.py` | 文本切分（TTS 适配）              |
+| `splitter.py`      | 文本切分（TTS 适配）              |
 | `taxonomy.py`      | 知识分类体系                      |
 | `schema.py`        | Chunk schema 定义与校验           |
 | `fingerprint.py`   | 文本指纹去重                      |
-| `json_parser.py`   | LLM JSON 输出解析                 |
-| `vector_store.py`  | sqlite-vec 向量数据库封装         |
+| `parser.py`        | LLM JSON 输出解析                 |
+| `store.py`         | sqlite-vec 向量数据库封装         |
+| `tags.py`          | 标签注册与归一化                  |
 
 ## 核心调用链（以语音模式为例）
 
 ```text
 monibox --mode mic_vad
   └─ Engine.start()
-       ├─ 启动 ASR 线程 (whisper_asr / worker)
+       ├─ 启动 ASR 线程 (speech.whisper / speech.worker)
        ├─ 启动音频播放线程
        ├─ 创建 Orchestrator
        └─ 协调线程调度事件队列

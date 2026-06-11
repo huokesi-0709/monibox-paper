@@ -9,7 +9,7 @@ from pathlib import Path
 
 from faster_whisper import WhisperModel
 
-from monibox.config import PROJECT_ROOT
+from app.config import PROJECT_ROOT
 
 DEFAULT_RESCUE_INITIAL_PROMPT = (
     "这是中文灾害救援对话。常见词：腿、手、胳膊、头、脑袋、流血、伤口、骨折、"

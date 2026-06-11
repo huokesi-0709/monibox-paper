@@ -1,4 +1,6 @@
 """
+Windows 端到端语音链路实验入口。
+
 关键：每轮 session.handle() 返回后，sleep 一小段冷却时间，
 避免立刻又进入 VAD 监听把 TTS 声音吃进去，也避免音频设备争用。
 """
@@ -7,15 +9,15 @@ import argparse
 import os
 import time
 
-from monibox.asr.whisper_asr import (
+from app.config import settings
+from runtime.orchestrator import MoniSession, SessionConfig
+from speech.recorder import record
+from speech.vad import VadConfig, record_vad
+from speech.whisper import (
     FasterWhisperASR,
     WhisperASRConfig,
     build_default_initial_prompt,
 )
-from monibox.audio.base_recorder import record
-from monibox.audio.vad import VadConfig, record_vad
-from monibox.config import settings
-from monibox.runtime.orchestrator import MoniSession, SessionConfig
 
 
 def main():

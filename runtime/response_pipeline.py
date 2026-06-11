@@ -1,5 +1,5 @@
 """
-monibox/runtime/response_pipeline.py
+runtime/response_pipeline.py
 
 用途
 -----
@@ -12,18 +12,18 @@ from __future__ import annotations
 
 import re
 
-from monibox.runtime.rewriter import ResponseRewriter
-from monibox.runtime.runtime_config import RuntimeConfig
-from monibox.runtime.guard import SafetyGuard
-from monibox.runtime.primitives import RepeatGuard, WorkingMemory
-from monibox.runtime.preprocessor import (
+from runtime.rewriter import ResponseRewriter
+from runtime.runtime_config import RuntimeConfig
+from runtime.guard import SafetyGuard
+from runtime.primitives import RepeatGuard, WorkingMemory
+from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
     normalize_for_tts,
     shape_tts_text,
     smart_cut,
 )
-from monibox.runtime.primitives import VariantBank
+from runtime.primitives import VariantBank
 
 
 class OutputPipeline:

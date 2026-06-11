@@ -5,7 +5,7 @@ DeepSeek API 封装（OpenAI 兼容）。
 
 from openai import OpenAI
 
-from monibox.config import settings
+from app.config import settings
 
 
 class DeepSeekClient:
@@ -40,4 +40,3 @@ class DeepSeekClient:
             temperature=temperature,
         )
         return resp.choices[0].message.content
-

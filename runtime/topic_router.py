@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-from monibox.config import GENERATED_DIR, KNOWLEDGE_SRC
-from monibox.tags.tag_registry import TagRegistry
+from app.config import GENERATED_DIR, KNOWLEDGE_SRC
+from knowledgekit.tags import TagRegistry
 
 
 @dataclass
