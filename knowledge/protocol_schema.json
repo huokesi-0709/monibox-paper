@@ -1,0 +1,247 @@
+{
+  "schema_version": "stage_4d_v1",
+  "description": "Protocol governance contract for Stage 4-A through 4-D. This file defines required protocol fields, naming rules, priority bands, expansion targets, and fixed priority competition cases.",
+  "stage_targets": {
+    "stage_4b_min_protocols": 25,
+    "stage_4c_min_protocols": 40,
+    "stage_4d_min_protocols": 60
+  },
+  "protocol_id_pattern": "^prot_[a-z0-9_]+$",
+  "required_fields": [
+    "protocol_id",
+    "name",
+    "priority",
+    "trigger",
+    "actions",
+    "source_refs"
+  ],
+  "recommended_fields": [
+    "cooldown_sec",
+    "qa_followups",
+    "followup_actions",
+    "hardware_actions",
+    "safety_constraints",
+    "eval_cases"
+  ],
+  "priority": {
+    "min": 1,
+    "max": 100,
+    "bands": [
+      {
+        "name": "critical_immediate",
+        "range": [96, 100],
+        "description": "Immediate physical danger that may preempt all other protocols."
+      },
+      {
+        "name": "critical_medical",
+        "range": [90, 95],
+        "description": "High-risk medical or airway protocols."
+      },
+      {
+        "name": "high_risk_support",
+        "range": [80, 89],
+        "description": "High-risk but usually non-preemptive support protocols."
+      },
+      {
+        "name": "medium_support",
+        "range": [40, 79],
+        "description": "Psychological, de-escalation, or lower urgency support."
+      },
+      {
+        "name": "fallback",
+        "range": [1, 10],
+        "description": "Noise, unclear input, and fallback guidance."
+      }
+    ]
+  },
+  "priority_order": [
+    "prot_aftershock_immediate",
+    "prot_extreme_shake_event",
+    "prot_secondary_collapse_risk",
+    "prot_earthquake_initial_shelter",
+    "prot_landslide_debris_flow",
+    "prot_bleeding_control",
+    "prot_asthma_breathing",
+    "prot_respiratory_distress",
+    "prot_chest_pain",
+    "prot_smoke_fire_airway",
+    "prot_gas_leak_suspected",
+    "prot_fire_heat_nearby",
+    "prot_panic_button_help",
+    "prot_airway_dust",
+    "prot_injury_fracture",
+    "prot_crush_pressure_long",
+    "prot_cardiac_chronic_risk",
+    "prot_head_injury_confusion",
+    "prot_pregnant_pain",
+    "prot_building_collapse_trapped",
+    "prot_companion_unconscious",
+    "prot_hypoglycemia_suspected",
+    "prot_child_trapped",
+    "prot_syncope_blackout",
+    "prot_pregnant_trapped",
+    "prot_elderly_confusion",
+    "prot_wet_cold_flood",
+    "prot_flood_rising_indoor",
+    "prot_elderly_chronic_trapped",
+    "prot_heat_stress_overheat",
+    "prot_child_crying",
+    "prot_hypothermia",
+    "prot_despair_keep_alive",
+    "prot_panic_breathing",
+    "prot_numbness_worsening",
+    "prot_dehydration_thirst",
+    "prot_stuck_immobile",
+    "prot_companion_injured",
+    "prot_numbness_pressure",
+    "prot_wheelchair_mobility_impaired",
+    "prot_water_safety_uncertain",
+    "prot_epistaxis_nosebleed",
+    "prot_visual_impaired_trapped",
+    "prot_hearing_impaired_trapped",
+    "prot_claustrophobia",
+    "prot_darkness_visibility",
+    "prot_rescue_location_marking",
+    "prot_no_response_long_wait",
+    "prot_rescue_voice_heard",
+    "prot_chronic_medication_unavailable",
+    "prot_noisy_environment_unclear",
+    "prot_user_refusal",
+    "prot_abuse_deescalate",
+    "prot_battery_critical_shutdown",
+    "prot_temperature_sensor_high",
+    "prot_low_battery_degrade",
+    "prot_audio_input_error",
+    "prot_audio_output_error",
+    "prot_long_runtime_degrade",
+    "prot_noise_ignore"
+  ],
+  "priority_competition_cases": [
+    {
+      "input": "喘不过气我好怕",
+      "expected_protocol_id": "prot_airway_dust",
+      "reason": "Airway risk must beat ordinary panic."
+    },
+    {
+      "input": "冷得发抖心慌",
+      "expected_protocol_id": "prot_hypothermia",
+      "reason": "Cold context should route to hypothermia rather than panic."
+    },
+    {
+      "input": "我头晕发黑还在流血",
+      "expected_protocol_id": "prot_bleeding_control",
+      "reason": "Active bleeding must beat syncope."
+    },
+    {
+      "input": "闭嘴废物我喘不过气",
+      "expected_protocol_id": "prot_airway_dust",
+      "reason": "Airway risk must beat abuse de-escalation."
+    },
+    {
+      "input": "我腿断了又在流血还在晃",
+      "expected_protocol_id": "prot_aftershock_immediate",
+      "reason": "Immediate aftershock risk preempts bleeding and fracture."
+    },
+    {
+      "input": "喂我骨折了",
+      "expected_protocol_id": "prot_injury_fracture",
+      "reason": "Noise/filler words must not steal dangerous inputs."
+    },
+    {
+      "input": "我有哮喘现在呼吸困难",
+      "expected_protocol_id": "prot_asthma_breathing",
+      "reason": "Asthma context should beat generic respiratory distress."
+    },
+    {
+      "input": "胸痛还呼吸困难",
+      "expected_protocol_id": "prot_chest_pain",
+      "reason": "Chest pain should beat generic respiratory distress."
+    },
+    {
+      "input": "烟很大我喘不过气",
+      "expected_protocol_id": "prot_smoke_fire_airway",
+      "reason": "Fire/smoke context should beat generic dust airway guidance."
+    },
+    {
+      "input": "我不想活了但我胸口很痛",
+      "expected_protocol_id": "prot_chest_pain",
+      "reason": "High-risk physiology must beat despair support."
+    },
+    {
+      "input": "电量低但我腿在流血",
+      "expected_protocol_id": "prot_bleeding_control",
+      "reason": "Device degradation must not steal medical emergencies."
+    },
+    {
+      "input": "二次坍塌我好怕",
+      "expected_protocol_id": "prot_secondary_collapse_risk",
+      "reason": "Secondary collapse risk must beat ordinary panic."
+    },
+    {
+      "input": "孩子一直哭闹还呼吸困难",
+      "expected_protocol_id": "prot_respiratory_distress",
+      "reason": "Respiratory distress must beat child crying support."
+    },
+    {
+      "input": "同伴昏迷还在流血",
+      "expected_protocol_id": "prot_bleeding_control",
+      "reason": "Active bleeding must beat companion support protocols."
+    },
+    {
+      "input": "环境太吵听不清但我腿在流血",
+      "expected_protocol_id": "prot_bleeding_control",
+      "reason": "Noise handling must not steal bleeding emergencies."
+    },
+    {
+      "input": "麦克风异常但我胸口痛",
+      "expected_protocol_id": "prot_chest_pain",
+      "reason": "Device errors must not steal chest pain."
+    },
+    {
+      "input": "听到救援声但是又在晃",
+      "expected_protocol_id": "prot_aftershock_immediate",
+      "reason": "Immediate aftershock risk must beat rescue coordination."
+    },
+    {
+      "input": "强震我腿在流血",
+      "expected_protocol_id": "prot_extreme_shake_event",
+      "reason": "Extreme shake event should temporarily preempt bleeding while the shaking is active."
+    },
+    {
+      "input": "按了求救按钮但我胸口痛",
+      "expected_protocol_id": "prot_chest_pain",
+      "reason": "Chest pain must beat panic button support."
+    },
+    {
+      "input": "燃气味又着火",
+      "expected_protocol_id": "prot_smoke_fire_airway",
+      "reason": "Visible fire/smoke response should beat suspected gas leak guidance."
+    },
+    {
+      "input": "孕妇肚子疼还流血",
+      "expected_protocol_id": "prot_bleeding_control",
+      "reason": "Active bleeding must beat pregnancy support protocols."
+    },
+    {
+      "input": "设备温度高但胸口痛",
+      "expected_protocol_id": "prot_chest_pain",
+      "reason": "Device temperature degradation must not steal chest pain."
+    },
+    {
+      "input": "电量马上耗尽但我喘不过气",
+      "expected_protocol_id": "prot_airway_dust",
+      "reason": "Airway distress must beat critical battery mode."
+    }
+  ],
+  "action_rules": {
+    "require_tts_action": true,
+    "require_hardware_hint_for_priority_at_or_above": 75,
+    "hardware_action_types": ["led", "screen", "audio", "vibration"]
+  },
+  "trigger_condition_keys": [
+    "event",
+    "text_contains_any",
+    "tags_any",
+    "tags_all"
+  ]
+}

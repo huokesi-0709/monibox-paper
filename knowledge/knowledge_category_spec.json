@@ -1,0 +1,168 @@
+{
+  "version": "2026-04-stage-3a",
+  "field": {
+    "canonical": "category",
+    "chinese": "知识类别"
+  },
+  "categories": [
+    {
+      "category": "emergency_protocol",
+      "name": "高风险确定性协议",
+      "description": "可直接驱动协议或强确定性动作的高风险知识。",
+      "dimension_map": [
+        "核心生理病理学",
+        "极端环境适应与次生灾害"
+      ],
+      "tag_prefixes": [
+        "prot_"
+      ]
+    },
+    {
+      "category": "medical_risk",
+      "name": "生理风险知识",
+      "description": "出血、骨折、呼吸、脱水、失温等生理风险知识，不做医学诊断。",
+      "dimension_map": [
+        "核心生理病理学"
+      ],
+      "tag_prefixes": [
+        "med_"
+      ]
+    },
+    {
+      "category": "environment_hazard",
+      "name": "环境风险知识",
+      "description": "余震、坍塌、粉尘、黑暗、低温、潮湿、水淹等环境风险。",
+      "dimension_map": [
+        "微环境物理特征",
+        "极端环境适应与次生灾害"
+      ],
+      "tag_prefixes": [
+        "env_",
+        "sec_",
+        "scn_"
+      ]
+    },
+    {
+      "category": "rescue_signal",
+      "name": "求救信号知识",
+      "description": "敲击、呼喊、灯光、哨音、定位、省力求救等知识。",
+      "dimension_map": [
+        "极端环境适应与次生灾害",
+        "微环境物理特征"
+      ],
+      "tag_keywords": [
+        "求救",
+        "信号",
+        "敲击",
+        "哨子",
+        "手电",
+        "定位"
+      ]
+    },
+    {
+      "category": "psychological_support",
+      "name": "心理支持知识",
+      "description": "恐慌、绝望、内疚、麻木、愤怒等灾后心理支持。",
+      "dimension_map": [
+        "动态心理认知状态"
+      ],
+      "tag_prefixes": [
+        "psy_"
+      ]
+    },
+    {
+      "category": "special_population",
+      "name": "特殊人群知识",
+      "description": "儿童、老人、哮喘、糖尿病、心脏病、幽闭恐惧等特殊策略。",
+      "dimension_map": [
+        "特殊群体干预策略"
+      ],
+      "tag_prefixes": [
+        "spc_"
+      ]
+    },
+    {
+      "category": "conversation_control",
+      "name": "对话控制知识",
+      "description": "追问、澄清、拒答、低证据保守输出和语气回拉。",
+      "dimension_map": [
+        "动态心理认知状态"
+      ],
+      "tag_keywords": [
+        "追问",
+        "澄清",
+        "拒答",
+        "低证据",
+        "回拉",
+        "降温"
+      ]
+    },
+    {
+      "category": "tts_expression",
+      "name": "播报表达知识",
+      "description": "短句、停顿、播报风格和预合成语音表达。",
+      "dimension_map": [
+        "动态心理认知状态"
+      ],
+      "tag_prefixes": [
+        "tts_"
+      ]
+    },
+    {
+      "category": "hardware_feedback",
+      "name": "硬件反馈知识",
+      "description": "LED、屏幕、提示音、多通道动作等硬件反馈。",
+      "dimension_map": [
+        "微环境物理特征",
+        "极端环境适应与次生灾害"
+      ],
+      "tag_prefixes": [
+        "hw_"
+      ],
+      "tag_keywords": [
+        "LED",
+        "屏幕",
+        "提示音"
+      ]
+    },
+    {
+      "category": "evaluation_case",
+      "name": "验收评估知识",
+      "description": "测试输入、反例、危险输出黑名单和验收样例。",
+      "dimension_map": [
+        "动态心理认知状态",
+        "核心生理病理学",
+        "微环境物理特征",
+        "极端环境适应与次生灾害",
+        "特殊群体干预策略"
+      ],
+      "tag_prefixes": [
+        "eval_"
+      ]
+    }
+  ],
+  "dimension_category_map": {
+    "核心生理病理学": [
+      "medical_risk",
+      "emergency_protocol"
+    ],
+    "动态心理认知状态": [
+      "psychological_support",
+      "conversation_control",
+      "tts_expression"
+    ],
+    "微环境物理特征": [
+      "environment_hazard",
+      "hardware_feedback"
+    ],
+    "极端环境适应与次生灾害": [
+      "environment_hazard",
+      "rescue_signal",
+      "emergency_protocol"
+    ],
+    "特殊群体干预策略": [
+      "special_population",
+      "medical_risk"
+    ]
+  }
+}

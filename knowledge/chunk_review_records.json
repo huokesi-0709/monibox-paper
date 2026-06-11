@@ -1,0 +1,116 @@
+[
+  {
+    "record_id": "rev_stage2c_0001",
+    "chunk_id": "k_qa_00017_fc8e9b9921_00_bdafbfa0",
+    "source_id": "src_manual_gold_review_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "人工金标审核通过，迁出合成冷启动来源，保留为特殊人群脱水风险兜底短句。"
+  },
+  {
+    "record_id": "rev_stage2c_0002",
+    "chunk_id": "k_qa_00019_e83ba81f42_00_940855a8",
+    "source_id": "src_ready_earthquake_trapped_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "粉尘气道短句绑定地震受困遮口鼻和少喊话策略来源。"
+  },
+  {
+    "record_id": "rev_stage2c_0003",
+    "chunk_id": "k_qa_00022_7832d82c23_00_400fdd9b",
+    "source_id": "src_medlineplus_crush_injury_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "挤压伤高风险短句绑定非合成医学急救来源。"
+  },
+  {
+    "record_id": "rev_stage2c_0004",
+    "chunk_id": "k_qa_00054_c52d3cb306_00_691d613e",
+    "source_id": "src_ready_floods_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "水淹区域求救短句绑定洪水避险和求救信号来源。"
+  },
+  {
+    "record_id": "rev_stage2c_0005",
+    "chunk_id": "k_qa_00160_3761d50c68_00_b8f497cd",
+    "source_id": "src_red_cross_life_threatening_bleeding_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "出血控制短句绑定红十字会外部大出血急救来源并提权启用。"
+  },
+  {
+    "record_id": "rev_stage2c_0006",
+    "chunk_id": "k_qa_00165_b8312ccc10_00_c0b1bd3a",
+    "source_id": "src_red_cross_muscle_bone_joint_injury_v1",
+    "decision": "enable",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "疑似骨折固定短句绑定红十字会骨骼关节伤急救来源并提权启用。"
+  },
+  {
+    "record_id": "rep_stage2c_0001",
+    "chunk_id": "k_qa_00017_fc8e9b9921_00_bdafbfa0",
+    "source_id_before": "src_synth_deepseek_v1",
+    "source_id_after": "src_manual_gold_review_v1",
+    "decision": "replace_source",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "启用态高风险 chunk 不再保留合成来源。"
+  },
+  {
+    "record_id": "rep_stage2c_0002",
+    "chunk_id": "k_qa_00019_e83ba81f42_00_940855a8",
+    "source_id_before": "src_synth_deepseek_v1",
+    "source_id_after": "src_ready_earthquake_trapped_v1",
+    "decision": "replace_source",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "启用态高风险粉尘气道 chunk 迁移到非合成灾害来源。"
+  },
+  {
+    "record_id": "rep_stage2c_0003",
+    "chunk_id": "k_qa_00022_7832d82c23_00_400fdd9b",
+    "source_id_before": "src_synth_deepseek_v1",
+    "source_id_after": "src_medlineplus_crush_injury_v1",
+    "decision": "replace_source",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "启用态致命风险挤压伤 chunk 迁移到非合成医学来源。"
+  },
+  {
+    "record_id": "rep_stage2c_0004",
+    "chunk_id": "k_qa_00054_c52d3cb306_00_691d613e",
+    "source_id_before": "src_synth_deepseek_v1",
+    "source_id_after": "src_ready_floods_v1",
+    "decision": "replace_source",
+    "review_status": "active",
+    "reviewer": "manual_stage_2",
+    "reviewed_at": "2026-04-19",
+    "score_after": 5,
+    "reason": "启用态高风险洪水求救 chunk 迁移到非合成灾害来源。"
+  }
+]

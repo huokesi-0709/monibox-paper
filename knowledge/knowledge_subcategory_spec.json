@@ -1,0 +1,261 @@
+{
+  "version": "2026-04-stage-3b",
+  "field": {
+    "canonical": "sub_category",
+    "chinese": "二级子类"
+  },
+  "subcategories": [
+    {
+      "sub_category": "bleeding",
+      "category": "medical_risk",
+      "name": "出血与止血",
+      "risk": "高",
+      "tag_ids": ["med_medical_bleeding_control"],
+      "trigger_terms": ["流血", "出血", "血止不住", "喷血", "伤口", "冒血"],
+      "protocol_ids": ["prot_bleeding_control"]
+    },
+    {
+      "sub_category": "fracture",
+      "category": "medical_risk",
+      "name": "骨折与固定",
+      "risk": "高",
+      "tag_ids": ["med_medical_fracture_immobilization"],
+      "trigger_terms": ["骨折", "断了", "折了", "变形", "动不了", "剧痛"],
+      "protocol_ids": ["prot_injury_fracture"]
+    },
+    {
+      "sub_category": "head_injury",
+      "category": "medical_risk",
+      "name": "头部外伤",
+      "risk": "高",
+      "tag_ids": ["med_medical_head_injury_risk"],
+      "trigger_terms": ["头撞了", "头破了", "头部受伤", "昏迷", "意识不清"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "chest_pain",
+      "category": "medical_risk",
+      "name": "胸痛胸闷",
+      "risk": "高",
+      "tag_ids": ["med_medical_chest_pain_risk"],
+      "trigger_terms": ["胸痛", "胸口痛", "胸闷", "心口痛", "喘不上气"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "respiratory_distress",
+      "category": "medical_risk",
+      "name": "呼吸困难",
+      "risk": "致命",
+      "tag_ids": ["med_medical_respiratory_distress", "med_medical_airway_obstruction_risk"],
+      "trigger_terms": ["喘不过气", "呼吸困难", "吸不到气", "喘不上来", "胸口发闷"],
+      "protocol_ids": ["prot_airway_dust"]
+    },
+    {
+      "sub_category": "dehydration",
+      "category": "medical_risk",
+      "name": "脱水与节水",
+      "risk": "高",
+      "tag_ids": ["med_medical_dehydration_risk"],
+      "trigger_terms": ["口渴", "脱水", "没水", "缺水", "嘴里发干"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "hypothermia",
+      "category": "medical_risk",
+      "name": "失温与保暖",
+      "risk": "高",
+      "tag_ids": ["med_medical_hypothermia_risk"],
+      "trigger_terms": ["失温", "好冷", "发抖", "冻得不行", "手脚冰凉"],
+      "protocol_ids": ["prot_hypothermia"]
+    },
+    {
+      "sub_category": "crush_syndrome",
+      "category": "medical_risk",
+      "name": "挤压伤风险",
+      "risk": "致命",
+      "tag_ids": ["med_medical_crush_syndrome_risk"],
+      "trigger_terms": ["挤压伤", "被压", "压住了", "肢体麻木", "压了很久"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "syncope",
+      "category": "medical_risk",
+      "name": "头晕晕厥",
+      "risk": "高",
+      "tag_ids": ["med_medical_syncope_risk"],
+      "trigger_terms": ["头晕", "眼前发黑", "要晕", "站不稳", "眼前一黑"],
+      "protocol_ids": ["prot_syncope_blackout"]
+    },
+    {
+      "sub_category": "aftershock",
+      "category": "environment_hazard",
+      "name": "余震避险",
+      "risk": "高",
+      "tag_ids": ["scn_scene_aftershock_zone", "sec_secondary_hazard_aftershock"],
+      "trigger_terms": ["余震", "又在晃", "又震了", "地在动", "还在晃"],
+      "protocol_ids": ["prot_aftershock_immediate"]
+    },
+    {
+      "sub_category": "collapse_risk",
+      "category": "environment_hazard",
+      "name": "坍塌风险",
+      "risk": "致命",
+      "tag_ids": ["env_structural_instability", "scn_scene_collapsed_building", "scn_scene_partial_collapse"],
+      "trigger_terms": ["坍塌", "塌了", "裂了", "掉东西", "结构不稳"],
+      "protocol_ids": ["prot_aftershock_immediate"]
+    },
+    {
+      "sub_category": "dust_airway",
+      "category": "environment_hazard",
+      "name": "粉尘气道",
+      "risk": "高",
+      "tag_ids": ["env_dust_concentration", "env_dust_concentration_high"],
+      "trigger_terms": ["粉尘", "灰很大", "灰太大", "灰尘", "咳嗽", "呛"],
+      "protocol_ids": ["prot_airway_dust"]
+    },
+    {
+      "sub_category": "smoke_airway",
+      "category": "environment_hazard",
+      "name": "烟雾气道",
+      "risk": "高",
+      "tag_ids": ["env_smoke_concentration", "med_medical_respiratory_distress"],
+      "trigger_terms": ["烟", "烟雾", "刺鼻", "呛烟", "浓烟"],
+      "protocol_ids": ["prot_airway_dust"]
+    },
+    {
+      "sub_category": "darkness",
+      "category": "environment_hazard",
+      "name": "黑暗受困",
+      "risk": "中",
+      "tag_ids": ["env_darkness"],
+      "trigger_terms": ["看不见", "太黑", "黑暗", "没光", "灯灭了"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "cold_wet",
+      "category": "environment_hazard",
+      "name": "寒冷潮湿",
+      "risk": "高",
+      "tag_ids": ["env_temperature_extreme", "env_humidity_extreme"],
+      "trigger_terms": ["冷湿", "潮湿", "湿衣服", "又冷又湿", "低温"],
+      "protocol_ids": ["prot_hypothermia"]
+    },
+    {
+      "sub_category": "flooded_area",
+      "category": "environment_hazard",
+      "name": "水淹区域",
+      "risk": "高",
+      "tag_ids": ["scn_scene_flooded_area"],
+      "trigger_terms": ["洪水", "水淹", "被水困住", "泡在水里", "积水"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "panic",
+      "category": "psychological_support",
+      "name": "恐慌",
+      "risk": "中",
+      "tag_ids": ["psy_psychological_panic_attack"],
+      "trigger_terms": ["我好怕", "恐慌", "心跳好快", "要崩了", "受不了"],
+      "protocol_ids": ["prot_panic_breathing"]
+    },
+    {
+      "sub_category": "despair",
+      "category": "psychological_support",
+      "name": "绝望",
+      "risk": "高",
+      "tag_ids": ["psy_psychological_hopelessness"],
+      "trigger_terms": ["没希望", "活不下去", "绝望", "撑不住", "不想活"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "anger",
+      "category": "psychological_support",
+      "name": "愤怒",
+      "risk": "中",
+      "tag_ids": ["psy_psychological_anger"],
+      "trigger_terms": ["烦死了", "滚", "闭嘴", "废物", "你有病"],
+      "protocol_ids": ["prot_abuse_deescalate"]
+    },
+    {
+      "sub_category": "numbness_emotion",
+      "category": "psychological_support",
+      "name": "情绪麻木",
+      "risk": "中",
+      "tag_ids": ["psy_psychological_emotional_numbness"],
+      "trigger_terms": ["没感觉", "麻木", "脑子空", "反应不过来"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "confusion",
+      "category": "psychological_support",
+      "name": "混乱",
+      "risk": "高",
+      "tag_ids": ["psy_psychological_confusion"],
+      "trigger_terms": ["不知道在哪", "想不起来", "混乱", "意识乱", "说不清"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "fatigue",
+      "category": "psychological_support",
+      "name": "疲劳虚弱",
+      "risk": "中",
+      "tag_ids": ["psy_psychological_fatigue"],
+      "trigger_terms": ["没力气", "太累", "虚弱", "撑不住", "困得不行"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "child",
+      "category": "special_population",
+      "name": "儿童",
+      "risk": "高",
+      "tag_ids": ["spc_special_group_child"],
+      "trigger_terms": ["孩子", "小孩", "儿童", "宝宝", "幼儿"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "elderly",
+      "category": "special_population",
+      "name": "老人",
+      "risk": "高",
+      "tag_ids": ["spc_special_group_elderly"],
+      "trigger_terms": ["老人", "老年", "奶奶", "爷爷", "行动慢"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "asthma",
+      "category": "special_population",
+      "name": "哮喘",
+      "risk": "高",
+      "tag_ids": ["spc_special_group_asthma_patient"],
+      "trigger_terms": ["哮喘", "吸入器", "喘鸣", "老毛病喘"],
+      "protocol_ids": ["prot_airway_dust"]
+    },
+    {
+      "sub_category": "diabetes",
+      "category": "special_population",
+      "name": "糖尿病",
+      "risk": "高",
+      "tag_ids": ["spc_special_group_diabetic"],
+      "trigger_terms": ["糖尿病", "低血糖", "胰岛素", "血糖", "没药"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "heart_disease",
+      "category": "special_population",
+      "name": "心脏病",
+      "risk": "高",
+      "tag_ids": ["spc_special_group_cardiac_patient"],
+      "trigger_terms": ["心脏病", "心口痛", "心慌", "胸痛", "冠心病"],
+      "fallback_policy": "low_evidence_conservative"
+    },
+    {
+      "sub_category": "claustrophobia",
+      "category": "special_population",
+      "name": "幽闭恐惧",
+      "risk": "中",
+      "tag_ids": ["psy_psychological_claustrophobia_anxiety"],
+      "trigger_terms": ["幽闭恐惧", "密闭", "出不去", "喘不过来", "害怕空间小"],
+      "protocol_ids": ["prot_panic_breathing"]
+    }
+  ]
+}

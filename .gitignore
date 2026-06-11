@@ -1,0 +1,29 @@
+# 环境
+.env
+.venv/
+.python-version
+
+# 构建产物
+build/
+dist/
+*.egg-info/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 测试与覆盖
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 类型检查与格式化
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.DS_Store
+.idea/
+.vscode/

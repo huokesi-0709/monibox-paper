@@ -1,0 +1,21 @@
+# Radxa full mode: ASR + protocol + RAG + local rewrite + TTS.
+tts_backend: sherpa
+tts_model_dir: models/tts/sherpa/vits-icefall-zh-aishell3
+tts_model_type: melo
+tts_threads: 2
+tts_sherpa_sid: 173
+tts_sherpa_speed: 0.92
+tts_sherpa_noise_scale: 0.72
+tts_sherpa_noise_scale_w: 0.85
+tts_max_chars: 76
+llm_ctx: 1536
+llm_threads: 4
+llm_temperature: 0.25
+rag_max_distance: 0.42
+low_evidence_mode: true
+cache_size: 80
+enable_llm_rewrite: true
+enable_led: true
+enable_screen: true
+enable_precomputed_audio: true
+perf_warning_mb: 900

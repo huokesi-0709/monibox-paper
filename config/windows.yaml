@@ -1,0 +1,22 @@
+# Windows development baseline. Environment variables in .env override these.
+tts_backend: sherpa
+tts_model_dir: models/tts/sherpa/vits-icefall-zh-aishell3
+tts_model_type: melo
+tts_threads: 4
+tts_sherpa_sid: 173
+tts_sherpa_speed: 0.92
+tts_sherpa_noise_scale: 0.72
+tts_sherpa_noise_scale_w: 0.85
+tts_max_chars: 90
+llm_ctx: 2048
+llm_threads: 6
+llm_gpu_layers: 0
+llm_temperature: 0.3
+rag_max_distance: 0.42
+low_evidence_mode: true
+cache_size: 100
+enable_llm_rewrite: true
+enable_led: true
+enable_screen: true
+enable_precomputed_audio: false
+perf_warning_mb: 600

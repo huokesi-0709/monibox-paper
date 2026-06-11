@@ -1,0 +1,149 @@
+{
+  "schema_version": "stage_3c_v1",
+  "description": "Stage 3-C chunk field contract. Chinese legacy fields remain supported; canonical fields are normalized during build.",
+  "fields": [
+    {
+      "name": "chunk_id",
+      "legacy_names": ["片段ID"],
+      "type": "string",
+      "required": true,
+      "description": "Stable machine id for one chunk."
+    },
+    {
+      "name": "display_id",
+      "legacy_names": ["显示ID"],
+      "type": "string|null",
+      "required": false,
+      "default": null
+    },
+    {
+      "name": "group_id",
+      "legacy_names": ["片段组ID"],
+      "type": "string|null",
+      "required": false,
+      "default": null
+    },
+    {
+      "name": "text",
+      "legacy_names": ["文本"],
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "dimension",
+      "legacy_names": ["维度"],
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "category",
+      "legacy_names": ["知识类别"],
+      "type": "string",
+      "required": false,
+      "default": "evaluation_case"
+    },
+    {
+      "name": "sub_category",
+      "legacy_names": ["二级子类"],
+      "type": "string",
+      "required": false,
+      "default": "unclassified"
+    },
+    {
+      "name": "risk",
+      "legacy_names": ["风险等级"],
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "scene",
+      "legacy_names": ["场景"],
+      "type": "string",
+      "required": false,
+      "default": "general"
+    },
+    {
+      "name": "emotion_fit",
+      "legacy_names": ["情绪适配"],
+      "type": "string[]",
+      "required": false,
+      "default": []
+    },
+    {
+      "name": "population",
+      "legacy_names": ["适用人群"],
+      "type": "string[]",
+      "required": false,
+      "default": []
+    },
+    {
+      "name": "tags",
+      "legacy_names": ["标签"],
+      "type": "string[]",
+      "required": false,
+      "default": []
+    },
+    {
+      "name": "source_id",
+      "legacy_names": ["来源ID"],
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "review_status",
+      "legacy_names": ["状态"],
+      "type": "string",
+      "required": false,
+      "default": "候选"
+    },
+    {
+      "name": "quality_score",
+      "legacy_names": ["人工评分"],
+      "type": "number",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "priority",
+      "legacy_names": ["优先级"],
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    {
+      "name": "tts_ok",
+      "legacy_names": ["可直接播报"],
+      "type": "boolean",
+      "required": false,
+      "default": true
+    },
+    {
+      "name": "tts_style",
+      "legacy_names": ["播报风格"],
+      "type": "string|null",
+      "required": false,
+      "default": null
+    },
+    {
+      "name": "hardware_action_hint",
+      "legacy_names": ["硬件动作提示"],
+      "type": "string|null",
+      "required": false,
+      "default": null
+    },
+    {
+      "name": "contraindications",
+      "legacy_names": ["禁忌"],
+      "type": "string[]",
+      "required": false,
+      "default": []
+    },
+    {
+      "name": "eval_cases",
+      "legacy_names": ["评测用例"],
+      "type": "object[]",
+      "required": false,
+      "default": []
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "db": "D:\\代码项目\\MoniBox-KB\\build\\rag.db",
+  "scanned": 334,
+  "allow": 332,
+  "rewrite": 2,
+  "block": 0,
+  "rewrite_action": "penalize",
+  "rewrite_penalty": -1.0,
+  "items": {
+    "block": [],
+    "rewrite": [
+      {
+        "id": 52,
+        "chunk_id": "k_qa_00036_2beb0f7339_00_3b0fddb0",
+        "display_id": "k_synth_med_distress_3b0fddb0_00",
+        "group_id": "qa_00036_2beb0f7339",
+        "dimension": "核心生理病理学",
+        "risk": "高",
+        "source_id": "src_synth_deepseek_v1",
+        "status_before": "候选",
+        "quality_score_before": -1.0,
+        "reasons": [
+          "medication_dosage_hint",
+          "medication_dosage_hint"
+        ],
+        "text": "请保持冷静，尽量缓慢深呼吸。如果身边有药物，请按常规剂量使用。节省体力，不要大声呼喊，尝试通过敲击发出求救信号。"
+      },
+      {
+        "id": 266,
+        "chunk_id": "k_qa_00154_7f2838eed0_00_30041e9c",
+        "display_id": "k_synth_med_obstruction_30041e9c_00",
+        "group_id": "qa_00154_7f2838eed0",
+        "dimension": "核心生理病理学",
+        "risk": "致命",
+        "source_id": "src_synth_deepseek_v1",
+        "status_before": "候选",
+        "quality_score_before": -1.0,
+        "reasons": [
+          "airway_foreign_body_check"
+        ],
+        "text": "情况危急。请立即检查其口鼻是否有明显异物，并小心将其头部偏向一侧，保持气道尽可能通畅。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "version": "2026-04-stage-2c",
+  "workflow": [
+    "候选",
+    "人工审核",
+    "启用",
+    "评分提权",
+    "停用/替换"
+  ],
+  "status_rules": {
+    "synthetic_bootstrap_default_status": "候选",
+    "enabled_min_quality_score": 5,
+    "high_risk_enabled_requires_review_record": true,
+    "test_fixture_enabled_allowed": false
+  },
+  "cleanup_rules": {
+    "low_score_threshold": 1,
+    "plastic_phrases": [
+      "保持冷静",
+      "尽量",
+      "如果可能",
+      "情况危急",
+      "请立即尝试",
+      "不要大声呼喊",
+      "等待专业医疗救助"
+    ],
+    "vague_phrases": [
+      "注意安全",
+      "及时求助",
+      "采取措施",
+      "根据情况",
+      "适当处理",
+      "进行处理"
+    ]
+  },
+  "report_outputs": {
+    "directory": "build/stage_2_review",
+    "candidate_review_list": "candidate_review_list.json",
+    "enabled_knowledge_list": "enabled_knowledge_list.json",
+    "disabled_or_replacement_records": "disabled_or_replacement_records.json",
+    "cleanup_report": "cleanup_report.json",
+    "summary_markdown": "SUMMARY.md"
+  }
+}

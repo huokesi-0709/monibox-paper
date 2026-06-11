@@ -1,0 +1,21 @@
+# Radxa extreme mode: protocol-first output with precomputed audio/screen/LED fallback.
+tts_backend: sherpa
+tts_model_dir: models/tts/sherpa/vits-icefall-zh-aishell3
+tts_model_type: melo
+tts_threads: 1
+tts_sherpa_sid: 173
+tts_sherpa_speed: 0.95
+tts_sherpa_noise_scale: 0.72
+tts_sherpa_noise_scale_w: 0.85
+tts_max_chars: 48
+llm_ctx: 768
+llm_threads: 2
+llm_temperature: 0.2
+rag_max_distance: 0.38
+low_evidence_mode: true
+cache_size: 40
+enable_llm_rewrite: false
+enable_led: true
+enable_screen: true
+enable_precomputed_audio: true
+perf_warning_mb: 700

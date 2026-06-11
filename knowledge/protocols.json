@@ -1,0 +1,4096 @@
+{
+  "version": "1.2",
+  "protocols": [
+    {
+      "protocol_id": "prot_aftershock_immediate",
+      "name": "余震-立即避险提示",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 100,
+      "qa_followups": {
+        "yesno_true": "能动也先护住头和脖子，贴着稳的地方慢慢挪。等晃停了再继续。周围还有东西在掉吗？",
+        "yesno_false": "不能动就先护住头和脖子，贴地别硬撑。等晃停了再说。你身边还有掉落声吗？",
+        "yesno": "先护住头和脖子，等晃停了再动。你身边还有掉落声吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续护住头和脖子，别急着乱动。等晃停了再挪。周围还有东西在掉吗？"
+        },
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "贴着稳的地方先别动，少说话省力。晃动是不是小一点了？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "imu_strong_shake"
+          },
+          {
+            "text_contains_any": [
+              "余震",
+              "又在晃",
+              "又震了",
+              "又摇",
+              "晃得厉害",
+              "塌了",
+              "裂了",
+              "又响了",
+              "掉东西",
+              "在摇",
+              "地在动",
+              "一直在晃",
+              "地又开始摇了",
+              "还在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先别动，双手抱头护住脖子。等晃停了再动。你现在能移动吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              80,
+              0
+            ],
+            "hz": 1.2,
+            "ms": 3500
+          }
+        },
+        {
+          "type": "screen",
+          "text": "护头  慢呼吸",
+          "ms": 3500
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_secondary_collapse_risk",
+      "name": "二次坍塌风险-立即稳定与护头",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 97,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "继续护住头颈，贴着稳的地方。别钻进更窄的缝。声音是不是还在变大？",
+        "yesno_false": "好，先贴着稳的承重物旁边，别乱跑。声音是不是还在变大？",
+        "yesno": "继续护住头颈，贴着稳的地方。声音是不是还在变大？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续护住头颈，贴着稳的地方。别钻进更窄的缝。声音是不是还在变大？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "二次坍塌",
+              "二次塌",
+              "墙体松动",
+              "天花板裂开",
+              "楼板裂开",
+              "又要塌",
+              "石块在掉",
+              "墙在裂"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先护住头和脖子，贴着稳的地方别乱跑。别钻进更窄的缝。还有掉落声吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              80,
+              0
+            ],
+            "hz": 1.5,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "墙在裂感觉二次坍塌",
+          "expected_protocol_id": "prot_secondary_collapse_risk"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_bleeding_control",
+      "name": "出血/流血-直接压迫止血",
+      "source_refs": [
+        "src_red_cross_life_threatening_bleeding_v1"
+      ],
+      "priority": 95,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "location": "好，{location}在流血。继续压住别松手。布湿了就再加一层。血是不是少了？",
+        "yesno_true": "好，血在减少。继续压着别松。你现在头晕不晕？",
+        "yesno_false": "继续压紧别松手，伤处尽量抬高。你现在头晕不晕？",
+        "yesno": "继续压着别松手。你现在头晕不晕？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续压住别松手。布湿了就再加一层，别掀开。血是不是少了？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续压着别松。少说话省点力。你头晕不晕？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "血止不住",
+              "一直流血",
+              "喷血",
+              "很多血",
+              "血一直冒",
+              "伤口",
+              "割到",
+              "划伤",
+              "血不停",
+              "血止不住了",
+              "一直冒血",
+              "冒血"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "鼻血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先用布压住伤口别松手。能抬高就抬高，别乱动。你哪里在流血？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "solid",
+            "rgb": [
+              255,
+              80,
+              80
+            ],
+            "ms": 2500
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_asthma_breathing",
+      "name": "哮喘人群-呼吸困难保守提示",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 94,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，先保持半坐或前倾，少说话，按你自己的随身药说明使用。胸口有没有松一点？",
+        "yesno_false": "先保持半坐或前倾，少说话。把口鼻捂好，等救援时优先说明你有哮喘。你随身药在身边吗？",
+        "yesno": "先保持半坐或前倾，少说话省力。你随身药在身边吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续半坐或前倾，别平躺。少说话，小口慢呼吸。胸口有没有松一点？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "哮喘",
+              "哮喘犯了",
+              "有哮喘",
+              "哮喘喘不上",
+              "哮喘呼吸困难",
+              "气雾剂",
+              "吸入器"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先别平躺，保持半坐或身体前倾。少说话，小口慢呼吸。你的随身药在身边吗？"
+        },
+        {
+          "type": "screen",
+          "text": "半坐  少说话",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我有哮喘现在呼吸困难",
+          "expected_protocol_id": "prot_asthma_breathing"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_respiratory_distress",
+      "name": "呼吸困难/疑似缺氧-省氧与体位",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 94,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果胸口也痛，要把胸痛优先告诉救援。现在先半坐，少说话。嘴唇还发紫吗？",
+        "yesno_false": "好，继续半坐或侧卧，少说话，小口慢呼吸。嘴唇有没有发紫？",
+        "yesno": "继续半坐或侧卧，少说话，小口慢呼吸。嘴唇有没有发紫？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先保持半坐或侧卧，少说话省氧。别大口急喘。嘴唇有没有发紫？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "呼吸困难",
+              "缺氧",
+              "嘴唇发紫",
+              "快窒息",
+              "喘得厉害",
+              "呼吸很费劲",
+              "气不够用"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "哮喘",
+              "胸痛",
+              "胸口痛",
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先保持半坐或侧卧，别平躺。少说话，小口慢呼吸。嘴唇有没有发紫？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              80,
+              180,
+              255
+            ],
+            "hz": 1.2,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我呼吸困难嘴唇发紫",
+          "expected_protocol_id": "prot_respiratory_distress"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_chest_pain",
+      "name": "胸痛/胸闷高风险-减少活动",
+      "source_refs": [
+        "src_red_cross_fainting_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 93,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "先停止活动，半坐或侧卧，少说话。胸痛还在加重吗？",
+        "yesno_false": "好，继续保持安静别乱动。胸口现在是闷还是痛？",
+        "yesno": "先停止活动，半坐或侧卧，少说话。胸痛还在加重吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续别乱动，半坐或侧卧。少说话省力。胸痛还在加重吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "胸口疼",
+              "心口痛",
+              "胸闷得厉害",
+              "胸口压着",
+              "胸口压榨",
+              "左胸痛",
+              "胸口很痛"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "余震",
+              "又在晃",
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先停止活动，半坐或侧卧，别硬撑。少说话省力。胸痛有没有放到左臂或背部？"
+        },
+        {
+          "type": "screen",
+          "text": "停止活动  半坐",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我胸口很痛还发闷",
+          "expected_protocol_id": "prot_chest_pain"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_smoke_fire_airway",
+      "name": "火灾烟雾/刺激气味-低姿态护气道",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 92,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有刺鼻气味就继续捂紧口鼻，尽量低一点。别大口喘。烟是不是更浓了？",
+        "yesno_false": "好，继续捂住口鼻，尽量低一点，少说话。烟是不是更浓了？",
+        "yesno": "继续捂住口鼻，尽量低一点，少说话。烟是不是更浓了？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续低一点，用衣物捂住口鼻。少说话省氧。烟是不是更浓了？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "着火",
+              "起火",
+              "浓烟",
+              "烟很大",
+              "烟雾",
+              "刺鼻气味",
+              "刺激性气味",
+              "烧焦味",
+              "煤气味",
+              "闻到烟味"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先用衣物捂住口鼻，身体尽量低一点。少说话，小口慢呼吸。有没有刺鼻气味？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              120,
+              40
+            ],
+            "hz": 1.4,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "这里烟很大还有刺鼻气味",
+          "expected_protocol_id": "prot_smoke_fire_airway"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_airway_dust",
+      "name": "粉尘/气道风险-优先保护气道",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 90,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有刺激气味说明空气不好。把口鼻捂紧，呼吸放慢放浅。你胸口憋不憋？",
+        "yesno_false": "好，继续捂着口鼻，小口慢呼吸。你胸口憋不憋？",
+        "yesno": "继续捂着口鼻，小口慢呼吸。你胸口憋不憋？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续捂着口鼻。少说话，省一点氧气。你胸口憋不憋？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续小口慢呼吸。别大口喘气。你胸口憋不憋？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "tags_any": [
+              "env_dust_concentration",
+              "med_medical_airway_obstruction",
+              "med_medical_respiratory_distress"
+            ]
+          },
+          {
+            "text_contains_any": [
+              "粉尘",
+              "灰",
+              "呛",
+              "咳",
+              "咳嗽",
+              "嗓子痛",
+              "吸不到气",
+              "喘不过来",
+              "喘不过气",
+              "鼻子堵",
+              "喉咙痛",
+              "喘不上来",
+              "胸口发闷"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先用衣物捂住口鼻。小口慢呼吸，少说话。你能闻到刺鼻气味吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              120,
+              200,
+              255
+            ],
+            "hz": 1.0,
+            "ms": 3500
+          }
+        },
+        {
+          "type": "screen",
+          "text": "捂口鼻  小口慢呼吸",
+          "ms": 3500
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_crush_pressure_long",
+      "name": "长时间受压/挤压伤-减少移动",
+      "source_refs": [
+        "src_medlineplus_crush_injury_v1"
+      ],
+      "priority": 89,
+      "cooldown_sec": 30,
+      "qa_followups": {
+        "yesno_true": "好，别硬拽出来。保持能呼吸的姿势，少说话。被压的地方有没有发麻发冷？",
+        "yesno_false": "不能动就先别硬挣。保持呼吸，少说话。被压的地方有没有发麻发冷？",
+        "yesno": "先别硬拽，保持呼吸，少说话。被压的地方有没有发麻发冷？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "不要突然用力挣脱。先保持呼吸，少说话。被压的地方有没有发麻发冷？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "压了很久",
+              "被压很久",
+              "腿被压住",
+              "胸口被压",
+              "压着动不了",
+              "挤压伤",
+              "被石头压住",
+              "被水泥压住",
+              "身体被压住"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先别硬拽被压住的地方。保持能呼吸的姿势，少说话省力。你还能正常呼吸吗？"
+        },
+        {
+          "type": "screen",
+          "text": "别硬拽  省力",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我的腿被压住很久了",
+          "expected_protocol_id": "prot_crush_pressure_long"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_head_injury_confusion",
+      "name": "头部受伤/意识模糊-稳定体位",
+      "source_refs": [
+        "src_red_cross_fainting_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 88,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "想睡也先别强撑站起来。保持侧躺，少动头颈。有没有恶心想吐？",
+        "yesno_false": "好，继续别乱动头颈。保持清醒，慢慢呼气。有没有恶心想吐？",
+        "yesno": "保持侧躺，别乱动头颈。有没有恶心想吐？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续别乱动头颈，保持侧躺。少说话。有没有恶心想吐？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "头撞了",
+              "撞到头",
+              "头部受伤",
+              "意识模糊",
+              "说不清",
+              "犯迷糊",
+              "脑袋撞了",
+              "一直想睡",
+              "头破了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先别乱动头和脖子。能侧躺就侧躺，保持清醒。你有没有想睡或说不清话？"
+        },
+        {
+          "type": "screen",
+          "text": "别动头颈",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我撞到头了现在意识模糊",
+          "expected_protocol_id": "prot_head_injury_confusion"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_injury_fracture",
+      "name": "疑似骨折/断了-固定与减少移动",
+      "source_refs": [
+        "src_red_cross_muscle_bone_joint_injury_v1"
+      ],
+      "priority": 90,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能动就好。继续固定别挪，少用力。疼痛有没有加重？",
+        "yesno_false": "先别硬动。保持现在的姿势，再垫东西固定。你感觉麻不麻？",
+        "yesno": "保持固定别扭动，少用力。疼痛有没有加重？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "保持固定别扭动。先少用力。你能动动手指脚趾吗？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "保持别动，少说话省力。疼痛有没有加重？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "脚断",
+              "脚断了",
+              "脚断呢",
+              "手断",
+              "手断了",
+              "腿断",
+              "断了",
+              "骨折",
+              "折了",
+              "扭伤",
+              "变形",
+              "动不了",
+              "很痛",
+              "剧痛",
+              "摔了",
+              "掰不动",
+              "弯不了",
+              "肿了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别动受伤的地方。找东西垫着固定住。你能动动手指脚趾吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "solid",
+            "rgb": [
+              255,
+              180,
+              80
+            ],
+            "ms": 2500
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_companion_unconscious",
+      "name": "同伴失去意识-呼吸观察与侧卧",
+      "source_refs": [
+        "src_red_cross_fainting_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 87,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能呼吸就先保持侧卧，别喂水喂食。观察胸口起伏。呼吸是不是越来越弱？",
+        "yesno_false": "如果不呼吸，要立刻向外求救并说明无呼吸。你能听到救援人员吗？",
+        "yesno": "先看胸口有没有起伏，保持侧卧，别喂水喂食。还有呼吸吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续看胸口起伏，能呼吸就侧卧，别喂水喂食。呼吸是不是越来越弱？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "同伴没意识",
+              "同伴昏迷",
+              "朋友昏迷",
+              "他昏过去",
+              "她昏过去",
+              "旁边的人没反应",
+              "队友没反应",
+              "同伴叫不醒"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先看他胸口有没有起伏。能呼吸就侧卧，别喂水喂食。他还有呼吸吗？"
+        },
+        {
+          "type": "screen",
+          "text": "看呼吸  别喂水",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "旁边的人没反应叫不醒",
+          "expected_protocol_id": "prot_companion_unconscious"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_hypoglycemia_suspected",
+      "name": "糖尿病/低血糖疑似-减少消耗",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 86,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果你清醒能吞咽，可以少量慢慢补一点含糖食物。别一次吃太多。手抖有没有缓一点？",
+        "yesno_false": "没有也先减少动作，坐下或侧躺，少说话省力。你还能清楚说话吗？",
+        "yesno": "先坐下或侧躺，少说话省力。你身边有没有糖或甜饮料？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续坐下或侧躺，少说话省力。你还能清楚说话吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "低血糖",
+              "糖尿病",
+              "冒冷汗",
+              "心慌手抖",
+              "很饿发抖",
+              "没吃饭发晕",
+              "血糖低"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先坐下或侧躺，少动少说话。保持清醒。你身边有没有糖或甜饮料？"
+        },
+        {
+          "type": "screen",
+          "text": "坐下  省力",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我是糖尿病现在冒冷汗手抖",
+          "expected_protocol_id": "prot_hypoglycemia_suspected"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_child_trapped",
+      "name": "儿童受困-安抚与保暖",
+      "source_refs": [
+        "src_cdc_hypothermia_winter_v1",
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 86,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，先让孩子少哭少喊，贴近大人保暖。孩子有没有出血或喘不过气？",
+        "yesno_false": "先用很短的话安抚孩子，让他少哭少喊，贴近保暖。孩子有没有出血或喘不过气？",
+        "yesno": "先让孩子少哭少喊，贴近保暖。孩子有没有出血或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "继续用短句安抚孩子，别让他一直哭喊。注意保暖。孩子有没有出血或喘不过气？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "孩子被困",
+              "小孩被困",
+              "孩子在哭",
+              "宝宝被困",
+              "我孩子",
+              "小朋友受困",
+              "儿童被困"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "胸痛",
+              "呼吸困难",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "先用短句安抚孩子，让他少哭少喊。贴近保暖，别乱动。孩子能回应你吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              80,
+              160,
+              255
+            ],
+            "inhale_ms": 2500,
+            "exhale_ms": 3000,
+            "cycles": 3
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我的孩子被困了一直在哭",
+          "expected_protocol_id": "prot_child_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_syncope_blackout",
+      "name": "眼前发黑/头晕-先坐下与慢呼气",
+      "source_refs": [
+        "src_red_cross_fainting_v1"
+      ],
+      "priority": 85,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有胸闷或出血要注意。先侧躺别动，慢慢呼气。你胸口是闷还是痛？",
+        "yesno_false": "好，先躺着别起来，慢慢呼气。你多久没喝水了？",
+        "yesno": "先躺着别起来，慢慢呼气。你眼前还发黑吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续躺着别起来。慢慢呼气，别着急。眼前还发黑吗？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "保持侧躺，少说话。别急着起身。你有没有恶心想吐？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "眼前发黑",
+              "眼前一黑",
+              "看不清",
+              "头晕",
+              "要晕",
+              "站不稳",
+              "发软",
+              "眼冒金星",
+              "天旋地转",
+              "快要晕倒",
+              "眼前发黑要倒了",
+              "站着就发黑"
+            ]
+          }
+        ],
+        "none_of": []
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先坐下或侧躺。慢慢呼气，别急着起身。你胸口闷不闷？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              160,
+              180,
+              255
+            ],
+            "inhale_ms": 2500,
+            "exhale_ms": 3500,
+            "cycles": 3
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_elderly_confusion",
+      "name": "老人意识混乱-短句稳定与观察",
+      "source_refs": [
+        "src_cdc_hypothermia_winter_v1",
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 84,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，用短句重复一个动作，别催他。让他坐下或侧躺。能清楚说名字吗？",
+        "yesno_false": "先别让他走动，用短句安抚，保持坐下或侧躺。能清楚说名字吗？",
+        "yesno": "先别让老人走动，用短句安抚。能清楚说名字吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续用短句安抚，别催他走动。让他坐下或侧躺。能清楚说名字吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "老人意识混乱",
+              "老人糊涂",
+              "老人说胡话",
+              "老人认不出人",
+              "老人反应很慢",
+              "老人叫不清楚"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "流血",
+              "出血",
+              "呼吸困难",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别让老人走动，用短句安抚。让他坐下或侧躺。能清楚回应你吗？"
+        },
+        {
+          "type": "screen",
+          "text": "短句  别走动",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "老人意识混乱一直说胡话",
+          "expected_protocol_id": "prot_elderly_confusion"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_wet_cold_flood",
+      "name": "水困/潮湿失温-离水保暖",
+      "source_refs": [
+        "src_ready_floods_v1",
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 84,
+      "cooldown_sec": 30,
+      "qa_followups": {
+        "yesno_true": "能离开水就慢慢到更高更稳的地方，别涉急水。身上还能裹衣物吗？",
+        "yesno_false": "不能离水就先减少接触，尽量垫高身体，抱紧胸腹保暖。身上还能裹衣物吗？",
+        "yesno": "尽量离开水和冷地，抱紧胸腹保暖。身上还能裹衣物吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续离开水和冷地，抱紧胸腹保暖。别涉急水。身上还能裹衣物吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "水涨上来",
+              "水困住",
+              "被水困",
+              "身上湿透",
+              "又湿又冷",
+              "泡在水里",
+              "潮湿好冷",
+              "洪水困住"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先尽量离开水和冷地，抱紧胸口和肚子保暖。不要涉急水。你能到更高处吗？"
+        },
+        {
+          "type": "screen",
+          "text": "离水  保暖",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我被水困住了身上又湿又冷",
+          "expected_protocol_id": "prot_wet_cold_flood"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_elderly_chronic_trapped",
+      "name": "老人/慢病受困-优先稳定与少动",
+      "source_refs": [
+        "src_cdc_hypothermia_winter_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 83,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果有随身药，先放在手边，按本人平时医嘱使用。现在能清楚说话吗？",
+        "yesno_false": "没有也先少动少说话，保持坐下或侧躺。现在能清楚说话吗？",
+        "yesno": "先少动少说话，保持坐下或侧躺。随身药在身边吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续让老人少动少说话，保持保暖。现在能清楚回应吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "老人被困",
+              "老人喘",
+              "老人头晕",
+              "心脏病",
+              "高血压",
+              "慢病",
+              "我爸被困",
+              "我妈被困",
+              "老人动不了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "流血",
+              "出血",
+              "呼吸困难",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先让老人少动少说话，坐下或侧躺，注意保暖。随身药在身边吗？"
+        },
+        {
+          "type": "screen",
+          "text": "少动  保暖",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "老人被困了还有高血压",
+          "expected_protocol_id": "prot_elderly_chronic_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_panic_breathing",
+      "name": "恐慌/过度换气-呼吸节奏引导",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 80,
+      "cooldown_sec": 25,
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续按节奏呼吸。吸3拍，呼6拍。你做到第几轮了？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "放松肩膀，慢慢呼气。别越喘越快。胸口有没有松一点？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "tags_any": [
+              "psy_psychological_panic_attack",
+              "med_medical_hyperventilation"
+            ]
+          },
+          {
+            "text_contains_any": [
+              "我好怕",
+              "我很害怕",
+              "要失控",
+              "心跳好快",
+              "恐慌",
+              "发抖",
+              "手抖",
+              "不行了",
+              "受不了",
+              "快崩溃",
+              "心慌得不行",
+              "慌得不行",
+              "要崩了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "tags_any": [
+              "env_dust_concentration",
+              "med_medical_airway_obstruction",
+              "med_medical_respiratory_distress",
+              "env_temperature_extreme",
+              "med_medical_hypothermia_risk"
+            ]
+          },
+          {
+            "text_contains_any": [
+              "粉尘",
+              "灰",
+              "呛",
+              "咳",
+              "咳嗽",
+              "喘不过来",
+              "喘不过气",
+              "好冷",
+              "发冷",
+              "冷得发抖",
+              "冻得不行",
+              "喘不上来",
+              "胸口发闷",
+              "冷得直抖",
+              "冻麻了",
+              "快冻麻了"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先跟我数拍呼吸。鼻子吸3拍，嘴巴呼6拍。你能跟上吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              80,
+              160,
+              255
+            ],
+            "inhale_ms": 3000,
+            "exhale_ms": 6000,
+            "cycles": 5
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_child_crying",
+      "name": "儿童哭闹-短句安抚与节省体力",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 82,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，继续让孩子看着你，少哭少喊。贴近保暖。孩子有没有受伤？",
+        "yesno_false": "先别责备孩子，用短句重复：看着我，慢慢呼气。孩子有没有受伤？",
+        "yesno": "继续短句安抚，少哭少喊，贴近保暖。孩子有没有受伤？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "继续短句安抚孩子，别让他一直哭喊。贴近保暖。孩子有没有受伤？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "孩子一直哭",
+              "孩子哭闹",
+              "小孩一直哭",
+              "宝宝一直哭",
+              "孩子吓哭",
+              "孩子停不下来"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "孩子被困",
+              "流血",
+              "出血",
+              "呼吸困难",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "先蹲低看着孩子，用短句说：看着我，慢慢呼气。孩子能听你说话吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              80,
+              160,
+              255
+            ],
+            "inhale_ms": 2500,
+            "exhale_ms": 3500,
+            "cycles": 3
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "孩子一直哭闹停不下来",
+          "expected_protocol_id": "prot_child_crying"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_despair_keep_alive",
+      "name": "绝望/放弃求生-陪伴与微动作",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 81,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，就做这一件小事。慢慢呼一口气，再敲一下或发一点声音。你能听到外面声音吗？",
+        "yesno_false": "没关系，你先只做一件事：慢慢呼一口气。我在这儿。你能听到外面声音吗？",
+        "yesno": "先只做一件小事，慢慢呼一口气。你能听到外面声音吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "先别放弃，我们只做下一步。慢慢呼一口气。你能听到外面声音吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "不想活",
+              "想放弃",
+              "撑不下去",
+              "没人会来",
+              "等死",
+              "活不下去",
+              "不想坚持",
+              "救不了我"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "我在这儿。先别放弃，我们只做下一步。慢慢呼一口气。你能敲一下回应我吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              80,
+              120,
+              255
+            ],
+            "inhale_ms": 3000,
+            "exhale_ms": 4000,
+            "cycles": 4
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我撑不下去了想放弃",
+          "expected_protocol_id": "prot_despair_keep_alive"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_numbness_pressure",
+      "name": "麻木/刺痛-体位调整与保暖",
+      "source_refs": [
+        "src_red_cross_muscle_bone_joint_injury_v1",
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 75,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "可能是压到了。慢慢换个姿势，再轻轻活动几下。有没有好一点？",
+        "yesno_false": "先看看是不是被东西压着。能轻轻挪开就挪，不能就动动脚趾。有没有发凉？",
+        "yesno": "慢慢换姿势，轻轻活动手指脚趾。麻木有没有减轻？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续轻轻活动手指脚趾。别一下子用猛劲。麻木有没有减轻？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "注意保暖，别让四肢变凉。慢慢活动一下。你现在冷吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "麻了",
+              "发麻",
+              "刺痛",
+              "没知觉",
+              "麻木",
+              "针扎一样",
+              "蚂蚁爬"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "断了",
+              "骨折"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先看看是不是被压住了。慢慢换个姿势，轻轻动手指脚趾。麻的是手还是脚？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              120,
+              200,
+              255
+            ],
+            "inhale_ms": 2000,
+            "exhale_ms": 2500,
+            "cycles": 3
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_numbness_worsening",
+      "name": "手脚麻木加重-减压与保暖观察",
+      "source_refs": [
+        "src_red_cross_muscle_bone_joint_injury_v1",
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 79,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果被压着，别猛拽，慢慢减压。继续轻动手指脚趾。颜色有没有发紫？",
+        "yesno_false": "好，先保暖，轻轻活动手指脚趾。颜色有没有发紫？",
+        "yesno": "慢慢减压，轻轻活动手指脚趾，注意保暖。颜色有没有发紫？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续轻轻活动手指脚趾，别猛拽。注意保暖。颜色有没有发紫？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "麻得更厉害",
+              "越来越麻",
+              "手脚麻木加重",
+              "脚越来越麻",
+              "手越来越麻",
+              "没有知觉加重",
+              "麻到没感觉"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "骨折",
+              "断了",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别猛拽麻木的地方。轻轻动手指脚趾，注意保暖。是不是被东西压着？"
+        },
+        {
+          "type": "screen",
+          "text": "轻动  保暖",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我的脚越来越麻没有知觉",
+          "expected_protocol_id": "prot_numbness_worsening"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_stuck_immobile",
+      "name": "被卡住无法移动-稳定姿势与求救",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_medlineplus_crush_injury_v1"
+      ],
+      "priority": 77,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果还能呼吸，先别硬挤出来。保持姿势，轻敲求救。有没有越来越紧？",
+        "yesno_false": "先别乱挣，减少消耗。用敲击或短声求救。有没有越来越紧？",
+        "yesno": "先别硬挤，保持姿势，轻敲求救。有没有越来越紧？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续别硬挤出来，保持能呼吸的姿势。用敲击求救。有没有越来越紧？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "卡住了",
+              "被卡住",
+              "夹住了",
+              "夹着出不来",
+              "身体卡住",
+              "脚卡住",
+              "手卡住",
+              "出不来"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "骨折",
+              "断了",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别硬挤出来，保持能呼吸的姿势。用敲击发求救信号。你还能呼吸吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              180,
+              80
+            ],
+            "hz": 1.0,
+            "ms": 3000
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我的脚卡住了出不来",
+          "expected_protocol_id": "prot_stuck_immobile"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_dehydration_thirst",
+      "name": "严重口渴/脱水风险-小口补水",
+      "source_refs": [
+        "src_ready_floods_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 78,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有水就小口慢慢喝，不要猛灌。先省力少说话。嘴还很干吗？",
+        "yesno_false": "没有水就先少动少说话，别吃很咸的东西。嘴还很干吗？",
+        "yesno": "先少动少说话。有水就小口慢慢喝。嘴还很干吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续省力少说话。有水就小口慢慢喝。嘴还很干吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "很渴",
+              "口渴",
+              "没水喝",
+              "嘴很干",
+              "尿很少",
+              "脱水",
+              "喉咙干",
+              "渴得不行"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "胸痛",
+              "呼吸困难",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "少说话省水，有水就小口慢慢喝。身边有水吗？"
+        },
+        {
+          "type": "screen",
+          "text": "小口喝  省力",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我很渴嘴很干",
+          "expected_protocol_id": "prot_dehydration_thirst"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_hypothermia",
+      "name": "失温/寒冷-保暖与体温管理",
+      "source_refs": [
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 82,
+      "cooldown_sec": 30,
+      "enable_qa": true,
+      "qa_followups": {
+        "yesno_true": "好，把能盖的都裹上，重点护住胸口和肚子。你脚冷不冷？",
+        "yesno_false": "缩成一团，双手抱胸。轻轻动动手指脚趾，别大动。你脚冷不冷？",
+        "yesno": "继续蜷着保暖，别贴着冷地。你脚冷不冷？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续蜷着，双手抱胸。别直接贴着冷地。有没有暖和一点？"
+        },
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续裹住胸口和肚子，轻轻动手指脚趾。脚还是很冷吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "tags_any": [
+              "env_temperature_extreme",
+              "med_medical_hypothermia_risk"
+            ]
+          },
+          {
+            "text_contains_any": [
+              "越来越冷",
+              "失温",
+              "打哆嗦",
+              "全身发抖",
+              "浑身发抖",
+              "太冷了",
+              "冻僵",
+              "冻死",
+              "手脚冰凉",
+              "冷得不行",
+              "冷得发抖",
+              "冻得不行",
+              "好冷",
+              "发冷",
+              "冷得直抖",
+              "冻麻了",
+              "快冻麻了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "骨折",
+              "呼吸困难",
+              "喘不上气"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先把身体蜷起来，双手抱胸。拿衣物裹住身子，别直接躺冰地上。身边有能盖的吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              255,
+              200,
+              80
+            ],
+            "inhale_ms": 2500,
+            "exhale_ms": 2500,
+            "cycles": 3
+          }
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_companion_injured",
+      "name": "同伴受伤-先看呼吸出血",
+      "source_refs": [
+        "src_red_cross_life_threatening_bleeding_v1",
+        "src_red_cross_muscle_bone_joint_injury_v1"
+      ],
+      "priority": 76,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果在流血，先压住伤口别松手。让他少动少说话。血是不是很多？",
+        "yesno_false": "好，先别乱搬动他。看呼吸和疼痛，少说话省力。他能清楚说话吗？",
+        "yesno": "先看呼吸和出血，别乱搬动。他能清楚说话吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先看呼吸和出血，别乱搬动。同伴少说话省力。他能清楚说话吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "同伴受伤",
+              "朋友受伤",
+              "旁边的人受伤",
+              "队友受伤",
+              "他受伤了",
+              "她受伤了",
+              "有人受伤"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "昏迷",
+              "没意识",
+              "没反应",
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先看同伴能不能呼吸和说话，别乱搬动。有没有明显出血？"
+        },
+        {
+          "type": "screen",
+          "text": "看呼吸  看出血",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我朋友受伤了",
+          "expected_protocol_id": "prot_companion_injured"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_epistaxis_nosebleed",
+      "name": "鼻血/普通出血分流-前倾压鼻",
+      "source_refs": [
+        "src_red_cross_life_threatening_bleeding_v1"
+      ],
+      "priority": 72,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "yesno_true": "好，继续捏住鼻翼，身体前倾。别仰头。血有没有变少？",
+        "yesno_false": "继续捏住鼻翼，身体前倾，别仰头。血有没有变少？",
+        "yesno": "继续捏住鼻翼，身体前倾。血有没有变少？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续捏住鼻翼，身体前倾，别仰头。血有没有变少？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "鼻血",
+              "流鼻血",
+              "鼻子出血",
+              "鼻子流血"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "头撞了",
+              "撞到头",
+              "意识模糊",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先身体前倾，捏住鼻翼别仰头。用嘴慢慢呼吸。血有没有很多？"
+        },
+        {
+          "type": "screen",
+          "text": "前倾  捏鼻翼",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我一直流鼻血",
+          "expected_protocol_id": "prot_epistaxis_nosebleed"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_water_safety_uncertain",
+      "name": "饮水不确定-保守饮水提醒",
+      "source_refs": [
+        "src_ready_floods_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 73,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果水有异味、浑浊或来自积水，先别喝。优先保存体力。还有别的水源吗？",
+        "yesno_false": "好，先别喝不确定的水。少说话省水。还有别的水源吗？",
+        "yesno": "不确定就先别喝，少说话省水。还有别的水源吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "不确定的水先别喝。少说话省水，保存体力。还有别的水源吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "水能不能喝",
+              "这水能喝吗",
+              "水不确定能不能喝",
+              "积水能喝吗",
+              "脏水能喝吗",
+              "不知道水能不能喝"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "不确定的水先别喝。少说话省水，保存体力。还有别的干净水吗？"
+        },
+        {
+          "type": "screen",
+          "text": "不确定先别喝",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "这瓶水不确定能不能喝",
+          "expected_protocol_id": "prot_water_safety_uncertain"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_claustrophobia",
+      "name": "幽闭恐惧-短句安抚与节奏呼吸",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 70,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，就看着那一点。慢慢呼气，肩膀放低。胸口有没有松一点？",
+        "yesno_false": "没关系，先只听我声音。慢慢呼气，肩膀放低。胸口有没有松一点？",
+        "yesno": "先看一个固定点，慢慢呼气。胸口有没有松一点？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "继续看一个固定点，慢慢呼气。别越喘越快。胸口有没有松一点？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "幽闭恐惧",
+              "太挤了受不了",
+              "空间太小",
+              "密闭空间好怕",
+              "出不去好慌",
+              "被困得慌"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "呼吸困难",
+              "喘不过气",
+              "胸痛",
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "先看一个固定点，肩膀放低。慢慢呼气，别越喘越快。你能看到一点光吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "breath",
+            "rgb": [
+              80,
+              160,
+              255
+            ],
+            "inhale_ms": 3000,
+            "exhale_ms": 5000,
+            "cycles": 4
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我幽闭恐惧空间太小了",
+          "expected_protocol_id": "prot_claustrophobia"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_darkness_visibility",
+      "name": "黑暗看不见-稳定位置与发信号",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 69,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能看到一点就先标记方向，别乱走。用敲击或灯光发信号。能听到外面声音吗？",
+        "yesno_false": "看不见就先别乱走，摸到稳的地方停住。用敲击发信号。能听到外面声音吗？",
+        "yesno": "先别乱走，摸到稳的地方停住。能听到外面声音吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "看不清就先别乱走，摸到稳的地方停住。用敲击发信号。能听到外面声音吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "太黑了",
+              "黑得看不见",
+              "完全看不见",
+              "没有光",
+              "看不到路",
+              "一片黑",
+              "灯灭了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别乱走，摸到稳的地方停住。用敲击或灯光发信号。你能看到一点光吗？"
+        },
+        {
+          "type": "screen",
+          "text": "别乱走  发信号",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "这里太黑了完全看不见",
+          "expected_protocol_id": "prot_darkness_visibility"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_abuse_deescalate",
+      "name": "辱骂/挑衅/要求辱骂-降温与回到需求",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": false,
+      "priority": 40,
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "骂我",
+              "不骂我",
+              "你怎么不骂我",
+              "罵我",
+              "不罵我",
+              "你怎麼不罵我",
+              "你是不是有病",
+              "你有病",
+              "腦殘",
+              "脑残",
+              "你媽",
+              "你妈",
+              "傻逼",
+              "廢物",
+              "废物",
+              "滚",
+              "閉嘴",
+              "闭嘴",
+              "去死",
+              "狗东西"
+            ]
+          }
+        ],
+        "none_of": []
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我不跟你顶，我还在这儿。先说要紧的。你现在要止血、固定，还是喘口气？"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_no_response_long_wait",
+      "name": "长时间无人回应-省力求救节奏",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_who_pfa_field_workers_v1"
+      ],
+      "priority": 67,
+      "cooldown_sec": 30,
+      "qa_followups": {
+        "yesno_true": "能听到一点就先别大喊，改用敲击和短声回应。外面声音是不是靠近了？",
+        "yesno_false": "先保存体力，定时敲击，不要一直喊。身边有没有能敲的金属？",
+        "yesno": "先保存体力，定时敲击，不要一直喊。身边有没有能敲的金属？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "继续保存体力，定时敲击，不要一直喊。身边有没有能敲的金属？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "一直没人回应",
+              "没人回应",
+              "喊了没人听见",
+              "等了很久没人来",
+              "外面没人",
+              "一直没人来"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "先别一直喊，保存体力。改成定时敲击或短声求救。你能听到外面声音吗？"
+        },
+        {
+          "type": "screen",
+          "text": "省力  定时敲击",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我喊了很久一直没人回应",
+          "expected_protocol_id": "prot_no_response_long_wait"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_rescue_voice_heard",
+      "name": "听到救援声-短促回应与定位",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 66,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，别连续大喊，用敲击或短声回应。报位置时越短越好。声音是不是靠近了？",
+        "yesno_false": "那先定时敲击，不要一直喊。听到声音再短声回应。你身边有能敲的东西吗？",
+        "yesno": "用敲击或短声回应，别连续大喊。声音是不是靠近了？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续用敲击或短声回应，别连续大喊。报位置越短越好。声音是不是靠近了？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "听到救援声",
+              "听到有人喊",
+              "外面有人",
+              "救援来了",
+              "有人在外面",
+              "听到人声",
+              "有人叫我"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先用短声回应，别连续大喊。能敲就敲三下，再停一停。外面能听到你吗？"
+        },
+        {
+          "type": "screen",
+          "text": "短声回应  敲三下",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我听到救援声了外面有人",
+          "expected_protocol_id": "prot_rescue_voice_heard"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_noisy_environment_unclear",
+      "name": "噪声环境听不清-短句重复",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 44,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "yesno_true": "好，你就说一个最要紧的词：流血、喘不过气、被压住，或者没有。现在有高危情况吗？",
+        "yesno_false": "明白。我会问短一点。你只回答有或没有。现在有出血或喘不过气吗？",
+        "yesno": "我会问短一点。现在有出血或喘不过气吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我会问短一点。你只说一个词。现在有出血或喘不过气吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "太吵听不清",
+              "听不清你说什么",
+              "噪声太大",
+              "环境太吵",
+              "你说什么",
+              "听不见你"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我会说短一点。你只回答一个词。现在有出血或喘不过气吗？"
+        },
+        {
+          "type": "screen",
+          "text": "只说一个词",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "环境太吵听不清你说什么",
+          "expected_protocol_id": "prot_noisy_environment_unclear"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_user_refusal",
+      "name": "用户拒绝配合-降低要求",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 41,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "yesno_true": "好，那我们只做这一件。你现在先少说话省力。有没有出血或喘不过气？",
+        "yesno_false": "没关系，我把问题变小。你只回答有或没有：有没有出血或喘不过气？",
+        "yesno": "没关系，我把问题变小。有没有出血或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "没关系，我们只做一件小事。你只回答有或没有：有没有出血或喘不过气？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "我不想配合",
+              "别问了",
+              "不想回答",
+              "我不想说",
+              "别管我",
+              "不要问我"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "闭嘴",
+              "滚",
+              "废物",
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "warm",
+          "text": "好，我少问。你只回答有或没有。现在有没有出血或喘不过气？"
+        },
+        {
+          "type": "screen",
+          "text": "只答有/没有",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我不想配合别问了",
+          "expected_protocol_id": "prot_user_refusal"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_low_battery_degrade",
+      "name": "低电量/设备降级-省电提醒",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 30,
+      "cooldown_sec": 60,
+      "qa_followups": {
+        "yesno_true": "好，我会尽量短句提醒。你优先说出血、喘不过气、被压住这些要紧情况。",
+        "yesno_false": "明白，我会尽量省电，只保留关键提醒。你现在有没有出血、疼痛或喘不过气？",
+        "yesno": "我会尽量省电，只保留关键提醒。你现在有没有出血、疼痛或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "电量低，我会短句提醒。你优先说出血、喘不过气、被压住这些要紧情况。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "low_battery"
+          },
+          {
+            "text_contains_any": [
+              "电量低",
+              "快没电",
+              "低电量",
+              "省电模式",
+              "设备没电"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "电量低，我会少说话省电。你优先告诉我有没有出血、喘不过气或被压住？"
+        },
+        {
+          "type": "screen",
+          "text": "低电量  短句模式",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "设备快没电了",
+          "expected_protocol_id": "prot_low_battery_degrade"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_audio_input_error",
+      "name": "麦克风异常-改用短输入提示",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 29,
+      "cooldown_sec": 60,
+      "qa_followups": {
+        "yesno_true": "好，我会尽量用屏幕短句。你优先输入出血、喘不过气、被压住这些要紧情况。",
+        "yesno_false": "明白，我会继续尝试听你说话。你现在有没有出血或喘不过气？",
+        "yesno": "我会尽量用短句。你现在有没有出血或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "麦克风可能异常。请尽量靠近说短句，或改用屏幕输入。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "audio_input_error"
+          },
+          {
+            "text_contains_any": [
+              "麦克风异常",
+              "麦克风坏了",
+              "听不到我说话",
+              "收音失败",
+              "语音输入失败"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "麦克风可能异常。请靠近说短句，或改用屏幕输入。你能看到屏幕吗？"
+        },
+        {
+          "type": "screen",
+          "text": "麦克风异常  说短句",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "麦克风异常听不到我说话",
+          "expected_protocol_id": "prot_audio_input_error"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_audio_output_error",
+      "name": "扬声器异常-改用屏幕和灯光",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 28,
+      "cooldown_sec": 60,
+      "qa_followups": {
+        "yesno_true": "好，我会优先用屏幕短句和灯光提示。你现在有没有出血或喘不过气？",
+        "yesno_false": "明白，我继续尽量播报，同时屏幕显示短句。你现在有没有出血或喘不过气？",
+        "yesno": "我会优先用屏幕短句。你现在有没有出血或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "扬声器可能异常。我会改用屏幕短句和灯光提示。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "audio_output_error"
+          },
+          {
+            "text_contains_any": [
+              "扬声器异常",
+              "喇叭坏了",
+              "听不到声音",
+              "没有播报",
+              "语音输出失败"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "扬声器可能异常。我会优先用屏幕短句和灯光提示。你能看到屏幕吗？"
+        },
+        {
+          "type": "screen",
+          "text": "扬声器异常  看屏幕",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "扬声器异常听不到声音",
+          "expected_protocol_id": "prot_audio_output_error"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_extreme_shake_event",
+      "name": "强震事件-立即护头稳住",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 99,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "yesno_true": "继续护住头颈，贴着稳的地方。别急着跑。晃动是不是变小了？",
+        "yesno_false": "不能动就贴地护头颈，别硬撑。晃动是不是变小了？",
+        "yesno": "继续护住头颈，贴着稳的地方。晃动是不是变小了？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续护住头颈，贴着稳的地方。等稳定后再动。晃动是不是变小了？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "imu_extreme_shake"
+          },
+          {
+            "text_contains_any": [
+              "强震",
+              "地震来了",
+              "震得站不住",
+              "剧烈摇晃",
+              "房子猛烈晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "马上护住头和脖子，贴着稳的地方蹲低。先别跑。你现在能稳住吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              60,
+              0
+            ],
+            "hz": 1.8,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "地震来了震得站不住",
+          "expected_protocol_id": "prot_extreme_shake_event"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_earthquake_initial_shelter",
+      "name": "地震初始避险-蹲下掩护抓牢",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 96,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能抓牢就继续抓牢，护住头颈。别靠近玻璃和外墙。晃动停了吗？",
+        "yesno_false": "先靠近稳的低处，护住头颈，别急着跑。晃动停了吗？",
+        "yesno": "继续蹲低护头，抓住稳的东西。晃动停了吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续蹲低护头，抓住稳的东西。远离玻璃和外墙。晃动停了吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "刚地震",
+              "开始地震",
+              "地震开始",
+              "房子在摇",
+              "桌子在晃"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "强震",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先蹲低，护住头和脖子，抓住稳的东西。远离玻璃。你能抓牢吗？"
+        },
+        {
+          "type": "screen",
+          "text": "蹲低  护头  抓牢",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "开始地震快找地方躲",
+          "expected_protocol_id": "prot_earthquake_initial_shelter"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_landslide_debris_flow",
+      "name": "泥石流/滑坡-远离流向",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 96,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能离开流向就往两侧高处走，别顺沟跑。脚下还稳吗？",
+        "yesno_false": "不能移动就抓牢稳固物，护住头颈，尽量避开流向。脚下还稳吗？",
+        "yesno": "尽量往两侧高处避开，别顺沟跑。脚下还稳吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "避开泥石流方向，能动就往两侧高处走，别顺沟跑。脚下还稳吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "泥石流",
+              "山体滑坡",
+              "滑坡",
+              "土石流",
+              "山坡塌",
+              "石头滚下来"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "别顺着沟跑。能动就往两侧高处避开，护住头。你脚下还稳吗？"
+        },
+        {
+          "type": "screen",
+          "text": "往两侧高处",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "山体滑坡石头滚下来",
+          "expected_protocol_id": "prot_landslide_debris_flow"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_gas_leak_suspected",
+      "name": "燃气/化学刺激气味-减少火源与护气道",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 92,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有燃气味就别点火，别开关电器。捂住口鼻，尽量低一点。气味还在变重吗？",
+        "yesno_false": "好，继续捂住口鼻，少说话。气味还在变重吗？",
+        "yesno": "别点火，别开关电器。捂住口鼻。气味还在变重吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续别点火，别开关电器。捂住口鼻，少说话。气味还在变重吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "燃气味",
+              "煤气味",
+              "天然气味",
+              "化学气味",
+              "刺鼻化学味",
+              "漏气"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "着火",
+              "起火",
+              "胸痛",
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先别点火，别开关电器。用衣物捂住口鼻。你还能闻到燃气味吗？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              140,
+              40
+            ],
+            "hz": 1.2,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "这里有燃气味好像漏气",
+          "expected_protocol_id": "prot_gas_leak_suspected"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_fire_heat_nearby",
+      "name": "近处火源/高热-远离热源",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 91,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能远离就低姿态慢慢离开热源，别穿过浓烟。热是不是更近了？",
+        "yesno_false": "不能离开就用衣物护住皮肤，尽量贴低，少说话。热是不是更近了？",
+        "yesno": "尽量远离热源，贴低，捂住口鼻。热是不是更近了？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续远离热源，贴低，捂住口鼻。别穿过浓烟。热是不是更近了？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "火在旁边",
+              "火越来越近",
+              "热浪",
+              "烫得受不了",
+              "旁边很烫",
+              "火源很近"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "胸痛"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "尽量低姿态远离热源，捂住口鼻，别穿过浓烟。你能往旁边避开吗？"
+        },
+        {
+          "type": "screen",
+          "text": "低姿态  远离热源",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "火越来越近旁边很烫",
+          "expected_protocol_id": "prot_fire_heat_nearby"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_panic_button_help",
+      "name": "panic 按键-求助与稳定",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 91,
+      "cooldown_sec": 20,
+      "qa_followups": {
+        "yesno_true": "好，先保持能呼吸的姿势。你优先说出血、喘不过气、被压住。现在有哪一种？",
+        "yesno_false": "没关系，我在。先慢慢呼气。你现在有没有出血、喘不过气或被压住？",
+        "yesno": "我在。你现在有没有出血、喘不过气或被压住？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "我在。先慢慢呼气。你优先说出血、喘不过气、被压住。现在有哪一种？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "panic_button_press"
+          },
+          {
+            "text_contains_any": [
+              "按了求救键",
+              "按了panic",
+              "紧急按钮",
+              "求救按钮"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "我收到求救了。先慢慢呼气。你现在有没有出血、喘不过气或被压住？"
+        },
+        {
+          "type": "led",
+          "pattern": {
+            "mode": "pulse",
+            "rgb": [
+              255,
+              80,
+              80
+            ],
+            "hz": 1.5,
+            "ms": 3500
+          }
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我按了求救按钮",
+          "expected_protocol_id": "prot_panic_button_help"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_cardiac_chronic_risk",
+      "name": "心脏病慢病不适-停止活动",
+      "source_refs": [
+        "src_red_cross_fainting_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 89,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "先停止活动，坐下或侧躺，少说话。按本人平时医嘱处理随身药。胸口痛不痛？",
+        "yesno_false": "没有随身药也先停止活动，少说话。胸口痛不痛？",
+        "yesno": "先停止活动，坐下或侧躺，少说话。胸口痛不痛？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续停止活动，坐下或侧躺，少说话省力。胸口痛不痛？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "心脏病不舒服",
+              "心脏病犯了",
+              "心慌胸闷",
+              "心脏不舒服",
+              "有心脏病很难受"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "流血",
+              "出血",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先停止活动，坐下或侧躺，少说话省力。随身药在身边吗？"
+        },
+        {
+          "type": "screen",
+          "text": "停止活动  少说话",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我有心脏病很难受",
+          "expected_protocol_id": "prot_cardiac_chronic_risk"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_pregnant_pain",
+      "name": "孕妇腹痛/不适-侧卧少动",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 88,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "如果有出血要马上说明。先左侧卧或侧卧，少动少说话。疼痛有没有加重？",
+        "yesno_false": "好，先侧卧，少动少说话，注意保暖。疼痛有没有加重？",
+        "yesno": "先侧卧，少动少说话。有没有出血？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续侧卧，少动少说话。注意保暖。疼痛有没有加重？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "孕妇腹痛",
+              "孕妇肚子疼",
+              "怀孕肚子疼",
+              "孕妇不舒服",
+              "宫缩"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "胸痛",
+              "呼吸困难",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先侧卧，少动少说话，注意保暖。有没有出血？"
+        },
+        {
+          "type": "screen",
+          "text": "侧卧  少动",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "孕妇肚子疼不舒服",
+          "expected_protocol_id": "prot_pregnant_pain"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_building_collapse_trapped",
+      "name": "建筑坍塌受困-稳定空间",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1",
+        "src_medlineplus_crush_injury_v1"
+      ],
+      "priority": 88,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能呼吸就先别硬钻，清理口鼻附近灰尘，少说话。空间还在变小吗？",
+        "yesno_false": "先把口鼻附近清出来，少说话，别硬钻。空间还在变小吗？",
+        "yesno": "先保持空间，别硬钻。你还能呼吸吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续保持能呼吸的空间，别硬钻。少说话省力。空间还在变小吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "楼塌了被困",
+              "建筑坍塌",
+              "房子塌了被困",
+              "废墟里",
+              "楼板压住空间"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "余震",
+              "又在晃"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先保持能呼吸的空间，别硬钻。少说话省力。你还能正常呼吸吗？"
+        },
+        {
+          "type": "screen",
+          "text": "保空间  少说话",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "建筑坍塌把我埋在废墟里",
+          "expected_protocol_id": "prot_building_collapse_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_pregnant_trapped",
+      "name": "孕妇受困-侧卧保暖与少动",
+      "source_refs": [
+        "src_manual_gold_review_v1",
+        "src_cdc_hypothermia_winter_v1"
+      ],
+      "priority": 85,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，先侧卧，少动少说话，注意保暖。有没有腹痛或出血？",
+        "yesno_false": "先尽量侧卧，少动少说话，注意保暖。有没有腹痛或出血？",
+        "yesno": "先侧卧，少动少说话。有没有腹痛或出血？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续侧卧，少动少说话，注意保暖。有没有腹痛或出血？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "孕妇被困",
+              "怀孕被困",
+              "孕妇受困",
+              "怀孕动不了"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "腹痛",
+              "肚子疼",
+              "流血",
+              "出血",
+              "呼吸困难",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先尽量侧卧，少动少说话，注意保暖。你现在能侧身吗？"
+        },
+        {
+          "type": "screen",
+          "text": "侧卧  保暖",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "孕妇被困现在没法转身",
+          "expected_protocol_id": "prot_pregnant_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_flood_rising_indoor",
+      "name": "室内进水上涨-转移高处",
+      "source_refs": [
+        "src_ready_floods_v1"
+      ],
+      "priority": 84,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能上高处就慢慢上去，避开电线和急水。水还在上涨吗？",
+        "yesno_false": "不能上高处就先抓牢稳固物，远离电线。水还在上涨吗？",
+        "yesno": "尽量转到更高更稳的地方，远离电线。水还在上涨吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "继续往高处转移，远离电线和急水。别涉水乱走。水还在上涨吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "水涨进屋",
+              "室内进水",
+              "水位上涨",
+              "洪水进来了",
+              "房间进水",
+              "水越来越高"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "触电",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "urgent_calm",
+          "text": "先往更高更稳的地方转移，远离电线，别涉急水。你能到高处吗？"
+        },
+        {
+          "type": "screen",
+          "text": "去高处  远离电线",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "水涨进屋了水越来越高",
+          "expected_protocol_id": "prot_flood_rising_indoor"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_heat_stress_overheat",
+      "name": "身体过热/中暑风险-降温省力",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 83,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "有阴凉处就先避开热源，少动少说话。能小口喝水就慢慢喝。还头晕吗？",
+        "yesno_false": "先减少活动，松开紧的衣物，尽量避开热源。还头晕吗？",
+        "yesno": "先少动，避开热源，能小口喝水就慢慢喝。还头晕吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续少动，避开热源，能小口喝水就慢慢喝。还头晕吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "热得头晕",
+              "中暑",
+              "太热了不舒服",
+              "浑身发烫",
+              "热得恶心",
+              "快热晕"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "呼吸困难",
+              "流血",
+              "出血"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先少动少说话，避开热源。能小口喝水就慢慢喝。附近有阴凉处吗？"
+        },
+        {
+          "type": "screen",
+          "text": "少动  降温",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我热得恶心快中暑了",
+          "expected_protocol_id": "prot_heat_stress_overheat"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_wheelchair_mobility_impaired",
+      "name": "轮椅/行动障碍受困-稳定与求助",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 74,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能固定就先锁住轮椅或稳定姿势，别冒险移动。你能发出求救信号吗？",
+        "yesno_false": "先保持稳定姿势，别冒险移动。用声音、敲击或灯光求救。你能发出求救信号吗？",
+        "yesno": "先稳定姿势，别冒险移动。你能发出求救信号吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续稳定姿势，别冒险移动。用声音、敲击或灯光求救。你能发出信号吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "轮椅被困",
+              "行动不便被困",
+              "残障被困",
+              "我不能走",
+              "腿脚不便"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "骨折",
+              "呼吸困难",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先稳定姿势，别冒险移动。用声音、敲击或灯光求救。你能固定住自己吗？"
+        },
+        {
+          "type": "screen",
+          "text": "稳定姿势  求救",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我坐轮椅被困行动不便",
+          "expected_protocol_id": "prot_wheelchair_mobility_impaired"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_visual_impaired_trapped",
+      "name": "视障受困-原地稳定与声响定位",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 72,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能摸到稳固物就先停住，别乱走。用敲击或声音定位。能听到外面声音吗？",
+        "yesno_false": "先原地稳定，慢慢摸索稳固边缘，别急着走。能听到外面声音吗？",
+        "yesno": "先原地稳定，别乱走。能听到外面声音吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续原地稳定，别乱走。用敲击或声音定位。能听到外面声音吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "我是盲人",
+              "视障被困",
+              "看不见被困",
+              "盲人被困",
+              "眼睛看不见"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先原地稳定，别乱走。用敲击或声音定位。你能摸到稳固的边缘吗？"
+        },
+        {
+          "type": "screen",
+          "text": "原地稳定  听声",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我是盲人看不见被困了",
+          "expected_protocol_id": "prot_visual_impaired_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_hearing_impaired_trapped",
+      "name": "听障受困-屏幕与灯光提示",
+      "source_refs": [
+        "src_who_pfa_field_workers_v1",
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 72,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "好，我会优先用屏幕短句和灯光。你现在有没有出血、疼痛或喘不过气？",
+        "yesno_false": "明白，我继续短句提示。你现在有没有出血、疼痛或喘不过气？",
+        "yesno": "我会优先用屏幕短句。你现在有没有高危情况？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我会优先用屏幕短句和灯光提示。你现在有没有出血、疼痛或喘不过气？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "我是聋人",
+              "听障被困",
+              "听不见播报",
+              "耳朵听不见",
+              "听力障碍"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我会优先用屏幕短句和灯光提示。你能看到屏幕吗？"
+        },
+        {
+          "type": "screen",
+          "text": "看屏幕  短句提示",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我是聋人听不见播报",
+          "expected_protocol_id": "prot_hearing_impaired_trapped"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_rescue_location_marking",
+      "name": "定位困难-标记位置与节省体力",
+      "source_refs": [
+        "src_ready_earthquake_trapped_v1"
+      ],
+      "priority": 68,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "能标记就用敲击、灯光或短声重复位置。别一直喊。外面能听到你吗？",
+        "yesno_false": "先用规律敲击或短声求救，保存体力。外面能听到你吗？",
+        "yesno": "用规律敲击或短声标记位置。外面能听到你吗？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "继续用规律敲击或短声标记位置，别一直喊。外面能听到你吗？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "救援找不到我",
+              "不知道我在哪",
+              "定位不到",
+              "怎么让他们找到我",
+              "我位置说不清"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "用规律敲击、灯光或短声标记位置，别一直喊。外面能听到你吗？"
+        },
+        {
+          "type": "screen",
+          "text": "敲击定位",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "救援找不到我不知道我在哪",
+          "expected_protocol_id": "prot_rescue_location_marking"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_battery_critical_shutdown",
+      "name": "电量极低-关键提醒模式",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 33,
+      "cooldown_sec": 60,
+      "qa_followups": {
+        "yesno_true": "好，我会只保留关键提醒。你优先说出血、喘不过气、被压住。现在有哪一种？",
+        "yesno_false": "明白，我会进入短句省电。你现在有没有出血、喘不过气或被压住？",
+        "yesno": "我会进入短句省电。你现在有没有高危情况？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "电量极低，我会进入关键提醒模式。优先说出血、喘不过气、被压住。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "battery_critical"
+          },
+          {
+            "text_contains_any": [
+              "电量马上耗尽",
+              "快关机了",
+              "电量极低",
+              "马上没电"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "电量极低，我会只保留关键提醒。你现在有没有高危情况？"
+        },
+        {
+          "type": "screen",
+          "text": "电量极低  关键提醒",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "电量马上耗尽快关机了",
+          "expected_protocol_id": "prot_battery_critical_shutdown"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_temperature_sensor_high",
+      "name": "设备高温-降载提示",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 32,
+      "cooldown_sec": 60,
+      "qa_followups": {
+        "yesno_true": "好，我会减少播报和模型调用。你优先说高危情况。现在有没有出血或喘不过气？",
+        "yesno_false": "明白，我会继续短句提醒。现在有没有出血或喘不过气？",
+        "yesno": "我会短句提醒。现在有没有出血或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "设备温度高，我会减少播报和模型调用，保留关键提醒。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "high_temperature"
+          },
+          {
+            "text_contains_any": [
+              "设备温度高",
+              "机器发烫",
+              "主板过热",
+              "温度过高"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "呼吸困难",
+              "胸痛",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "设备温度高，我会减少播报，保留关键提醒。你能看到屏幕吗？"
+        },
+        {
+          "type": "screen",
+          "text": "设备高温  降载",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "设备温度高机器发烫",
+          "expected_protocol_id": "prot_temperature_sensor_high"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_long_runtime_degrade",
+      "name": "长时间运行降级-关键链路保留",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": true,
+      "priority": 27,
+      "cooldown_sec": 90,
+      "qa_followups": {
+        "yesno_true": "好，我会保留协议、屏幕和灯光，减少长回答。现在有没有高危情况？",
+        "yesno_false": "明白，我会继续短句运行。现在有没有出血、喘不过气或被压住？",
+        "yesno": "我会继续短句运行。现在有没有高危情况？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "长时间运行后我会降级，只保留关键协议、屏幕和灯光提示。"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "event": "long_runtime_degrade"
+          },
+          {
+            "text_contains_any": [
+              "长时间运行降级",
+              "系统降级",
+              "进入轻量模式",
+              "运行太久变慢"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我会进入轻量模式，只保留关键提醒。你现在有没有高危情况？"
+        },
+        {
+          "type": "screen",
+          "text": "轻量模式  关键提醒",
+          "ms": 3500
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "系统长时间运行降级",
+          "expected_protocol_id": "prot_long_runtime_degrade"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_chronic_medication_unavailable",
+      "name": "慢病常用药不在身边-保守稳定",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "priority": 64,
+      "cooldown_sec": 25,
+      "qa_followups": {
+        "yesno_true": "先别临时乱用别人的药。坐下或侧躺，少说话省力。现在有没有胸痛或喘不过气？",
+        "yesno_false": "好，先保持安静，少动少说话。现在有没有胸痛或喘不过气？",
+        "yesno": "先保持安静，少动少说话。现在有没有胸痛或喘不过气？"
+      },
+      "followup_actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别临时乱用别人的药。坐下或侧躺，少说话省力。现在有没有胸痛或喘不过气？"
+        }
+      ],
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "常用药不在",
+              "药不在身边",
+              "药找不到",
+              "降压药找不到",
+              "胰岛素不在",
+              "慢病药没带"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "胸痛",
+              "胸口痛",
+              "呼吸困难",
+              "流血",
+              "出血",
+              "余震"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "先别乱用别人的药。坐下或侧躺，少动少说话。你的常用药在身边吗？"
+        },
+        {
+          "type": "screen",
+          "text": "别乱用药  少动",
+          "ms": 3000
+        }
+      ],
+      "eval_cases": [
+        {
+          "input": "我的常用药不在身边",
+          "expected_protocol_id": "prot_chronic_medication_unavailable"
+        }
+      ]
+    },
+    {
+      "protocol_id": "prot_noise_ignore",
+      "name": "噪声/无意义输入-忽略并引导",
+      "source_refs": [
+        "src_manual_gold_review_v1"
+      ],
+      "enable_qa": false,
+      "priority": 5,
+      "trigger": {
+        "any_of": [
+          {
+            "text_contains_any": [
+              "字幕",
+              "测试",
+              "喂",
+              "喂喂",
+              "你好",
+              "在吗",
+              "嗯",
+              "啊",
+              "哦",
+              "哈哈",
+              "呵呵",
+              "謝謝",
+              "谢谢",
+              "by",
+              "B站",
+              "抖音",
+              "视频",
+              "影片",
+              "音乐",
+              "歌",
+              "广告"
+            ]
+          }
+        ],
+        "none_of": [
+          {
+            "text_contains_any": [
+              "流血",
+              "出血",
+              "断了",
+              "骨折",
+              "眼前发黑",
+              "喘不过气",
+              "呼吸困难",
+              "窒息",
+              "恐慌",
+              "我很害怕",
+              "粉尘",
+              "咳嗽"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "tts",
+          "style": "calm_clear",
+          "text": "我听到了。先说哪里不舒服。你有出血、疼痛或喘不过气吗？"
+        }
+      ]
+    }
+  ]
+}

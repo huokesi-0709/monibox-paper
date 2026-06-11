@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "aliases": {
+    "scn_eq_trapped": ["scn_scene_urban_rubble", "scn_scene_collapsed_building"],
+    "psy_panic": ["psy_psychological_panic_attack"],
+    "act_breath_pacing": ["act_intervention_breathing_guidance"],
+    "scn_aftershock": ["scn_scene_aftershock_zone", "sec_secondary_hazard_aftershock"],
+
+    "med_crush": [
+      "med_medical_crush_syndrome_risk",
+      "med_medical_crush_injury",
+      "med_medical_crush_injury_risk"
+    ],
+
+    "med_bleeding": ["med_medical_bleeding_control"],
+    "med_fracture": ["med_medical_fracture_immobilization"],
+    "med_hypothermia": ["med_medical_hypothermia_risk"],
+    "med_dehydration": ["med_medical_dehydration_risk"],
+    "med_airway": ["med_medical_airway_obstruction_risk", "med_medical_airway_obstruction"],
+    "med_dust_airway": ["env_dust_concentration_high", "env_dust_concentration"],
+    "med_syncope": ["med_medical_orthostatic_hypotension_risk"],
+    "med_medical_syncope_risk": ["med_medical_orthostatic_hypotension_risk"],
+    "med_head_injury": ["med_medical_acute_pain", "med_medical_wound_infection_risk"],
+    "med_medical_head_injury_risk": ["med_medical_acute_pain"],
+    "med_chest_pain": ["med_medical_respiratory_distress", "med_medical_hypertension_crisis"],
+    "med_medical_chest_pain_risk": ["med_medical_respiratory_distress", "med_medical_hypertension_crisis"],
+
+    "env_smoke": ["sec_secondary_hazard_fire", "env_air_quality_poor"],
+    "env_smoke_concentration": ["sec_secondary_hazard_fire", "env_air_quality_poor"],
+    "env_darkness": ["dev_device_interaction_light_signal"],
+    "scn_collapse": ["scn_scene_collapsed_building", "scn_scene_partial_collapse"],
+
+    "psy_fear": ["psy_psychological_panic_attack"],
+    "psy_anger": ["psy_psychological_delirium_agitation"],
+    "psy_psychological_anger": ["psy_psychological_delirium_agitation"],
+    "psy_confusion": ["psy_psychological_delirium_agitation", "psy_psychological_shock_state"],
+    "psy_psychological_confusion": ["psy_psychological_delirium_agitation", "psy_psychological_shock_state"],
+    "psy_fatigue": ["psy_psychological_shock_state", "med_medical_dehydration_risk"],
+    "psy_psychological_fatigue": ["psy_psychological_shock_state", "med_medical_dehydration_risk"],
+
+    "spc_child": ["spc_special_group_child"],
+    "spc_elderly": ["spc_special_group_elderly"],
+    "spc_asthma": ["spc_special_group_asthma_patient"],
+    "spc_diabetes": ["spc_special_group_diabetic"],
+    "spc_special_group_diabetes_patient": ["spc_special_group_diabetic"],
+    "spc_heart_disease": ["spc_special_group_cardiac_patient"],
+    "spc_special_group_heart_disease_patient": ["spc_special_group_cardiac_patient"]
+  },
+  "notes": [
+    "value 可以是数组，系统会选择第一个存在于 taxonomy 的 tag_id",
+    "3-D 要求：legacy/meta/protocol/subcategory/router 中出现的标签，必须能通过 TagRegistry 收敛到 normalized taxonomy 中的 tag_id"
+  ]
+}

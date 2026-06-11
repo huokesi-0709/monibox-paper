@@ -1,0 +1,299 @@
+{
+  "version": "1.1",
+  "rules": [
+    {
+      "name": "bleeding_priority",
+      "patterns": [
+        "流血",
+        "出血",
+        "血止不住",
+        "喷血",
+        "伤口冒血"
+      ],
+      "boost_tags": {
+        "med_medical_bleeding_control": 2.8
+      },
+      "force_tags": [
+        "med_medical_bleeding_control"
+      ]
+    },
+    {
+      "name": "fracture_priority",
+      "patterns": [
+        "骨折",
+        "断了",
+        "折了",
+        "变形",
+        "不能动",
+        "动不了"
+      ],
+      "boost_tags": {
+        "med_medical_fracture_immobilization": 2.6,
+        "med_medical_acute_pain": 1.2
+      },
+      "force_tags": [
+        "med_medical_fracture_immobilization"
+      ]
+    },
+    {
+      "name": "panic_core",
+      "patterns": [
+        "害怕",
+        "恐慌",
+        "慌",
+        "心跳快",
+        "要失控",
+        "手脚发麻"
+      ],
+      "boost_tags": {
+        "psy_psychological_panic_attack": 1.6,
+        "med_medical_hyperventilation": 1.2
+      },
+      "force_tags": []
+    },
+    {
+      "name": "hypothermia",
+      "comment": "NOTE: 发抖单独出现可能是恐慌，但与冷/寒/凉/冻/失温共现时应路由到失温",
+      "patterns": [
+        "越来越冷",
+        "失温",
+        "太冷了",
+        "冻",
+        "好冷",
+        "寒",
+        "发冷",
+        "发抖",
+        "打哆嗦"
+      ],
+      "boost_tags": {
+        "env_temperature_extreme": 2.0,
+        "med_medical_hypothermia_risk": 1.8,
+        "act_intervention_thermal_management": 1.2
+      },
+      "force_tags": []
+    },
+    {
+      "name": "breath_distress",
+      "patterns": [
+        "喘不过气",
+        "喘不上气",
+        "呼吸困难",
+        "胸闷",
+        "憋得慌",
+        "气短",
+        "上不来气",
+        "透不过气"
+      ],
+      "boost_tags": {
+        "med_medical_respiratory_distress": 1.6,
+        "med_medical_hyperventilation": 1.2,
+        "env_oxygen_level_low": 1.2,
+        "env_oxygen_deficiency": 1.2,
+        "med_medical_airway_obstruction": 1.0
+      },
+      "force_tags": []
+    },
+    {
+      "name": "dust_cough",
+      "patterns": [
+        "粉尘",
+        "灰",
+        "呛",
+        "咳",
+        "咳嗽",
+        "嗓子痛",
+        "呼吸道",
+        "鼻子堵"
+      ],
+      "boost_tags": {
+        "env_dust_concentration": 2.0,
+        "med_medical_airway_obstruction": 1.6,
+        "med_medical_respiratory_distress": 1.2
+      },
+      "force_tags": []
+    },
+    {
+      "name": "dust_airway_priority",
+      "patterns": [
+        "灰很大",
+        "灰太大",
+        "粉尘很大",
+        "一直咳嗽",
+        "咳个不停"
+      ],
+      "boost_tags": {
+        "env_dust_concentration_high": 2.6,
+        "med_medical_airway_obstruction_risk": 2.2,
+        "env_air_quality_poor": 1.6
+      },
+      "force_tags": [
+        "env_dust_concentration_high",
+        "med_medical_airway_obstruction_risk"
+      ]
+    },
+    {
+      "name": "smoke_airway",
+      "patterns": [
+        "烟很大",
+        "烟太大",
+        "烟大",
+        "烟味",
+        "烟雾",
+        "浓烟",
+        "呛烟",
+        "冒烟",
+        "刺鼻烟味",
+        "呛得喘不过气"
+      ],
+      "boost_tags": {
+        "env_air_quality_poor": 3.4,
+        "sec_secondary_hazard_fire": 2.4,
+        "med_medical_respiratory_distress": 1.4
+      },
+      "force_tags": []
+    },
+    {
+      "name": "darkness_signal",
+      "patterns": [
+        "太黑",
+        "看不见",
+        "没光",
+        "灯灭了",
+        "黑暗"
+      ],
+      "boost_tags": {
+        "dev_device_interaction_light_signal": 1.6,
+        "psy_psychological_claustrophobia_anxiety": 1.0
+      },
+      "force_tags": []
+    },
+    {
+      "name": "oxygen_hint",
+      "patterns": [
+        "头晕",
+        "发黑",
+        "眼前一黑",
+        "要晕了",
+        "意识模糊",
+        "嗜睡",
+        "反应慢",
+        "乏力"
+      ],
+      "boost_tags": {
+        "env_oxygen_deficiency": 1.8,
+        "env_oxygen_level_low": 1.5
+      },
+      "force_tags": []
+    },
+    {
+      "name": "aftershock",
+      "patterns": [
+        "又在晃",
+        "又震了",
+        "余震",
+        "又摇",
+        "塌了",
+        "裂了"
+      ],
+      "boost_tags": {
+        "sec_secondary_hazard_aftershock": 1.8,
+        "env_structural_instability": 1.2,
+        "env_vibration_continuous": 1.0
+      },
+      "force_tags": []
+    },
+    {
+      "name": "special_population",
+      "patterns": [
+        "孩子",
+        "小孩",
+        "老人",
+        "老年人",
+        "哮喘",
+        "糖尿病",
+        "心脏病",
+        "冠心病"
+      ],
+      "boost_tags": {
+        "spc_special_group_child": 1.6,
+        "spc_special_group_elderly": 1.6,
+        "spc_special_group_asthma_patient": 1.6,
+        "spc_special_group_diabetic": 1.6,
+        "spc_special_group_cardiac_patient": 1.6
+      },
+      "force_tags": []
+    },
+    {
+      "name": "despair_and_confusion",
+      "patterns": [
+        "不想活",
+        "活不下去",
+        "没希望",
+        "绝望",
+        "不知道在哪",
+        "想不起来",
+        "意识乱",
+        "说不清"
+      ],
+      "boost_tags": {
+        "psy_psychological_hopelessness": 2.0,
+        "psy_psychological_delirium_agitation": 1.6,
+        "psy_psychological_shock_state": 1.2
+      },
+      "force_tags": []
+    },
+    {
+      "name": "flood_rescue",
+      "patterns": [
+        "洪水求救",
+        "泡水求救",
+        "水里求救",
+        "被水围困",
+        "水困求救"
+      ],
+      "boost_tags": {
+        "scn_scene_flooded_area": 2.4
+      },
+      "force_tags": [
+        "scn_scene_flooded_area"
+      ]
+    },
+    {
+      "name": "crush_trapped",
+      "patterns": [
+        "被压住了",
+        "压住了",
+        "腿被压住",
+        "手被压住",
+        "压着动不了"
+      ],
+      "boost_tags": {
+        "med_medical_crush_syndrome_risk": 2.4,
+        "scn_scene_collapsed_building": 1.2
+      },
+      "force_tags": [
+        "med_medical_crush_syndrome_risk"
+      ]
+    },
+    {
+      "name": "dehydration_thirst",
+      "patterns": [
+        "我很渴",
+        "特别渴",
+        "口特别干",
+        "嘴里发干",
+        "缺水"
+      ],
+      "boost_tags": {
+        "med_medical_dehydration_risk": 2.2
+      },
+      "force_tags": [
+        "med_medical_dehydration_risk"
+      ]
+    }
+  ],
+  "notes": [
+    "更细化的分流：恐慌/过度换气/缺氧/粉尘",
+    "如某个标签还没进库，会被 router 自动忽略（TagRegistry 会 canonicalize 并校验）"
+  ]
+}
