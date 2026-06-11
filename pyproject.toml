@@ -8,38 +8,46 @@ authors = [
   { name = "MoniBox Team" },
 ]
 
-dependencies = [
-  "json5>=0.14",
-  "numpy>=2.0",
-  "psutil>=6.0.0",
-  "python-dotenv>=1.0.1",
-  "sqlite-vec>=0.1.6",
-]
+dependencies = []
 
 [project.scripts]
 monibox = "app.cli:main"
 monibox-chat = "devtools.chat:main"
-monibox-rag = "devtools.rag_query:main"
 monibox-protocol-mock = "devtools.protocol_mock:main"
+monibox-rag = "devtools.rag_query:main"
 
 [project.optional-dependencies]
 dev = [
   "pytest>=9.0.0",
 ]
+env = [
+  "python-dotenv>=1.0.1",
+]
+json = [
+  "json5>=0.14",
+]
+knowledge = [
+  "numpy>=2.0",
+  "openai>=2.41",
+  "sentence-transformers>=5",
+  "sqlite-vec>=0.1.6",
+]
 local-llm = [
   "llama-cpp-python>=0.3",
+]
+perf = [
+  "psutil>=6.0.0",
 ]
 remote-llm = [
   "openai>=2.41",
 ]
-knowledge = [
-  "openai>=2.41",
-  "sentence-transformers>=5",
+tools = [
+  "soundfile>=0.12.1",
 ]
 voice = [
-  "comtypes>=1.4.16",
+  "comtypes>=1.4.16; sys_platform == 'win32'",
+  "numpy>=2.0",
   "sounddevice>=0.5",
-  "soundfile>=0.12.1",
   "pyttsx3>=2.90",
   "faster-whisper>=1.0.3",
   "sherpa-onnx>=1.12.29",
@@ -61,10 +69,6 @@ only-include = [
   "runtime",
   "speech",
 ]
-
-[tool.uv]
-default-groups = []
-package = true
 
 [tool.ruff]
 line-length = 88
@@ -99,3 +103,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "runtime/rag_engine.py" = ["S608"]
 "tests/**/*.py" = ["S101"]
+
+[tool.uv]
+default-groups = []
+package = true

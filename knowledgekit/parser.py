@@ -8,7 +8,10 @@ import json
 import re
 from typing import Any
 
-import json5
+try:
+    import json5
+except ImportError:
+    json5 = None
 
 
 def strip_fences(text: str) -> str:
@@ -66,7 +69,7 @@ def repair_unclosed_brackets(s: str) -> str:
             if (top == "{" and ch == "}") or (top == "[" and ch == "]"):
                 stack.pop()
             else:
-                # 括号类型不匹配，忽略（让 json5 去兜底）
+                # 括号类型不匹配，忽略（可选 json5 会继续兜底）
                 pass
 
     closing = []
@@ -77,10 +80,12 @@ def repair_unclosed_brackets(s: str) -> str:
 
 
 def _try_parse_json(block: str) -> Any:
-    """strict json + json5 两段兜底解析。"""
+    """strict json + optional json5 两段兜底解析。"""
     try:
         return json.loads(block)
     except Exception as strict_error:
+        if json5 is None:
+            raise strict_error
         try:
             return json5.loads(block)
         except Exception as json5_error:
@@ -195,16 +200,19 @@ def extract_json(text: str) -> Any:
     except Exception as repaired_error:
         first_error = repaired_error
 
-    # 5) json5 兜底（允许单引号/尾逗号/未加引号 key）
-    try:
-        return json5.loads(block2)
-    except Exception as e:
-        raise ValueError(
-            "JSON解析失败（strict json 与 json5 都失败）。\n"
-            f"错误：{e}\n"
-            f"候选JSON块前200字符：{block2[:200]!r}\n"
-            f"候选JSON块后200字符：{block2[-200:]!r}"
-        ) from first_error
+    # 5) optional json5 兜底（允许单引号/尾逗号/未加引号 key）
+    if json5 is not None:
+        try:
+            return json5.loads(block2)
+        except Exception as e:
+            first_error = e
+
+    raise ValueError(
+        "JSON解析失败（strict json 与 optional json5 都失败或 json5 未安装）。\n"
+        f"错误：{first_error}\n"
+        f"候选JSON块前200字符：{block2[:200]!r}\n"
+        f"候选JSON块后200字符：{block2[-200:]!r}"
+    ) from first_error
 
 
 # ---------- text_clean (migrated from text_clean.py) ----------

@@ -2,11 +2,17 @@ from __future__ import annotations
 
 import contextlib
 import queue
+import sys
 import threading
 from dataclasses import dataclass
 
 import pyttsx3
-from comtypes import CoInitialize, CoUninitialize
+
+if sys.platform == "win32":
+    from comtypes import CoInitialize, CoUninitialize
+else:
+    CoInitialize = None
+    CoUninitialize = None
 
 
 @dataclass
@@ -20,7 +26,7 @@ class Pyttsx3TTS:
     """
     稳定版 pyttsx3 TTS：
     - 单 worker 线程串行播放，避免多轮调用卡死/丢声
-    - worker 线程显式 COM 初始化（Windows SAPI 必需，解决“只播一次”）
+    - Windows 下显式 COM 初始化；macOS/Linux 不依赖 comtypes
     """
 
     def __init__(
@@ -86,7 +92,8 @@ class Pyttsx3TTS:
         return rate, min(1.0, max(0.0, volume))
 
     def _worker(self):
-        CoInitialize()
+        if CoInitialize is not None:
+            CoInitialize()
         try:
             engine = self._init_engine()
 
@@ -114,4 +121,5 @@ class Pyttsx3TTS:
                     self._speaking.clear()
                     item.done.set()
         finally:
-            CoUninitialize()
+            if CoUninitialize is not None:
+                CoUninitialize()

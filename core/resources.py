@@ -26,6 +26,8 @@ except ImportError:
 try:
     from speech.whisper import (
         FasterWhisperASR as WhisperASR,
+    )
+    from speech.whisper import (
         WhisperASRConfig,
         build_default_initial_prompt,
     )

@@ -2,9 +2,12 @@ import gc
 import os
 import time
 
-import psutil
-
 from core.shared import get_runtime_trace_logger
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 
 class PerfMonitor:
@@ -12,7 +15,7 @@ class PerfMonitor:
 
     def __init__(self, warning_mb: int = 512):
         self.warning_mb = warning_mb
-        self.process = psutil.Process(os.getpid())
+        self.process = psutil.Process(os.getpid()) if psutil is not None else None
         self.timers = {}
         self._trace = get_runtime_trace_logger()
 
@@ -26,6 +29,14 @@ class PerfMonitor:
 
     def check_memory(self, interaction_id: str | None = None):
         """检查当前内存水位，超出阈值则报警并强制 GC"""
+        if self.process is None:
+            self._trace.log(
+                "memory_sample_unavailable",
+                interaction_id=interaction_id,
+                reason="psutil_not_installed",
+            )
+            return 0.0
+
         mem_info = self.process.memory_info()
         rss_mb = mem_info.rss / 1024 / 1024
         self._trace.log(

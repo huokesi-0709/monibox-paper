@@ -674,59 +674,67 @@ wheels = [
 name = "monibox"
 version = "0.1.0"
 source = { editable = "." }
-dependencies = [
-    { name = "json5" },
-    { name = "numpy" },
-    { name = "psutil" },
-    { name = "python-dotenv" },
-    { name = "sqlite-vec" },
-]
 
 [package.optional-dependencies]
 dev = [
     { name = "pytest" },
 ]
+env = [
+    { name = "python-dotenv" },
+]
+json = [
+    { name = "json5" },
+]
 knowledge = [
+    { name = "numpy" },
     { name = "openai" },
     { name = "sentence-transformers" },
+    { name = "sqlite-vec" },
 ]
 local-llm = [
     { name = "llama-cpp-python" },
 ]
+perf = [
+    { name = "psutil" },
+]
 remote-llm = [
     { name = "openai" },
 ]
+tools = [
+    { name = "soundfile" },
+]
 voice = [
-    { name = "comtypes" },
+    { name = "comtypes", marker = "sys_platform == 'win32'" },
     { name = "faster-whisper" },
+    { name = "numpy" },
     { name = "pyttsx3" },
     { name = "pywin32", marker = "sys_platform == 'win32'" },
     { name = "sherpa-onnx" },
     { name = "sounddevice" },
-    { name = "soundfile" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "comtypes", marker = "extra == 'voice'", specifier = ">=1.4.16" },
+    { name = "comtypes", marker = "sys_platform == 'win32' and extra == 'voice'", specifier = ">=1.4.16" },
     { name = "faster-whisper", marker = "extra == 'voice'", specifier = ">=1.0.3" },
-    { name = "json5", specifier = ">=0.14" },
+    { name = "json5", marker = "extra == 'json'", specifier = ">=0.14" },
     { name = "llama-cpp-python", marker = "extra == 'local-llm'", specifier = ">=0.3" },
-    { name = "numpy", specifier = ">=2.0" },
+    { name = "numpy", marker = "extra == 'knowledge'", specifier = ">=2.0" },
+    { name = "numpy", marker = "extra == 'voice'", specifier = ">=2.0" },
     { name = "openai", marker = "extra == 'knowledge'", specifier = ">=2.41" },
     { name = "openai", marker = "extra == 'remote-llm'", specifier = ">=2.41" },
-    { name = "psutil", specifier = ">=6.0.0" },
+    { name = "psutil", marker = "extra == 'perf'", specifier = ">=6.0.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.0" },
-    { name = "python-dotenv", specifier = ">=1.0.1" },
+    { name = "python-dotenv", marker = "extra == 'env'", specifier = ">=1.0.1" },
     { name = "pyttsx3", marker = "extra == 'voice'", specifier = ">=2.90" },
     { name = "pywin32", marker = "sys_platform == 'win32' and extra == 'voice'", specifier = ">=306" },
     { name = "sentence-transformers", marker = "extra == 'knowledge'", specifier = ">=5" },
     { name = "sherpa-onnx", marker = "extra == 'voice'", specifier = ">=1.12.29" },
     { name = "sounddevice", marker = "extra == 'voice'", specifier = ">=0.5" },
-    { name = "soundfile", marker = "extra == 'voice'", specifier = ">=0.12.1" },
-    { name = "sqlite-vec", specifier = ">=0.1.6" },
+    { name = "soundfile", marker = "extra == 'tools'", specifier = ">=0.12.1" },
+    { name = "sqlite-vec", marker = "extra == 'knowledge'", specifier = ">=0.1.6" },
 ]
-provides-extras = ["dev", "local-llm", "remote-llm", "knowledge", "voice"]
+provides-extras = ["dev", "env", "json", "knowledge", "local-llm", "perf", "remote-llm", "tools", "voice"]
 
 [[package]]
 name = "mpmath"

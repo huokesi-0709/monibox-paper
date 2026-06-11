@@ -9,8 +9,6 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 # 项目根目录（app/config.py 的上级目录）
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,8 +17,18 @@ GENERATED_DIR = KNOWLEDGE_SRC / "generated"
 BUILD_DIR = PROJECT_ROOT / "build"
 SQL_DIR = PROJECT_ROOT / "sql"
 
-# 显式从项目根目录加载 .env
-load_dotenv(PROJECT_ROOT / ".env")
+
+def load_project_env(path: Path | None = None) -> bool:
+    """Load .env when python-dotenv is installed; otherwise rely on OS env."""
+    try:
+        from dotenv import load_dotenv
+    except ImportError:
+        return False
+    return bool(load_dotenv(path or (PROJECT_ROOT / ".env")))
+
+
+# 显式从项目根目录加载 .env；未安装 python-dotenv 时自动跳过。
+load_project_env()
 
 
 def resolve_project_path(p: str) -> str:

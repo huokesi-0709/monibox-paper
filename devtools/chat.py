@@ -14,11 +14,9 @@ import argparse
 import os
 import sys
 
-from dotenv import load_dotenv
+from app.config import load_project_env, settings
 
-from app.config import settings
-
-load_dotenv()
+load_project_env()
 
 
 def run_rag_only(query: str, rag_db_path: str) -> None:
