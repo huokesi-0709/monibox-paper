@@ -3,10 +3,10 @@ from __future__ import annotations
 import argparse
 
 from monibox.config import settings
-from monibox.runtime.protocol_engine import ProtocolEngine
+from monibox.runtime.protocol_matcher import ProtocolEngine
 from monibox.runtime.rag_engine import RagEngine
-from monibox.runtime.safety_guard import SafetyGuard
-from monibox.runtime.support import MockHardware
+from monibox.runtime.guard import SafetyGuard
+from monibox.runtime.primitives import MockHardware
 
 
 def main():

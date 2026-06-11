@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from monibox.config import KNOWLEDGE_SRC
-from monibox.tags.registry import TagRegistry
+from monibox.tags.tag_registry import TagRegistry
 
 CATEGORY_FIELD = "知识类别"
 CANONICAL_CATEGORY_FIELD = "category"

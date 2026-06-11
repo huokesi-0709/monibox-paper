@@ -67,7 +67,7 @@ def run_rag_only(query: str, rag_db_path: str) -> None:
 
 def run_full(rag_db_path: str, single_query: str = "") -> None:
     """完整模式：RAG + LLM 对话"""
-    from monibox.runtime.session import MoniSession, SessionConfig
+    from monibox.runtime.orchestrator import MoniSession, SessionConfig
 
     llm_path = os.getenv("LLM_GGUF_PATH", "")
     if not llm_path:

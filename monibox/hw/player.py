@@ -10,7 +10,7 @@ from queue import Empty
 
 import sounddevice as sd
 
-from monibox.core_loop.base import (
+from monibox.core_loop.shared import (
     EventType,
     get_runtime_trace_logger,
     output_queue,

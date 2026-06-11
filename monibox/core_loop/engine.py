@@ -13,7 +13,7 @@ import time
 from datetime import datetime
 
 from monibox.config import settings
-from monibox.core_loop.base import (
+from monibox.core_loop.shared import (
     EngineEvent,
     EventType,
     clear_runtime_queues,
@@ -22,9 +22,9 @@ from monibox.core_loop.base import (
     new_interaction_id,
     output_queue,
 )
-from monibox.core_loop.resource_manager import global_resources
-from monibox.runtime.protocol_context import parse_location, parse_yesno
-from monibox.runtime.session import MoniSession, SessionConfig
+from monibox.core_loop.resources import global_resources
+from monibox.runtime.slot_parser import parse_location, parse_yesno
+from monibox.runtime.orchestrator import MoniSession, SessionConfig
 
 logger = logging.getLogger(__name__)
 
@@ -366,9 +366,9 @@ class MainEngine:
             logger.info(f"[MainEngine] system started. mode={self.mode}")
             return
 
-        from monibox.asr.asr_worker import ASRWorkerThread
-        from monibox.audio.vad_recorder import VadConfig
-        from monibox.hw.audio_player import AudioPlayerThread
+        from monibox.asr.worker import ASRWorkerThread
+        from monibox.audio.vad import VadConfig
+        from monibox.hw.player import AudioPlayerThread
 
         self.player_thread = AudioPlayerThread()
         self.player_thread.start()

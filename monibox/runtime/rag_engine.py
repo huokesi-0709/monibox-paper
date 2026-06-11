@@ -8,8 +8,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
 
-from monibox.runtime.router import AutoRouter
-from monibox.runtime.rerank import RerankPolicy, final_distance
+from monibox.runtime.topic_router import AutoRouter
+from monibox.runtime.scoring import RerankPolicy, final_distance
 
 try:
     import sqlite_vec  # type: ignore
@@ -358,7 +358,7 @@ class RagEngine:
     ) -> list[SearchResult]:
 
         try:
-            from monibox.embedding import embed_texts
+            from monibox.embedder import embed_texts
         except Exception:
             embed_texts = None  # type: ignore
 

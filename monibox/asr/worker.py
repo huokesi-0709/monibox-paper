@@ -8,15 +8,15 @@ import logging
 import threading
 import time
 
-from monibox.audio.vad_recorder import VadConfig, record_vad
-from monibox.core_loop.base import (
+from monibox.audio.vad import VadConfig, record_vad
+from monibox.core_loop.shared import (
     EngineEvent,
     EventType,
     get_runtime_trace_logger,
     input_queue,
     new_interaction_id,
 )
-from monibox.core_loop.resource_manager import global_resources
+from monibox.core_loop.resources import global_resources
 
 logger = logging.getLogger(__name__)
 

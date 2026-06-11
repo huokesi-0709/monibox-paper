@@ -1,5 +1,5 @@
 """
-monibox/runtime/session.py
+monibox/runtime/orchestrator.py
 
 用途
 -----
@@ -18,41 +18,37 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from monibox.llm.backend import create_llm_backend
-from monibox.runtime.emotion_strategies import EmotionStrategy, EmotionStrategyBook
-from monibox.runtime.low_evidence_router import LowEvidenceRouter
-from monibox.runtime.output_pipeline import OutputPipeline
-from monibox.runtime.protocol_context import infer_slot_from_text
-from monibox.runtime.protocol_engine import ProtocolEngine
-from monibox.runtime.protocol_handler import ProtocolHandler
-from monibox.runtime.rag_engine import RagEngine, SearchResult
-from monibox.runtime.rag_generator import RagGenerator
-from monibox.runtime.response_rewriter import ResponseRewriter
-from monibox.runtime.runtime_config import load_runtime_config
-from monibox.runtime.safety_guard import SafetyGuard
-from monibox.runtime.support import (
+from monibox.llm.backends import create_llm_backend
+from monibox.runtime.emotions import EmotionStrategy, EmotionStrategyBook
+from monibox.runtime.evidence_router import LowEvidenceRouter
+from monibox.runtime.generator import RagGenerator
+from monibox.runtime.guard import SafetyGuard
+from monibox.runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
+from monibox.runtime.primitives import (
     PerfMonitor,
     RepeatGuard,
     WorkingMemory,
     build_default_variant_bank,
 )
-from monibox.runtime.text_pipeline import (
-    dedup_sentences,
-    force_second_person,
-    smart_cut,
-)
+from monibox.runtime.protocol_fsm import ProtocolHandler
+from monibox.runtime.protocol_matcher import ProtocolEngine
+from monibox.runtime.rag_engine import RagEngine, SearchResult
+from monibox.runtime.response_pipeline import OutputPipeline
+from monibox.runtime.rewriter import ResponseRewriter
+from monibox.runtime.runtime_config import load_runtime_config
+from monibox.runtime.slot_parser import infer_slot_from_text
 
 # NOTE: TTS 模块延迟加载——纯文本模式无需安装 pyttsx3 / pywin32
 try:
-    from monibox.tts.pyttsx3_tts import Pyttsx3TTS
+    from monibox.tts.pyttsx3 import Pyttsx3TTS
 except ImportError:
     Pyttsx3TTS = None  # type: ignore
 try:
-    from monibox.tts.sapi_tts import SapiTTS  # type: ignore
+    from monibox.tts.sapi import SapiTTS  # type: ignore
 except Exception:
     SapiTTS = None  # type: ignore
 try:
-    from monibox.tts.sherpa_tts import SherpaTTS
+    from monibox.tts.sherpa import SherpaTTS
 except ImportError:
     SherpaTTS = None  # type: ignore
 
@@ -140,7 +136,9 @@ class MoniSession:
         self.proto_handler = kwargs.get("protocol_handler") or ProtocolHandler(
             guard=self.guard, cfg=self.rt, emotion_book=self.emotions
         )
-        self.rag_gen = kwargs.get("rag_generator") or RagGenerator(llm=self.llm, cfg=self.rt)
+        self.rag_gen = kwargs.get("rag_generator") or RagGenerator(
+            llm=self.llm, cfg=self.rt
+        )
 
         # 挂载性能监控
         self.perf = kwargs.get("perf_monitor") or PerfMonitor(
@@ -176,7 +174,7 @@ class MoniSession:
         if time.monotonic() > self.pending_until:
             self.pending_bucket = None
             return None
-        from monibox.runtime.protocol_context import parse_yesno
+        from monibox.runtime.slot_parser import parse_yesno
 
         yn = parse_yesno(user_text)
         if yn is None:
@@ -218,7 +216,7 @@ class MoniSession:
         return emotion, max_chars, rewrite_enabled
 
     def _is_localized_pain_query(self, user_text: str) -> bool:
-        from monibox.runtime.text_pipeline import HIGH_RISK_KEYWORDS, contains_any
+        from monibox.runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         t = user_text or ""
         body_parts = [
@@ -275,14 +273,7 @@ class MoniSession:
     def _handle(
         self, user_text: str, events: list[str] | None = None, auto_top_tags: int = 2
     ) -> str:
-        from monibox.runtime.protocol_context import infer_slot_from_text
-        from monibox.runtime.text_pipeline import (
-            HIGH_RISK_KEYWORDS,
-            contains_any,
-            dedup_sentences,
-            force_second_person,
-            smart_cut,
-        )
+        from monibox.runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         events = events or []
         user_text = (user_text or "").strip()

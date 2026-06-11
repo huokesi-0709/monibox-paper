@@ -7,15 +7,15 @@ import argparse
 import os
 import time
 
-from monibox.asr.faster_whisper_asr import (
+from monibox.asr.whisper_asr import (
     FasterWhisperASR,
     WhisperASRConfig,
     build_default_initial_prompt,
 )
-from monibox.audio.recorder import record
-from monibox.audio.vad_recorder import VadConfig, record_vad
+from monibox.audio.base_recorder import record
+from monibox.audio.vad import VadConfig, record_vad
 from monibox.config import settings
-from monibox.runtime.session import MoniSession, SessionConfig
+from monibox.runtime.orchestrator import MoniSession, SessionConfig
 
 
 def main():

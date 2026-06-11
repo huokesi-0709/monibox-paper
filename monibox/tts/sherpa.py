@@ -1,5 +1,5 @@
 """
-monibox/tts/sherpa_tts.py
+monibox/tts/sherpa.py
 
 用途
 -----
@@ -281,7 +281,7 @@ class SherpaTTS:
     ) -> None:
         """根据模式，推给队列或者阻塞式播放"""
         if self._playback_mode == "queue":
-            from monibox.core_loop.base import EngineEvent, EventType, output_queue
+            from monibox.core_loop.shared import EngineEvent, EventType, output_queue
 
             output_queue.put(
                 EngineEvent(

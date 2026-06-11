@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import os
 import queue
 import threading
@@ -46,10 +47,10 @@ class SapiTTS:
         t = (text or "").strip()
         if not t:
             return
-            
+
         # 标点符号轻微停顿处理（用逗号或句号替换一部分连续顿号/空格，利用 SAPI 自带法则停顿）
         t = t.replace("、", "，")
-        
+
         done = threading.Event()
         self._q.put(_TTSItem(t, done, style))
         if block:
@@ -111,10 +112,8 @@ class SapiTTS:
 
                 except Exception:
                     # 出错则重建 voice，避免后续全部失声
-                    try:
+                    with contextlib.suppress(Exception):
                         voice = self._new_voice()
-                    except Exception:
-                        pass
                 finally:
                     item.done.set()
 

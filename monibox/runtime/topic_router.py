@@ -4,7 +4,7 @@ import json
 from dataclasses import dataclass
 
 from monibox.config import GENERATED_DIR, KNOWLEDGE_SRC
-from monibox.tags.registry import TagRegistry
+from monibox.tags.tag_registry import TagRegistry
 
 
 @dataclass

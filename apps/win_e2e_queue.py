@@ -11,15 +11,15 @@ import os
 import time
 
 from monibox.config import settings
-from monibox.core_loop.base import (
+from monibox.core_loop.shared import (
     EngineEvent,
     EventType,
     input_queue,
     output_queue,
 )
-from monibox.core_loop.resource_manager import global_resources
-from monibox.hw.audio_player import AudioPlayerThread
-from monibox.runtime.session import MoniSession, SessionConfig
+from monibox.core_loop.resources import global_resources
+from monibox.hw.player import AudioPlayerThread
+from monibox.runtime.orchestrator import MoniSession, SessionConfig
 
 
 def worker_session():

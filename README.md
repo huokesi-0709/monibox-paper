@@ -136,9 +136,9 @@ uv lock                          # 更新 uv.lock
 
 | 目录/文件                       | 职责                    |
 | ------------------------------- | ----------------------- |
-| `monibox/audio/recorder.py`     | 基础录音                |
-| `monibox/audio/vad_recorder.py` | VAD（语音活动检测）录音 |
-| `monibox/hw/audio_player.py`    | 音频播放器              |
+| `monibox/audio/base_recorder.py`     | 基础录音                |
+| `monibox/audio/vad.py` | VAD（语音活动检测）录音 |
+| `monibox/hw/player.py`    | 音频播放器              |
 | `monibox/hw/mock_hw.py`         | 硬件 mock（占位）       |
 
 ### 6. 数据与构建层
