@@ -114,7 +114,7 @@ class VariantBank:
         if not xs:
             return default
         if mode == "rand":
-            return random.choice(xs)
+            return random.choice(xs)  # noqa: S311 - UI variant rotation, not security.
         i = self.rr_index.get(key, 0) % len(xs)
         self.rr_index[key] = i + 1
         return xs[i]

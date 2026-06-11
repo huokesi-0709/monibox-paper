@@ -157,9 +157,10 @@ class RagEngine:
             if any(term in body for term in ("眼睛", "闭上", "往干净的地方挪")):
                 adjust += 0.04
 
-        if any(term in q for term in ("我很渴", "特别渴", "口特别干", "嘴里发干")):
-            if any(term in body for term in ("小口", "别大口", "省水", "少说话")):
-                adjust -= 0.05
+        if any(
+            term in q for term in ("我很渴", "特别渴", "口特别干", "嘴里发干")
+        ) and any(term in body for term in ("小口", "别大口", "省水", "少说话")):
+            adjust -= 0.05
 
         return adjust
 
@@ -258,7 +259,8 @@ class RagEngine:
 
         where_sql = " WHERE " + " AND ".join(where)
 
-        sql = f"""
+        sql = (
+            f"""
         SELECT
           chunk_id, display_id, group_id, text, category, sub_category, dimension,
           risk, scene, source_id, status, quality_score, priority, hardware_action_hint, tags_flat
@@ -266,6 +268,7 @@ class RagEngine:
         {where_sql}
         LIMIT 800;
         """
+        )
 
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
@@ -404,7 +407,8 @@ class RagEngine:
 
         k_pool = min(max(topk, topk * pool_mult), 300)
 
-        sql = f"""
+        sql = (
+            f"""
         WITH knn AS (
           SELECT rowid, distance
           FROM vec_chunks
@@ -422,6 +426,7 @@ class RagEngine:
         ORDER BY knn.distance
         LIMIT :kpool;
         """
+        )
 
         params["qvec"] = qblob
         params["kpool"] = int(k_pool)

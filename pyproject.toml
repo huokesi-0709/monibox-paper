@@ -97,4 +97,5 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"runtime/rag_engine.py" = ["S608"]
 "tests/**/*.py" = ["S101"]

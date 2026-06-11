@@ -73,7 +73,7 @@ def record_vad(cfg: VadConfig) -> np.ndarray | None:
         device=cfg.device,
     ) as stream:
         for _ in range(max_blocks):
-            data, overflowed = stream.read(block_size)
+            data, _overflowed = stream.read(block_size)
             x = data.reshape(-1)
             raw_level = _rms(x)
 

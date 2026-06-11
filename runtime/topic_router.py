@@ -121,7 +121,7 @@ class AutoRouter:
                         tag_score[canon] = tag_score.get(canon, 0.0) + 99.0
                         tag_hits.setdefault(canon, []).extend(hit_terms)
 
-            except Exception:
+            except (TypeError, ValueError):
                 continue
 
     def route(self, query: str, top_tags: int = 1) -> RouteResult:

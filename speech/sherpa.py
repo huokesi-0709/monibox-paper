@@ -237,7 +237,7 @@ class SherpaTTS:
     @staticmethod
     def _text_hash(raw: str) -> str:
         """生成短哈希作为缓存键。"""
-        return hashlib.md5(raw.encode("utf-8")).hexdigest()[:16]
+        return hashlib.blake2b(raw.encode("utf-8"), digest_size=8).hexdigest()
 
     def _resolve_style_profile(self, style: str | None) -> _StyleProfile:
         """把 style 字符串映射成真实的 TTS profile。"""

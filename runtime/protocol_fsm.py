@@ -489,9 +489,7 @@ class ProtocolHandler:
             return True
         if len(t) <= 2:
             return True
-        if re.fullmatch(r"[A-Za-z0-9_\-]+", t):
-            return True
-        return False
+        return bool(re.fullmatch(r"[A-Za-z0-9_\-]+", t))
 
     def _is_attention_noise(self, text: str) -> bool:
         """

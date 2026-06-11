@@ -46,6 +46,7 @@ class Pyttsx3TTS:
         style: str | None = None,
         metadata: dict | None = None,
     ):
+        del metadata
         t = (text or "").strip()
         if not t:
             return
@@ -63,13 +64,11 @@ class Pyttsx3TTS:
         engine.setProperty("volume", self._volume)
 
         if self._voice_name_contains:
-            try:
+            with contextlib.suppress(Exception):
                 for v in engine.getProperty("voices"):
                     if self._voice_name_contains.lower() in (v.name or "").lower():
                         engine.setProperty("voice", v.id)
                         break
-            except Exception:
-                pass
         return engine
 
     def _style_props(self, style: str | None) -> tuple[int, float]:

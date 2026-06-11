@@ -147,16 +147,22 @@ def extract_first_json(text: str) -> Any:
 
     t = strip_fences(raw)
 
+    fallback_error: Exception | None = None
     block = _find_first_balanced_json_block(t)
     if block:
         try:
             return _try_parse_json(block)
-        except Exception:
+        except Exception as first_block_error:
             # 若这个完整块仍不严格，则继续走老策略（更激进的修复）
-            pass
+            fallback_error = first_block_error
 
     # 回退：用原 extract_json 的策略
-    return extract_json(text)
+    try:
+        return extract_json(text)
+    except Exception as extract_error:
+        if fallback_error is not None:
+            raise extract_error from fallback_error
+        raise
 
 
 def extract_json(text: str) -> Any:

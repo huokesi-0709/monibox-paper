@@ -44,13 +44,15 @@ class NullLLMBackend(LLMBackend):
     def generate(
         self, system: str, user: str, max_tokens: int = 120, temperature: float = 0.3
     ) -> str:
+        del system, user, max_tokens, temperature
         return ""
 
     def stream_generate(
         self, system: str, user: str, max_tokens: int = 120, temperature: float = 0.3
     ) -> Iterator[str]:
-        if False:
-            yield ""
+        del system, user, max_tokens, temperature
+        return
+        yield
 
     @property
     def backend_name(self) -> str:
@@ -120,7 +122,7 @@ class LlamaCppBackend(LLMBackend):
         n_threads: int = 6,
         n_gpu_layers: int = 0,
     ) -> None:
-        from language.local import LlamaCppChat, LLMConfig
+        from language.local import LLMConfig, LlamaCppChat
 
         self._llm = LlamaCppChat(
             LLMConfig(

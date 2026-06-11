@@ -44,6 +44,7 @@ class SapiTTS:
         style: str | None = None,
         metadata: dict | None = None,
     ):
+        del metadata
         t = (text or "").strip()
         if not t:
             return
@@ -103,10 +104,8 @@ class SapiTTS:
                         waited += self._poll_ms / 1000.0
                         if waited >= self._max_play_sec:
                             # 超过上限才 purge（避免长句被提前掐断）
-                            try:
+                            with contextlib.suppress(Exception):
                                 voice.Speak("", 2)  # 2 = SVSFPurgeBeforeSpeak
-                            except Exception:
-                                pass
                             voice = self._new_voice()
                             break
 

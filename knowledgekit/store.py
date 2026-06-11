@@ -67,7 +67,8 @@ class RagDB:
             conn.executescript(sql)
 
     def insert_chunks(self, records: list[dict[str, Any]], vectors: list[list[float]]):
-        assert len(records) == len(vectors), "records 与 vectors 数量必须一致"
+        if len(records) != len(vectors):
+            raise ValueError("records 与 vectors 数量必须一致")
 
         with self.connect() as conn:
             cur = conn.cursor()

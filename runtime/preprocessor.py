@@ -209,9 +209,10 @@ def parse_llm_payload(raw: str) -> dict[str, Any]:
             used_ids = []
         used_ids = [str(x) for x in used_ids if str(x).strip()]
 
-        return {"ok": True, "text": text, "used_ids": used_ids, "ask": ask}
     except Exception:
         return {"ok": False, "text": raw, "used_ids": [], "ask": ""}
+    else:
+        return {"ok": True, "text": text, "used_ids": used_ids, "ask": ask}
 
 
 def normalize_payload(text: str, ask: str) -> str:

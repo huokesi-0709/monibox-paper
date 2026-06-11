@@ -4,8 +4,6 @@ runtime/generator.py
 用途
 -----
 RAG 生成器：将 RAG 检索结果作为上下文，调用 LLM 生成回复。
-实现三级回退：LLM JSON 成功 → LLM 原始输出 → 最佳 chunk 原文。
-从原 session.py._generate_from_rag 剥离。
 """
 
 from __future__ import annotations
@@ -46,6 +44,7 @@ class RagGenerator:
         将 RAG 检索结果作为上下文，调用 LLM 生成回复。
         三级回退：LLM 成功 → LLM 原始输出 → 最佳 chunk 原文
         """
+        del high_risk
         if not results:
             return "我在。你现在最不舒服的是哪里？"
 
@@ -137,6 +136,7 @@ class RagGenerator:
         memory: WorkingMemory | None = None,
     ) -> Iterator[str]:
         """流式分句生成：一边从 LLM 获取 token，一边按标点切分出句子 yield 给外部"""
+        del high_risk
         if not results:
             yield "我在。你现在最不舒服的是哪里？"
             return
