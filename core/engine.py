@@ -12,6 +12,7 @@ import threading
 import time
 from datetime import datetime
 
+from app.config import BUILD_DIR, settings
 from core.resources import global_resources
 from core.shared import (
     EngineEvent,
@@ -22,8 +23,6 @@ from core.shared import (
     new_interaction_id,
     output_queue,
 )
-
-from app.config import settings
 from runtime.orchestrator import MoniSession, SessionConfig
 from runtime.slot_parser import parse_location, parse_yesno
 
@@ -265,14 +264,14 @@ class MainEngine:
 
     def _handle_feedback(self, label: str):
         history = self.session.mem.items
-        feedback_path = os.path.join(os.getcwd(), "build", "feedback_logs.jsonl")
-        os.makedirs(os.path.dirname(feedback_path), exist_ok=True)
+        feedback_path = BUILD_DIR / "feedback_logs.jsonl"
+        feedback_path.parent.mkdir(parents=True, exist_ok=True)
         entry = {
             "timestamp": datetime.now().isoformat(),
             "label": label,
             "recent_history": [str(it) for it in history[-5:]],
         }
-        with open(feedback_path, "a", encoding="utf-8") as f:
+        with feedback_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         logger.warning(f"[MainEngine] Feedback recorded: {label}")
 
@@ -367,10 +366,9 @@ class MainEngine:
             logger.info(f"[MainEngine] system started. mode={self.mode}")
             return
 
-        from speech.worker import ASRWorkerThread
-        from speech.vad import VadConfig
-
         from devices.player import AudioPlayerThread
+        from speech.vad import VadConfig
+        from speech.worker import ASRWorkerThread
 
         self.player_thread = AudioPlayerThread()
         self.player_thread.start()

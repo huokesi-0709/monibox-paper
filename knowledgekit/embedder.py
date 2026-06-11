@@ -62,7 +62,7 @@ def get_model():
         except ImportError as exc:
             raise RuntimeError(
                 "缺少 sentence-transformers，无法加载 embedding 模型。"
-                "请先执行 `pip install -r requirements.txt`。"
+                "请先执行 `uv sync --extra knowledge`。"
             ) from exc
 
         model_ref = _resolve_model_ref(settings.embedding_model)

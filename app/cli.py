@@ -8,9 +8,9 @@ import argparse
 import os
 import time
 
-from core.shared import EngineEvent, EventType, input_queue
-from core.engine import MainEngine
 from app.log import get_logger, setup_logging
+from core.engine import MainEngine
+from core.shared import EngineEvent, EventType, input_queue
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 if not os.getenv("WHISPER_THREADS"):

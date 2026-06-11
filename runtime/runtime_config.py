@@ -203,10 +203,10 @@ def _resolve_profile_path(profile: str | None) -> Path | None:
     if path.suffix in {".yaml", ".yml"} or path.parent != Path("."):
         return path if path.is_absolute() else PROJECT_ROOT / path
 
-    primary = PROJECT_ROOT / "configs" / f"{name}.yaml"
+    primary = PROJECT_ROOT / "profiles" / f"{name}.yaml"
     if primary.exists():
         return primary
-    return PROJECT_ROOT / "configs" / "profiles" / f"{name}.yaml"
+    return PROJECT_ROOT / "profiles" / f"{name}.yaml"
 
 
 def _load_profile_values(profile: str | None) -> dict[str, Any]:
@@ -232,7 +232,7 @@ def load_runtime_config(profile: str | None = None) -> RuntimeConfig:
 
     优先级：
     1. 环境变量 / .env
-    2. configs/*.yaml 或 configs/profiles/*.yaml
+    2. profiles/*.yaml
     3. RuntimeConfig 代码默认值
     """
     defaults = RuntimeConfig()

@@ -17,7 +17,7 @@ class ProtocolEngine:
 
     def __init__(self, protocols_path: str | None = None):
         if protocols_path is None:
-            protocols_path = str(PROJECT_ROOT / "knowledge_src" / "protocols.json")
+            protocols_path = str(PROJECT_ROOT / "knowledge" / "protocols.json")
 
         self.protocols_path = Path(protocols_path)
         self.protocols: list[dict[str, Any]] = []

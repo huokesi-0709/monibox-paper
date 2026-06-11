@@ -15,6 +15,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from app.config import PROJECT_ROOT
+
 # ---------- models ----------
 
 
@@ -111,6 +113,6 @@ def get_runtime_trace_logger() -> RuntimeTraceLogger:
             )
             path = Path(raw_path)
             if not path.is_absolute():
-                path = Path(os.getcwd()) / path
+                path = PROJECT_ROOT / path
             _LOGGER_SINGLETON = RuntimeTraceLogger(path=path, enabled=enabled)
         return _LOGGER_SINGLETON

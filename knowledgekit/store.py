@@ -46,7 +46,7 @@ class RagDB:
         if sqlite_vec is None:
             raise RuntimeError(
                 "缺少 sqlite-vec 依赖，无法创建或写入向量库。"
-                "请先执行 `pip install -r requirements.txt`。"
+                "请先执行 `uv sync`。"
             )
 
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)

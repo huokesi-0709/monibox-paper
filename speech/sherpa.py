@@ -313,8 +313,6 @@ class SherpaTTS:
                 item.done.set()
             return
 
-        sample_rate = tts_engine.sample_rate
-
         while True:
             item = self._q.get()
             if item is None:

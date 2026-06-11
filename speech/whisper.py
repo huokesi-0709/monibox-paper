@@ -114,8 +114,8 @@ class FasterWhisperASR:
         self.corrections: dict[str, str] = {}
         self.fuzzy_rules: list = []
 
-        # 优先从 knowledge_src/asr_corrections.json 加载增强纠错字典
-        dict_path = PROJECT_ROOT / "knowledge_src" / "asr_corrections.json"
+        # 优先从本地知识库加载增强纠错字典。
+        dict_path = PROJECT_ROOT / "knowledge" / "asr_corrections.json"
         if dict_path.exists():
             try:
                 data = json.loads(dict_path.read_text(encoding="utf-8"))

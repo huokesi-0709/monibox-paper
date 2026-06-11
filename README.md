@@ -33,6 +33,12 @@ MoniBox 面向的不是普通聊天机器人场景，而是灾害受困、断网
 # 同步核心依赖（文本模式可直接运行）
 uv sync
 
+# 同步含 DeepSeek / OpenAI API 后端
+uv sync --extra remote-llm
+
+# 同步知识库构建依赖（Embedding / DeepSeek 构建客户端）
+uv sync --extra knowledge
+
 # 同步含语音链路的完整依赖
 uv sync --extra voice
 
@@ -56,7 +62,7 @@ uv run monibox --mode mic_vad --once
 ### 常用命令
 
 ```bash
-uv run pytest                    # 运行测试
+uv run --extra dev pytest        # 运行测试
 uv run monibox-chat --no_llm     # 纯文本 RAG 调试入口
 uv run monibox-rag --q "我好冷"   # 快速查看 RAG 检索结果
 uv pip list                      # 查看已安装包
@@ -82,7 +88,6 @@ uv run monibox --mode mic_vad --once
 | `rag_query.py`     | 单条查询的 RAG 检索结果查看器  |
 | `protocol_mock.py` | 协议优先链路的轻量 smoke check |
 | `win_e2e_demo.py`  | Windows 端到端语音验证（早期） |
-| `win_e2e_queue.py` | 队列式音频链路实验入口         |
 
 ### 运行协调层 `core/`
 
@@ -125,28 +130,29 @@ uv run monibox --mode mic_vad --once
 
 #### 语音链路 `speech/`
 
-| 文件             | 职责                        |
-| ---------------- | --------------------------- |
-| `whisper.py`     | Faster-Whisper 语音识别实现 |
-| `worker.py`      | ASR 工作线程封装            |
-| `recorder.py`    | 基础录音                    |
-| `vad.py`         | VAD（语音活动检测）录音     |
-| `pyttsx3.py` | pyttsx3 离线 TTS                |
-| `sapi.py`    | Windows SAPI TTS                |
-| `sherpa.py`  | Sherpa 系列 TTS（端侧主推方案） |
+| 文件          | 职责                            |
+| ------------- | ------------------------------- |
+| `whisper.py`  | Faster-Whisper 语音识别实现     |
+| `worker.py`   | ASR 工作线程封装                |
+| `recorder.py` | 基础录音                        |
+| `vad.py`      | VAD（语音活动检测）录音         |
+| `pyttsx3.py`  | pyttsx3 离线 TTS                |
+| `sapi.py`     | Windows SAPI TTS                |
+| `sherpa.py`   | Sherpa 系列 TTS（端侧主推方案） |
 
 ### 设备抽象层 `devices/`
 
-| 目录/文件                        | 职责                    |
-| -------------------------------- | ----------------------- |
-| `player.py`                     | 音频播放器              |
+| 目录/文件   | 职责       |
+| ----------- | ---------- |
+| `player.py` | 音频播放器 |
 
 ### 数据与构建层
 
 | 目录             | 职责                                                                                  |
 | ---------------- | ------------------------------------------------------------------------------------- |
 | `knowledge/`     | 本地知识库资产：协议、策略、标签别名、情感策略、审核策略、chunk 元数据等              |
-| `build/`         | 构建产物：`rag.db`（向量数据库）、`runtime_pack.json`（运行时配置包）、日志与评测结果 |
+| `build/`         | 本地构建产物：`rag.db`、`runtime_pack.json`、日志与评测结果；默认不提交 Git          |
+| `models/`        | 本地模型资产；当前保留必要的轻量模型元数据和音色样例                                  |
 | `sql/schema.sql` | SQLite 数据库表结构定义                                                               |
 
 ### 配置层 `profiles/`
