@@ -8,9 +8,8 @@ import argparse
 import os
 import time
 
+from monibox.core_loop.base import EngineEvent, EventType, input_queue
 from monibox.core_loop.main_engine import MainEngine
-from monibox.core_loop.models import EngineEvent, EventType
-from monibox.core_loop.queues import input_queue
 from monibox.log import get_logger, setup_logging
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"

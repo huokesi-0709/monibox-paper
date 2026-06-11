@@ -281,8 +281,7 @@ class SherpaTTS:
     ) -> None:
         """根据模式，推给队列或者阻塞式播放"""
         if self._playback_mode == "queue":
-            from monibox.core_loop.models import EngineEvent, EventType
-            from monibox.core_loop.queues import output_queue
+            from monibox.core_loop.base import EngineEvent, EventType, output_queue
 
             output_queue.put(
                 EngineEvent(

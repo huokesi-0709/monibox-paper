@@ -11,12 +11,12 @@ utils_json.py
 
 策略：
 1) 去围栏
-2) 从文本中截取“第一个 { 或 [ 到最后一个 } 或 ]”的片段（extract_json）
+2) 从文本中截取"第一个 { 或 [ 到最后一个 } 或 ]"的片段（extract_json）
 3) 若括号未闭合：自动补齐缺失的 ] / }
 4) strict json 解析失败就用 json5 兜底
 
 新增：
-- extract_first_json：优先解析“第一个完整闭合 JSON 块”，解决多 JSON 连续输出导致解析失败
+- extract_first_json：优先解析"第一个完整闭合 JSON 块"，解决多 JSON 连续输出导致解析失败
 """
 
 import json
@@ -102,7 +102,7 @@ def _try_parse_json(block: str) -> Any:
 
 def _find_first_balanced_json_block(t: str) -> str | None:
     """
-    在文本中找到“第一个完整闭合”的 JSON 块（对象或数组），忽略字符串内部括号。
+    在文本中找到"第一个完整闭合"的 JSON 块（对象或数组），忽略字符串内部括号。
     用于处理：{...}\n{...}\n{...} 这种多段 JSON 输出。
     """
     st = first_start(t)
@@ -146,13 +146,13 @@ def _find_first_balanced_json_block(t: str) -> str | None:
 
 def extract_first_json(text: str) -> Any:
     """
-    优先解析“第一个完整闭合 JSON 块”。
+    优先解析"第一个完整闭合 JSON 块"。
 
     适用场景：
     - 模型输出多个 JSON：{...}\n{...}\n{...}
     - 模型前后夹杂文字，但第一个 JSON 是完整的
 
-    失败时会退回到 extract_json 的“截取大块 + 补括号”策略。
+    失败时会退回到 extract_json 的"截取大块 + 补括号"策略。
     """
     raw = (text or "").strip()
     if not raw:
@@ -193,7 +193,7 @@ def extract_json(text: str) -> Any:
 
     block = t[st : ed + 1].strip()
 
-    # 3) 尝试自动补齐括号（解决“截断”）
+    # 3) 尝试自动补齐括号（解决"截断"）
     block2 = repair_unclosed_brackets(block)
 
     # 4) strict 再试
@@ -212,3 +212,11 @@ def extract_json(text: str) -> Any:
             f"候选JSON块前200字符：{block2[:200]!r}\n"
             f"候选JSON块后200字符：{block2[-200:]!r}"
         )
+
+
+# ---------- text_clean (migrated from text_clean.py) ----------
+
+
+def clean_text(s: str) -> str:
+    """基础清洗：空白规范化。"""
+    return re.sub(r"\s+", " ", s).strip()

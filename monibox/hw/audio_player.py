@@ -10,9 +10,11 @@ from queue import Empty
 
 import sounddevice as sd
 
-from monibox.core_loop.models import EventType
-from monibox.core_loop.queues import output_queue
-from monibox.core_loop.trace_logger import get_runtime_trace_logger
+from monibox.core_loop.base import (
+    EventType,
+    get_runtime_trace_logger,
+    output_queue,
+)
 
 logger = logging.getLogger(__name__)
 

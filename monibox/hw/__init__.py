@@ -5,4 +5,4 @@
 LLM 或平台依赖，避免文本模式被可选依赖阻塞。
 """
 
-__all__ = ["audio_player", "mock_hw", "windows_hw"]
+__all__ = ["audio_player", "windows_hw"]

@@ -13,10 +13,16 @@ import time
 from datetime import datetime
 
 from monibox.config import settings
-from monibox.core_loop.models import EngineEvent, EventType
-from monibox.core_loop.queues import clear_runtime_queues, input_queue, output_queue
+from monibox.core_loop.base import (
+    EngineEvent,
+    EventType,
+    clear_runtime_queues,
+    get_runtime_trace_logger,
+    input_queue,
+    new_interaction_id,
+    output_queue,
+)
 from monibox.core_loop.resource_manager import global_resources
-from monibox.core_loop.trace_logger import get_runtime_trace_logger, new_interaction_id
 from monibox.runtime.protocol_context import parse_location, parse_yesno
 from monibox.runtime.session import MoniSession, SessionConfig
 

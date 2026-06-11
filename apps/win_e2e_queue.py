@@ -11,8 +11,12 @@ import os
 import time
 
 from monibox.config import settings
-from monibox.core_loop.models import EngineEvent, EventType
-from monibox.core_loop.queues import input_queue, output_queue
+from monibox.core_loop.base import (
+    EngineEvent,
+    EventType,
+    input_queue,
+    output_queue,
+)
 from monibox.core_loop.resource_manager import global_resources
 from monibox.hw.audio_player import AudioPlayerThread
 from monibox.runtime.session import MoniSession, SessionConfig

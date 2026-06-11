@@ -9,10 +9,14 @@ import threading
 import time
 
 from monibox.audio.vad_recorder import VadConfig, record_vad
-from monibox.core_loop.models import EngineEvent, EventType
-from monibox.core_loop.queues import input_queue
+from monibox.core_loop.base import (
+    EngineEvent,
+    EventType,
+    get_runtime_trace_logger,
+    input_queue,
+    new_interaction_id,
+)
 from monibox.core_loop.resource_manager import global_resources
-from monibox.core_loop.trace_logger import get_runtime_trace_logger, new_interaction_id
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 import hashlib
 
-from monibox.text_clean import clean_text
+from monibox.utils_json import clean_text
 
 
 def sha256_fp(text: str) -> str:

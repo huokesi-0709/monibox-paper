@@ -12,11 +12,10 @@ from __future__ import annotations
 
 import re
 
-from monibox.runtime.memory import WorkingMemory
-from monibox.runtime.repeat_guard import RepeatGuard
 from monibox.runtime.response_rewriter import ResponseRewriter
 from monibox.runtime.runtime_config import RuntimeConfig
 from monibox.runtime.safety_guard import SafetyGuard
+from monibox.runtime.support import RepeatGuard, WorkingMemory
 from monibox.runtime.text_pipeline import (
     dedup_sentences,
     force_second_person,
@@ -24,7 +23,7 @@ from monibox.runtime.text_pipeline import (
     shape_tts_text,
     smart_cut,
 )
-from monibox.runtime.variants import VariantBank
+from monibox.runtime.support import VariantBank
 
 
 class OutputPipeline:

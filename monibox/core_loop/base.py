@@ -1,16 +1,65 @@
 """
-Structured runtime trace logging for Stage E observability.
+Core loop foundation: event models, shared queues, and structured trace logging.
 """
 
 from __future__ import annotations
 
+import enum
 import json
 import os
+import queue
 import threading
 import time
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+
+# ---------- models ----------
+
+
+class EventType(enum.Enum):
+    AUDIO_IN = "audio_in"
+    TEXT_IN = "text_in"
+    TTS_CHUNK = "tts_chunk"
+    AUDIO_OUT = "audio_out"
+    SENSOR_IMU = "sensor_imu"
+    SYS_CTRL = "sys_ctrl"
+
+
+@dataclass
+class EngineEvent:
+    event_type: EventType
+    data: Any
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
+# ---------- queues ----------
+
+input_queue: queue.Queue[EngineEvent] = queue.Queue(maxsize=100)
+audio_in_queue: queue.Queue[EngineEvent] = queue.Queue(maxsize=100)
+output_queue: queue.Queue[EngineEvent] = queue.Queue(maxsize=100)
+
+
+def _drain_queue(q: queue.Queue[EngineEvent]) -> int:
+    dropped = 0
+    while True:
+        try:
+            q.get_nowait()
+            dropped += 1
+        except queue.Empty:
+            return dropped
+
+
+def clear_runtime_queues() -> dict[str, int]:
+    return {
+        "input": _drain_queue(input_queue),
+        "audio_in": _drain_queue(audio_in_queue),
+        "output": _drain_queue(output_queue),
+    }
+
+
+# ---------- trace_logger ----------
 
 _LOGGER_LOCK = threading.Lock()
 _LOGGER_SINGLETON: RuntimeTraceLogger | None = None

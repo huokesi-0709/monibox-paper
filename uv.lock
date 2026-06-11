@@ -785,6 +785,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "sentence-transformers" },
+    { name = "sounddevice" },
     { name = "sqlite-vec" },
     { name = "tqdm" },
 ]
@@ -821,6 +822,7 @@ requires-dist = [
     { name = "requests", specifier = ">=2.31.0" },
     { name = "sentence-transformers", specifier = ">=5" },
     { name = "sherpa-onnx", marker = "extra == 'voice'", specifier = ">=1.12.29" },
+    { name = "sounddevice", specifier = ">=0.5.5" },
     { name = "sounddevice", marker = "extra == 'voice'", specifier = ">=0.5" },
     { name = "soundfile", marker = "extra == 'voice'", specifier = ">=0.12.1" },
     { name = "sqlite-vec", specifier = ">=0.1.6" },

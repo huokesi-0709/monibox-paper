@@ -13,9 +13,9 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 from monibox.llm.backend import LLMBackend
-from monibox.runtime.memory import WorkingMemory
 from monibox.runtime.rag_engine import SearchResult
 from monibox.runtime.runtime_config import RuntimeConfig
+from monibox.runtime.support import WorkingMemory
 from monibox.runtime.text_pipeline import (
     dedup_sentences,
     force_second_person,

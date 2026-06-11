@@ -21,24 +21,26 @@ from typing import Any
 from monibox.llm.backend import create_llm_backend
 from monibox.runtime.emotion_strategies import EmotionStrategy, EmotionStrategyBook
 from monibox.runtime.low_evidence_router import LowEvidenceRouter
-from monibox.runtime.memory import WorkingMemory
 from monibox.runtime.output_pipeline import OutputPipeline
-from monibox.runtime.perf_monitor import PerfMonitor
 from monibox.runtime.protocol_context import infer_slot_from_text
 from monibox.runtime.protocol_engine import ProtocolEngine
 from monibox.runtime.protocol_handler import ProtocolHandler
 from monibox.runtime.rag_engine import RagEngine, SearchResult
 from monibox.runtime.rag_generator import RagGenerator
-from monibox.runtime.repeat_guard import RepeatGuard
 from monibox.runtime.response_rewriter import ResponseRewriter
 from monibox.runtime.runtime_config import load_runtime_config
 from monibox.runtime.safety_guard import SafetyGuard
+from monibox.runtime.support import (
+    PerfMonitor,
+    RepeatGuard,
+    WorkingMemory,
+    build_default_variant_bank,
+)
 from monibox.runtime.text_pipeline import (
     dedup_sentences,
     force_second_person,
     smart_cut,
 )
-from monibox.runtime.variants import build_default_variant_bank
 
 # NOTE: TTS 模块延迟加载——纯文本模式无需安装 pyttsx3 / pywin32
 try:
