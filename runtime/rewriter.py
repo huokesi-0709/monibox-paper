@@ -13,8 +13,8 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from language.backends import LLMBackend
 from knowledgekit.parser import extract_first_json
+from language.backends import LLMBackend
 
 if TYPE_CHECKING:
     from runtime.runtime_config import RuntimeConfig

@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import queue
 import re
 import threading
 import time
@@ -182,7 +183,7 @@ class MainEngine:
         while not self._stop_event.is_set():
             try:
                 event = input_queue.get(timeout=1.0)
-            except Exception:
+            except queue.Empty:
                 continue
 
             if event.event_type == EventType.SYS_CTRL and event.data == "exit":
@@ -243,7 +244,7 @@ class MainEngine:
                     session_trace=trace_info,
                 )
             except Exception as e:
-                logger.error(f"[MainEngine] Session handle failed: {e}")
+                logger.exception("[MainEngine] Session handle failed")
                 self._trace.log(
                     "reply_error", interaction_id=interaction_id, error=str(e)
                 )
@@ -285,10 +286,13 @@ class MainEngine:
 
     def _coordination_loop(self):
         while not self._stop_event.is_set():
-            if self.asr_thread and self._armed_at is None:
-                if getattr(self.asr_thread, "is_armed", lambda: False)():
-                    self._armed_at = time.monotonic()
-                    logger.info("[MainEngine] microphone armed and ready")
+            if (
+                self.asr_thread
+                and self._armed_at is None
+                and getattr(self.asr_thread, "is_armed", lambda: False)()
+            ):
+                self._armed_at = time.monotonic()
+                logger.info("[MainEngine] microphone armed and ready")
 
             audio_busy = self._audio_busy()
 

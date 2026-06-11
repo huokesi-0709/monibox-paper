@@ -12,10 +12,7 @@ from __future__ import annotations
 
 import re
 
-from runtime.rewriter import ResponseRewriter
-from runtime.runtime_config import RuntimeConfig
 from runtime.guard import SafetyGuard
-from runtime.primitives import RepeatGuard, WorkingMemory
 from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
@@ -23,7 +20,9 @@ from runtime.preprocessor import (
     shape_tts_text,
     smart_cut,
 )
-from runtime.primitives import VariantBank
+from runtime.primitives import RepeatGuard, VariantBank, WorkingMemory
+from runtime.rewriter import ResponseRewriter
+from runtime.runtime_config import RuntimeConfig
 
 
 class OutputPipeline:
@@ -103,8 +102,7 @@ class OutputPipeline:
                 if not res.used_fallback
                 else f"[REWRITE] fallback reason={res.reason}"
             )
-        out = re.sub(r"\.{2,}|…{2,}|。{2,}", "。", res.text)
-        return out
+        return re.sub(r"\.{2,}|…{2,}|。{2,}", "。", res.text)
 
     def apply_repeat_and_variants(
         self, text: str, variant_key: str, fallback_followup: str

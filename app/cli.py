@@ -39,7 +39,7 @@ def _describe_input_device() -> str:
         return f"unknown ({exc})"
 
 
-def _run_text_mode(engine: MainEngine):
+def _run_text_mode():
     print("\n" + "=" * 40, flush=True)
     print("  进入纯文本指令模式", flush=True)
     print("  可用指令: [文本内容] | #反馈 | exit", flush=True)
@@ -104,13 +104,13 @@ def main():
     try:
         engine.start()
         if args.mode == "text":
-            _run_text_mode(engine)
+            _run_text_mode()
         else:
             _run_voice_mode(engine, once=args.once)
     except KeyboardInterrupt:
         print("\n[User] 收到中断信号", flush=True)
-    except Exception as e:
-        logger.error(f"RuntimeEdge fatal error: {e}")
+    except Exception:
+        logger.exception("RuntimeEdge fatal error")
     finally:
         engine.stop()
         print("系统已安全关闭。", flush=True)

@@ -20,18 +20,10 @@ import time
 from typing import Any
 
 from runtime.emotions import EmotionStrategyBook
-from runtime.slot_parser import (
-    infer_slot_from_text,
-    parse_location,
-    parse_yesno,
-)
-from runtime.runtime_config import RuntimeConfig
 from runtime.guard import SafetyGuard
-from runtime.preprocessor import (
-    dedup_sentences,
-    force_second_person,
-    smart_cut,
-)
+from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
+from runtime.runtime_config import RuntimeConfig
+from runtime.slot_parser import infer_slot_from_text, parse_location, parse_yesno
 
 
 class ProtocolHandler:

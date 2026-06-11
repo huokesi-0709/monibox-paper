@@ -65,3 +65,36 @@ only-include = [
 [tool.uv]
 default-groups = []
 package = true
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+  "E4",
+  "E7",
+  "E9",
+  "F",
+  "I",
+  "B",
+  "SIM",
+  "RET",
+  "ARG",
+  "TRY",
+  "S",
+  "UP",
+  "RUF",
+]
+ignore = [
+  "E501",
+  "PLC0415",
+  "RUF001",
+  "RUF002",
+  "RUF003",
+  "TRY003",
+  "TRY004",
+  "TRY400",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]

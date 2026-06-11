@@ -80,9 +80,11 @@ def _try_parse_json(block: str) -> Any:
     """strict json + json5 两段兜底解析。"""
     try:
         return json.loads(block)
-    except Exception:
-        pass
-    return json5.loads(block)
+    except Exception as strict_error:
+        try:
+            return json5.loads(block)
+        except Exception as json5_error:
+            raise json5_error from strict_error
 
 
 def _find_first_balanced_json_block(t: str) -> str | None:
@@ -167,8 +169,8 @@ def extract_json(text: str) -> Any:
     # 1) 先 strict 直接解析
     try:
         return json.loads(t)
-    except Exception:
-        pass
+    except Exception as direct_error:
+        first_error = direct_error
 
     # 2) 截取 JSON 大块
     st = first_start(t)
@@ -184,8 +186,8 @@ def extract_json(text: str) -> Any:
     # 4) strict 再试
     try:
         return json.loads(block2)
-    except Exception:
-        pass
+    except Exception as repaired_error:
+        first_error = repaired_error
 
     # 5) json5 兜底（允许单引号/尾逗号/未加引号 key）
     try:
@@ -196,7 +198,7 @@ def extract_json(text: str) -> Any:
             f"错误：{e}\n"
             f"候选JSON块前200字符：{block2[:200]!r}\n"
             f"候选JSON块后200字符：{block2[-200:]!r}"
-        )
+        ) from first_error
 
 
 # ---------- text_clean (migrated from text_clean.py) ----------

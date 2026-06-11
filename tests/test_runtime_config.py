@@ -1,5 +1,9 @@
 from app.config import PROJECT_ROOT
-from runtime.runtime_config import _ENV_FIELD_MAP, _resolve_profile_path, load_runtime_config
+from runtime.runtime_config import (
+    _ENV_FIELD_MAP,
+    _resolve_profile_path,
+    load_runtime_config,
+)
 
 
 def _clear_runtime_env(monkeypatch):

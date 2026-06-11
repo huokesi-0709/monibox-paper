@@ -8,8 +8,8 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
 
-from runtime.topic_router import AutoRouter
 from runtime.scoring import RerankPolicy, final_distance
+from runtime.topic_router import AutoRouter
 
 try:
     import sqlite_vec  # type: ignore
@@ -19,7 +19,7 @@ except ImportError:
 
 def vec_to_f32_blob(vec: list[float]) -> sqlite3.Binary:
     floats = [float(x) for x in vec]
-    blob = struct.pack("<%sf" % len(floats), *floats)
+    blob = struct.pack(f"<{len(floats)}f", *floats)
     return sqlite3.Binary(blob)
 
 

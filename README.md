@@ -23,6 +23,66 @@ MoniBox 面向的不是普通聊天机器人场景，而是灾害受困、断网
 输入（文本/语音） → Engine → Orchestrator → 协议匹配 → RAG检索 → 低证据分流/LLM生成 → 安全护栏 → 响应管线 → TTS/播报
 ```
 
+## 整体架构
+
+MoniBox 按“构建侧”和“运行侧”两条主线组织。
+
+构建侧负责把灾害、生存、急救和情绪安抚知识转成端侧可用资产：
+
+```text
+知识源/数据源 → QA 生成与清洗 → Chunk 切分 → Embedding 计算 → rag.db / runtime_pack.json
+```
+
+运行侧负责把用户输入或未来硬件事件转成协议化响应：
+
+```text
+文本/麦克风/未来传感器 → MainEngine → Orchestrator → 协议优先 → RAG/LLM/回退 → OutputPipeline → TTS/播放/未来多通道反馈
+```
+
+```mermaid
+graph TD
+    subgraph Build["构建侧"]
+        A["知识源/数据源"] --> B["QA 生成与清洗"]
+        B --> C["Chunk 切分"]
+        C --> D["Embedding 计算"]
+        D --> E["rag.db / runtime_pack.json"]
+    end
+
+    subgraph Runtime["运行侧"]
+        F["文本输入 / 麦克风 / 未来传感器"] --> G["MainEngine"]
+        G --> H["Orchestrator"]
+        H --> I["协议匹配"]
+        I -->|命中| J["协议动作 / 协议回复"]
+        I -->|未命中| K["RAG 检索"]
+        K --> L["低证据分流 / LLM 生成 / 回退"]
+        L --> M["OutputPipeline"]
+        M --> N["TTS / 播放 / 未来灯光与屏幕反馈"]
+    end
+```
+
+当前阶段可以理解为：Windows 侧承担主开发、调试和语音闭环验证；Radxa Zero 3W 一类 ARM64 边缘板卡是目标运行平台，用来验证真实资源、时延、音频设备和软硬件协同表现。
+
+## 软硬件协同
+
+MoniBox 不是单纯的对话应用，而是为软硬件协同终端预留运行机制：
+
+- **语音输入输出协同**：TTS 播放期间暂停 ASR，播放队列清空后再恢复监听，并通过 arm delay / post arm guard 避免设备把自己的播报重新识别进去。
+- **协议事件抢占**：协议匹配具备优先级和状态处理能力，未来 IMU、震动传感器、按键等硬件事件可以转成高优先级语义事件，打断普通对话并触发应急动作。
+- **多通道反馈**：`runtime/primitives.py` 已抽象 TTS、LED、屏幕接口，未来一个协议动作可以同时触发语音、灯光和屏幕短句。
+- **边缘资源约束**：链路设计优先考虑低资源设备上的稳定性，包括线程协调、模型常驻、短句播报、SQLite 单文件知识库和本地模型加载策略。
+
+## 模型与运行基线
+
+当前主线模型与运行资产如下：
+
+- **Embedding**：`models/embedding/bge-small-zh-v1.5`
+- **RAG 存储**：SQLite + `sqlite-vec`，运行产物为 `build/rag.db` 与 `build/runtime_pack.json`
+- **LLM 后端**：`deepseek`、`llama`、`auto`、`null`，统一由 `language/backends.py` 抽象；`auto` 会优先选择本地 GGUF，其次远端 DeepSeek，最后回退到 `null`
+- **ASR**：Faster-Whisper，本地模型目录为 `models/asr/faster-whisper-small`
+- **TTS**：推荐收敛到 `sherpa-onnx` 端侧方案，同时保留 `pyttsx3` 与 Windows `sapi` 作为兼容/过渡后端
+
+需要特别注意的是，TTS 不只是“能发声”的模块，而是输出管线的一部分，需要同时服务于句长控制、重复抑制、音频队列播放、ASR 暂停恢复和端侧延迟控制。
+
 ## 环境管理（uv）
 
 本项目使用 uv 作为 Python 包与环境管理工具。
@@ -164,7 +224,7 @@ uv run monibox --mode mic_vad --once
 
 ### 测试层 `tests/`
 
-`tests/` 保留给自动化测试；当前仓库没有已跟踪测试文件时，可先使用 `python -m compileall .` 做结构级导入检查。
+`tests/` 存放自动化回归测试，当前主要覆盖项目路径、配置加载和重构后的目录约定。
 
 ### 知识库工具层 `knowledgekit/`
 
@@ -207,3 +267,14 @@ monibox --mode mic_vad
 3. **RAG 增强**：回答建立在本地 `rag.db` 知识库检索之上。
 4. **低证据分流**：检索证据不足时走保守策略，避免生成幻觉内容。
 5. **硬件预留**：`primitives.py` 中的 `HardwareIface` 已抽象 TTS/LED/屏幕接口，未来可直接对接 Radxa 真实外设。
+
+## 当前重点与下一步
+
+MoniBox 已经从概念原型进入系统雏形阶段：文本主链可以验证协议、RAG、低证据分流和输出逻辑；语音主链已经形成统一入口、ASR、TTS、播放队列和运行协调框架。后续工作重点不再只是继续加功能，而是把“可跑”收敛到“可稳定部署”。
+
+当前最需要优先推进的方向：
+
+- **TTS 主线收敛**：统一默认配置、推荐模型目录、模型类型和运行参数，减少 `pyttsx3`、`sapi`、`sherpa` 多后端之间的理解成本。
+- **目标硬件验证**：在 Radxa 目标设备上验证 ASR、TTS、RAG、LLM/回退、播放队列和长时间运行稳定性。
+- **硬件事件接入**：把传感器、按键或外设中断转成运行时高优先级语义事件，并接入协议抢占链路。
+- **系统性能画像**：沉淀 CPU、内存、RTF、线程数、端到端时延、温升和降频风险，形成 Windows 与 Radxa 两套清晰基线。

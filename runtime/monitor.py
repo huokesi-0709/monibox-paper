@@ -21,8 +21,7 @@ class PerfMonitor:
 
     def end_timer(self, name: str) -> float:
         if name in self.timers:
-            elapsed = time.perf_counter() - self.timers.pop(name)
-            return elapsed
+            return time.perf_counter() - self.timers.pop(name)
         return 0.0
 
     def check_memory(self, interaction_id: str | None = None):

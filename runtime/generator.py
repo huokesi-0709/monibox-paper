@@ -13,9 +13,6 @@ from __future__ import annotations
 from collections.abc import Iterator
 
 from language.backends import LLMBackend
-from runtime.rag_engine import SearchResult
-from runtime.runtime_config import RuntimeConfig
-from runtime.primitives import WorkingMemory
 from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
@@ -23,6 +20,9 @@ from runtime.preprocessor import (
     parse_llm_payload,
     smart_cut,
 )
+from runtime.primitives import WorkingMemory
+from runtime.rag_engine import SearchResult
+from runtime.runtime_config import RuntimeConfig
 
 
 class RagGenerator:

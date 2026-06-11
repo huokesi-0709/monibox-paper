@@ -4,13 +4,6 @@ runtime/orchestrator.py
 用途
 -----
 MoniSession 主编排器：组装子模块，协调 handle() 主流程。
-
-M2 重构后，具体职责已分散至：
-- text_pipeline.py    → 文本预处理
-- output_pipeline.py  → 输出管线（改写、重复抑制、TTS）
-- protocol_handler.py → 协议 QA 状态机
-- rag_generator.py    → RAG→LLM 生成
-- runtime_config.py   → 统一配置
 """
 
 from __future__ import annotations
@@ -25,11 +18,7 @@ from runtime.generator import RagGenerator
 from runtime.guard import SafetyGuard
 from runtime.monitor import PerfMonitor
 from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
-from runtime.primitives import (
-    RepeatGuard,
-    WorkingMemory,
-    build_default_variant_bank,
-)
+from runtime.primitives import RepeatGuard, WorkingMemory, build_default_variant_bank
 from runtime.protocol_fsm import ProtocolHandler
 from runtime.protocol_matcher import ProtocolEngine
 from runtime.rag_engine import RagEngine, SearchResult
