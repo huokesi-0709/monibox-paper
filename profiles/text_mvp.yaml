@@ -1,14 +1,15 @@
-# Lightweight text validation profile.
-tts_backend: sherpa
-tts_max_chars: 90
-llm_ctx: 2048
-llm_threads: 6
-llm_temperature: 0.3
-rag_max_distance: 0.42
-low_evidence_mode: true
-cache_size: 20
-enable_llm_rewrite: true
-enable_led: false
-enable_screen: false
-enable_precomputed_audio: false
-perf_warning_mb: 600
+# 纯文本最小验证模式（无语音链路）
+# 仅覆盖与 base.yaml 不同的字段
+
+app:
+  mode: text
+
+speech:
+  tts:
+    backend: sherpa             # 文本模式下不启用，保留默认值即可
+    cache_size: 20
+
+hardware:
+  enable_led: false
+  enable_screen: false
+  enable_precomputed_audio: false

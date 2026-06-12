@@ -1,0 +1,101 @@
+# MoniBox 全平台通用默认配置
+# 各平台/场景仅在自身 yaml 中覆盖与 base 不同的字段
+
+app:
+  log_level: INFO
+  mode: text                    # text | mic_vad | mic_continuous
+
+llm:
+  backend: auto                 # auto | deepseek | llama | null
+  timeout: 30
+  max_retries: 3
+  ctx: 2048
+  threads: 6
+  gpu_layers: 0
+  chat_format: chatml
+  temperature: 0.3
+  stream: false
+  # gguf_path: 平台相关，不在 base 中写死
+
+rag:
+  top_k: 5
+  max_distance: 0.42
+  low_evidence_threshold: 0.3
+  db_path: build/rag.db
+  runtime_pack_path: build/runtime_pack.json
+
+protocol:
+  pending_ttl_sec: 15.0
+  qa_ttl_sec: 25.0
+  active_ttl_sec: 45.0
+  default_cooldown_sec: 20.0
+  generic_followup: "我在。你现在情况有没有变化？有出血或呼吸困难马上告诉我。"
+
+rewrite:
+  enabled: true
+  protocol_enabled: true
+  low_evidence_enabled: true
+  max_chars_protocol_main: 78
+  max_chars_protocol_followup: 65
+  max_chars_normal: 90
+  temperature: 0.2
+  top_p: 0.9
+
+speech:
+  asr:
+    model_path: models/asr/faster-whisper-small
+    device: cpu
+    compute_type: int8
+    language: zh
+    # initial_prompt: 按需覆盖
+    corrections_json: ""          # ASR 纠错词典路径
+  tts:
+    backend: sherpa
+    max_chars: 90
+    model_dir: models/tts/sherpa/vits-icefall-zh-aishell3
+    model_type: melo
+    threads: 4
+    cache_size: 100
+    sherpa_sid: 173
+    sherpa_speed: 0.92
+    sherpa_noise_scale: 0.72
+    sherpa_noise_scale_w: 0.85
+    # pyttsx3 / sapi 兼容参数
+    rate: 180
+    volume: 1.0
+    sapi_rate: 0
+    sapi_volume: 100
+    poll_ms: 200                  # SAPI 轮询间隔
+    max_play_sec: 25.0            # SAPI 最大播放时长
+  vad:
+    sample_rate: 16000
+    start_rms: 0.006
+    end_rms: 0.0065
+    min_record_ms: 500
+    end_sil_ms: 800
+    max_sec: 12
+    pre_roll_ms: 400
+  asr_timing:
+    arm_delay_sec: 1.5
+    post_arm_guard_sec: 2.0
+
+build:
+  embedding_model: models/embedding/bge-small-zh-v1.5
+  chunk_max_chars: 60
+  chunk_min_chars: 15
+
+debug:
+  runtime_trace_enabled: true
+  trace_path: build/runtime_logs/interaction_trace.jsonl
+  debug_runtime: false
+  debug_tts: false
+
+hardware:
+  enable_led: true
+  enable_screen: true
+  enable_precomputed_audio: false
+  perf_warning_mb: 600
+
+repeat:
+  threshold: 0.92
+  variant_mode: rr

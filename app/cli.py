@@ -9,6 +9,7 @@ import os
 import time
 
 from app.log import get_logger, setup_logging
+from app.settings import get_settings
 from core.engine import MainEngine
 from core.shared import EngineEvent, EventType, input_queue
 
@@ -18,6 +19,17 @@ if not os.getenv("WHISPER_THREADS"):
 
 setup_logging()
 logger = get_logger("RuntimeEdge")
+
+
+_PROFILE_CHOICES = [
+    "windows",
+    "radxa",
+    "radxa_extreme",
+    "radxa_full",
+    "radxa_light",
+    "text_mvp",
+    "voice_mvp",
+]
 
 
 def _describe_input_device() -> str:
@@ -58,8 +70,9 @@ def _run_text_mode():
 
 
 def _run_voice_mode(engine: MainEngine, once: bool):
-    arm_delay = float(os.getenv("ASR_ARM_DELAY_SEC", "1.5"))
-    post_arm_guard = float(os.getenv("ASR_POST_ARM_GUARD_SEC", "1.0"))
+    cfg = get_settings()
+    arm_delay = cfg.speech.asr_timing.arm_delay_sec
+    post_arm_guard = cfg.speech.asr_timing.post_arm_guard_sec
     print("\n" + "=" * 40, flush=True)
     print("  进入语音交互模式 (VAD)", flush=True)
     if once:
@@ -91,11 +104,25 @@ def main():
     ap = argparse.ArgumentParser(description="MoniBox-KB edge runtime")
     ap.add_argument("--mode", choices=["mic_vad", "text"], default="mic_vad")
     ap.add_argument(
+        "--profile",
+        choices=_PROFILE_CHOICES,
+        default=None,
+        help=(
+            "Runtime profile to load (from profiles/*.yaml). "
+            "Overrides RUNTIME_PROFILE env var. Defaults to base.yaml if omitted."
+        ),
+    )
+    ap.add_argument(
         "--once",
         action="store_true",
         help="Stop after one handled turn in mic_vad mode",
     )
     args = ap.parse_args()
+
+    # 命令行 --profile 优先级高于环境变量
+    if args.profile:
+        os.environ["RUNTIME_PROFILE"] = args.profile
+        print(f"[Config] Using profile: {args.profile}", flush=True)
 
     engine = MainEngine(
         mode=args.mode, max_turns=1 if args.once and args.mode == "mic_vad" else 0

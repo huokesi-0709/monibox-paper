@@ -3,14 +3,25 @@ runtime/runtime_config.py
 
 用途
 -----
-运行时配置中心：将散落在 session.py、response_rewriter.py 等模块中的
-os.getenv 调用统一收敛到一处，便于管理、测试和后续端侧部署调参。
+运行时配置中心。本模块在重构后保留向后兼容的 facade：
+- 内部实际配置源已迁移到 app.settings（Pydantic + YAML 分层体系）
+- RuntimeConfig dataclass 与 load_runtime_config() 签名保持不变
+- 现有调用方无需立即修改
 
-设计决策
+加载优先级（新体系）：
+    profiles/base.yaml（默认值）
+        ↓ merge
+    profiles/{platform}.yaml（差异覆盖）
+        ↓ Pydantic 校验
+    MoniboxSettings 对象
+        ↓ .env 注入
+    最终配置（含 API Key 等机密）
+
+迁移说明
 --------
-- 构建侧配置（DeepSeek API、Embedding 模型、RAG DB 路径等）仍由
-  config.py 管理，本模块只管运行时行为。
-- 使用 dataclass + 工厂函数，支持测试时注入自定义值。
+- 新增参数请直接改 profiles/base.yaml 或各平台 yaml，不要再加 os.getenv
+- .env 仅保留机密（DEEPSEEK_API_KEY 等）
+- 如需层级访问新配置，可直接 import app.settings
 """
 
 from __future__ import annotations
@@ -20,11 +31,13 @@ from dataclasses import dataclass, fields
 from pathlib import Path
 from typing import Any
 
+from app.settings import load_settings, MoniboxSettings
 from app.config import PROJECT_ROOT
 
 PROFILE_ENV = "RUNTIME_PROFILE"
 PROFILE_PATH_ENV = "RUNTIME_CONFIG_PATH"
 
+# 保留向后兼容的别名映射（新体系下不再扩展，仅维护存量）
 _PROFILE_FIELD_ALIASES = {
     "tts_model_dir": "tts_sherpa_model_dir",
     "tts_model_type": "tts_sherpa_model_type",
@@ -33,6 +46,7 @@ _PROFILE_FIELD_ALIASES = {
     "enable_llm_rewrite": "rewrite_enabled",
 }
 
+# 保留向后兼容的环境变量映射（新参数请走 YAML，不要在此新增）
 _ENV_FIELD_MAP = {
     "RAG_MAX_DISTANCE": "rag_max_distance",
     "LOW_EVIDENCE_MODE": "low_evidence_mode",
@@ -82,7 +96,7 @@ _ENV_FIELD_MAP = {
 
 @dataclass
 class RuntimeConfig:
-    """运行时所有可调参数的单一数据类"""
+    """运行时所有可调参数的单一数据类（向后兼容）"""
 
     # ---- RAG 检索 ----
     rag_max_distance: float = 0.42
@@ -145,36 +159,60 @@ class RuntimeConfig:
     perf_warning_mb: int = 600
 
 
-def _strip_inline_comment(value: str) -> str:
-    """Remove simple YAML-style comments while keeping quoted values intact."""
-    quote: str | None = None
-    for i, ch in enumerate(value):
-        if ch in {"'", '"'}:
-            quote = None if quote == ch else ch
-        elif ch == "#" and quote is None:
-            return value[:i].strip()
-    return value.strip()
-
-
-def _parse_scalar(raw: str) -> Any:
-    value = _strip_inline_comment(raw)
-    if not value:
-        return ""
-    if (value.startswith('"') and value.endswith('"')) or (
-        value.startswith("'") and value.endswith("'")
-    ):
-        return value[1:-1]
-    lowered = value.lower()
-    if lowered in {"true", "yes", "on"}:
-        return True
-    if lowered in {"false", "no", "off"}:
-        return False
-    try:
-        if "." not in value:
-            return int(value)
-        return float(value)
-    except ValueError:
-        return value
+def _settings_to_flat(cfg: MoniboxSettings) -> dict[str, Any]:
+    """将层级 MoniboxSettings 扁平化为 RuntimeConfig 兼容的键值对。"""
+    return {
+        # RAG
+        "rag_max_distance": cfg.rag.max_distance,
+        "low_evidence_mode": cfg.rag.low_evidence_threshold < 0.5,
+        # Protocol
+        "pending_ttl_sec": cfg.protocol.pending_ttl_sec,
+        "protocol_qa_ttl_sec": cfg.protocol.qa_ttl_sec,
+        "active_protocol_ttl_sec": cfg.protocol.active_ttl_sec,
+        "protocol_default_cooldown_sec": cfg.protocol.default_cooldown_sec,
+        "protocol_generic_followup": cfg.protocol.generic_followup,
+        # Rewrite
+        "rewrite_protocol_enabled": cfg.rewrite.protocol_enabled,
+        "rewrite_low_evidence_enabled": cfg.rewrite.low_evidence_enabled,
+        "max_chars_protocol_main": cfg.rewrite.max_chars_protocol_main,
+        "max_chars_protocol_followup": cfg.rewrite.max_chars_protocol_followup,
+        "max_chars_normal": cfg.rewrite.max_chars_normal,
+        "rewrite_enabled": cfg.rewrite.enabled,
+        "rewrite_temperature": cfg.rewrite.temperature,
+        "rewrite_top_p": cfg.rewrite.top_p,
+        # TTS
+        "tts_max_chars": cfg.speech.tts.max_chars,
+        "tts_backend": cfg.speech.tts.backend,
+        "tts_rate": cfg.speech.tts.rate,
+        "tts_volume": cfg.speech.tts.volume,
+        "tts_sapi_rate": cfg.speech.tts.sapi_rate,
+        "tts_sapi_volume": cfg.speech.tts.sapi_volume,
+        "tts_sherpa_model_dir": cfg.speech.tts.model_dir,
+        "tts_sherpa_model_type": cfg.speech.tts.model_type,
+        "tts_sherpa_threads": cfg.speech.tts.threads,
+        "tts_sherpa_cache_size": cfg.speech.tts.cache_size,
+        "tts_sherpa_speed": cfg.speech.tts.sherpa_speed,
+        "tts_sherpa_sid": cfg.speech.tts.sherpa_sid,
+        "tts_sherpa_noise_scale": cfg.speech.tts.sherpa_noise_scale,
+        "tts_sherpa_noise_scale_w": cfg.speech.tts.sherpa_noise_scale_w,
+        # LLM
+        "llm_ctx": cfg.llm.ctx,
+        "llm_threads": cfg.llm.threads,
+        "llm_gpu_layers": cfg.llm.gpu_layers,
+        "llm_temperature": cfg.llm.temperature,
+        "llm_stream": cfg.llm.stream,
+        # Hardware
+        "enable_led": cfg.hardware.enable_led,
+        "enable_screen": cfg.hardware.enable_screen,
+        "enable_precomputed_audio": cfg.hardware.enable_precomputed_audio,
+        # Repeat
+        "repeat_threshold": cfg.repeat.threshold,
+        "variant_mode": cfg.repeat.variant_mode,
+        # Debug
+        "debug_runtime": cfg.debug.debug_runtime,
+        "debug_tts": cfg.debug.debug_tts,
+        "perf_warning_mb": cfg.hardware.perf_warning_mb,
+    }
 
 
 def _coerce_like(value: Any, default: Any) -> Any:
@@ -189,65 +227,27 @@ def _coerce_like(value: Any, default: Any) -> Any:
     return str(value).strip()
 
 
-def _resolve_profile_path(profile: str | None) -> Path | None:
-    explicit_path = (os.getenv(PROFILE_PATH_ENV, "") or "").strip()
-    if explicit_path:
-        path = Path(explicit_path)
-        return path if path.is_absolute() else PROJECT_ROOT / path
-
-    name = (profile or os.getenv(PROFILE_ENV, "windows") or "windows").strip()
-    if not name or name.lower() in {"none", "off", "0"}:
-        return None
-
-    path = Path(name)
-    if path.suffix in {".yaml", ".yml"} or path.parent != Path("."):
-        return path if path.is_absolute() else PROJECT_ROOT / path
-
-    primary = PROJECT_ROOT / "profiles" / f"{name}.yaml"
-    if primary.exists():
-        return primary
-    return PROJECT_ROOT / "profiles" / f"{name}.yaml"
-
-
-def _load_profile_values(profile: str | None) -> dict[str, Any]:
-    path = _resolve_profile_path(profile)
-    if path is None or not path.exists():
-        return {}
-
-    values: dict[str, Any] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#") or ":" not in stripped:
-            continue
-        key, raw_value = stripped.split(":", 1)
-        field_name = _PROFILE_FIELD_ALIASES.get(key.strip(), key.strip())
-        values[field_name] = _parse_scalar(raw_value)
-    return values
-
-
 def load_runtime_config(profile: str | None = None) -> RuntimeConfig:
     """
-    从环境变量一次性加载所有运行时配置。
-    每个字段都有合理的默认值，缺失环境变量不会报错。
+    从统一配置体系加载运行时配置。
 
-    优先级：
-    1. 环境变量 / .env
-    2. profiles/*.yaml
-    3. RuntimeConfig 代码默认值
+    每个字段都有合理的默认值，缺失配置不会报错。
+
+    优先级（新体系）：
+    1. 环境变量 / .env（向后兼容兜底）
+    2. profiles/*.yaml（分层覆盖）
+    3. profiles/base.yaml（全平台默认值）
     """
-    defaults = RuntimeConfig()
-    values = {
-        field.name: getattr(defaults, field.name) for field in fields(RuntimeConfig)
-    }
+    # 1. 从新体系加载层级配置并扁平化
+    settings = load_settings(profile=profile)
+    values = _settings_to_flat(settings)
 
-    for key, raw_value in _load_profile_values(profile).items():
-        if key in values:
-            values[key] = _coerce_like(raw_value, values[key])
-
+    # 2. 向后兼容：环境变量仍可覆盖（仅维护存量，不再扩展）
     for env_key, field_name in _ENV_FIELD_MAP.items():
         if env_key in os.environ and field_name in values:
             values[field_name] = _coerce_like(os.getenv(env_key), values[field_name])
 
+    # 3. 标准化
     values["tts_backend"] = str(values["tts_backend"]).strip().lower()
     values["tts_sherpa_model_type"] = (
         str(values["tts_sherpa_model_type"]).strip().lower()
