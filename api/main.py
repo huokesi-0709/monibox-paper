@@ -36,11 +36,7 @@ def create_app() -> FastAPI:
 
     @app.get("/", tags=["meta"])
     def root() -> dict[str, str]:
-        return {
-            "name": "MoniBox API",
-            "docs": "/docs",
-            "health": "/api/status/health",
-        }
+        return {"name": "MoniBox API", "docs": "/docs", "health": "/api/status/health"}
 
     return app
 
