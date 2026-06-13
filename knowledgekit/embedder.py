@@ -14,6 +14,7 @@ knowledgekit/embedder.py
 
 from __future__ import annotations
 
+import hashlib
 import os
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,8 @@ import numpy as np
 from app.config import PROJECT_ROOT, settings
 
 _model: Any | None = None
+
+EMBED_DIM = 512
 
 
 def _resolve_model_ref(model_id_or_path: str) -> str:
@@ -38,8 +41,9 @@ def _resolve_model_ref(model_id_or_path: str) -> str:
 
     p = Path(s)
 
-    # 相对路径：相对于项目根目录
-    if not p.is_absolute() and ("/" in s or "\\" in s):
+    # 明确的本地相对路径：相对于项目根目录
+    is_local_hint = s.startswith((".", "models/", "models\\"))
+    if not p.is_absolute() and is_local_hint:
         p = (PROJECT_ROOT / p).resolve()
         return str(p)
 
@@ -47,7 +51,7 @@ def _resolve_model_ref(model_id_or_path: str) -> str:
     if p.is_absolute():
         return str(p)
 
-    # 不是路径：当作模型名（不建议你现在用）
+    # 其余情况按模型 ID 处理，例如 BAAI/bge-small-zh-v1.5
     return s
 
 
@@ -67,11 +71,10 @@ def get_model():
 
         model_ref = _resolve_model_ref(settings.embedding_model)
 
-        # 强制离线（可选）：如果你担心它去联网，可以打开下面两行
-        # 由于你提供的是“本地路径”，正常情况下不会触发下载；
-        # 但开启离线更保险。
-        os.environ.setdefault("HF_HUB_OFFLINE", "1")
-        os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+        # 仅在本地目录模式下强制离线，避免把 HuggingFace 模型 ID 误伤。
+        if Path(model_ref).exists():
+            os.environ.setdefault("HF_HUB_OFFLINE", "1")
+            os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
         # 给出明确提示，方便你确认它在用本地路径
         print(f"[embedding] loading model from: {model_ref}")
@@ -85,13 +88,14 @@ def get_model():
                     "如果加载失败，请确认该目录是 sentence-transformers 格式模型。"
                 )
 
+        local_files_only = Path(model_ref).exists()
         load_attempts = [
             {
                 "device": "cpu",
-                "local_files_only": True,
+                "local_files_only": local_files_only,
                 "model_kwargs": {"use_safetensors": False},
             },
-            {"device": "cpu", "local_files_only": True},
+            {"device": "cpu", "local_files_only": local_files_only},
         ]
         last_exc: Exception | None = None
         for kwargs in load_attempts:
@@ -113,11 +117,49 @@ def get_model():
     return _model
 
 
+def _hash_token_index(token: str) -> tuple[int, float]:
+    digest = hashlib.sha256(token.encode("utf-8")).digest()
+    bucket = int.from_bytes(digest[:4], "little") % EMBED_DIM
+    sign = 1.0 if digest[4] % 2 == 0 else -1.0
+    return bucket, sign
+
+
+def _fallback_embed_text(text: str) -> list[float]:
+    vec = np.zeros(EMBED_DIM, dtype=np.float32)
+    normalized = " ".join((text or "").split()).strip()
+    if not normalized:
+        return vec.tolist()
+
+    tokens: list[str] = []
+    tokens.extend(part for part in normalized.split(" ") if part)
+    raw = normalized.replace(" ", "")
+    tokens.extend(raw[i : i + 2] for i in range(max(0, len(raw) - 1)))
+
+    for token in tokens:
+        bucket, sign = _hash_token_index(token)
+        vec[bucket] += sign
+
+    norm = float(np.linalg.norm(vec))
+    if norm > 0:
+        vec /= norm
+    return vec.tolist()
+
+
+def _fallback_embed_texts(texts: list[str]) -> list[list[float]]:
+    print("[embedding][WARN] using hash fallback embeddings")
+    return [_fallback_embed_text(text) for text in texts]
+
+
 def embed_texts(texts: list[str]) -> list[list[float]]:
     """
     批量生成向量（normalize_embeddings=True 输出单位向量，适合余弦相似度）
     """
-    model = get_model()
+    try:
+        model = get_model()
+    except Exception as exc:
+        print(f"[embedding][WARN] model unavailable, fallback enabled: {exc}")
+        return _fallback_embed_texts(texts)
+
     emb = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
     emb = np.asarray(emb, dtype=np.float32)
     return emb.tolist()

@@ -13,6 +13,18 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterator
 
 
+def _has_real_secret(value: str) -> bool:
+    normalized = (value or "").strip()
+    if not normalized:
+        return False
+    return normalized.lower() not in {
+        "your_key_here",
+        "changeme",
+        "placeholder",
+        "test",
+    }
+
+
 class LLMBackend(ABC):
     """统一的 LLM 调用接口"""
 
@@ -69,7 +81,7 @@ class DeepSeekBackend(LLMBackend):
         base_url = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
         model = os.getenv("DEEPSEEK_MODEL_CHAT", "deepseek-chat")
 
-        if not api_key:
+        if not _has_real_secret(api_key):
             raise RuntimeError("LLM_BACKEND=deepseek 但未设置 DEEPSEEK_API_KEY")
 
         self._client = OpenAI(api_key=api_key, base_url=base_url)
@@ -175,7 +187,7 @@ def create_llm_backend() -> LLMBackend:
         # 3. 都没有 -> null（便于测试与文本主链调试）
         if gguf_path:
             backend = "llama"
-        elif deepseek_api_key:
+        elif _has_real_secret(deepseek_api_key):
             backend = "deepseek"
         else:
             backend = "null"

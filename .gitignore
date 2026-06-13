@@ -27,3 +27,5 @@ htmlcov/
 .DS_Store
 .idea/
 .vscode/
+frontend/node_modules/
+frontend/dist/
