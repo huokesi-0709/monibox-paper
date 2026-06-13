@@ -20,7 +20,7 @@ MoniBox 面向的不是普通聊天机器人场景，而是灾害受困、断网
 ## 核心运行链路
 
 ```text
-输入（文本/语音） → Engine → Orchestrator → 协议匹配 → RAG检索 → 低证据分流/LLM生成 → 安全护栏 → 响应管线 → TTS/播报
+输入（文本/语音） → MainEngine / MoniSession → TopicRouter → ProtocolMatcher → RAG检索 / 低证据分流 / LLM生成 → OutputPipeline → TTS/播报
 ```
 
 ## 整体架构
@@ -36,44 +36,21 @@ MoniBox 按"构建侧"和"运行侧"两条主线组织。
 运行侧负责把用户输入或未来硬件事件转成协议化响应：
 
 ```text
-文本/麦克风/未来传感器 → MainEngine → Orchestrator → 协议优先 → RAG/LLM/回退 → OutputPipeline → TTS/播放/未来多通道反馈
+文本/麦克风/未来传感器 → MainEngine / MoniSession → TopicRouter → ProtocolMatcher → RAG/LLM/回退 → OutputPipeline → TTS/播放/未来多通道反馈
 ```
 
 **构建产物与运行侧的衔接**：构建侧产出的 `rag.db` 和 `runtime_pack.json` 是运行侧的输入依赖。`Engine` 启动时会从 `build/rag.db` 加载向量数据库供 `RagEngine` 做检索；从 `build/runtime_pack.json` 和 `knowledge/` 中的协议 JSON 加载协议规则供 `ProtocolMatcher` 匹配。构建侧通常在开发机（PC）上执行，产物随版本发布到目标设备；运行侧在端侧设备上常驻，按配置路径读取这些资产。
 
-```mermaid
-graph TB
-    subgraph Build["构建侧（开发机）"]
-    direction TB
-        A["知识源/数据源"] --> B["QA 生成与清洗"]
-        B --> C["Chunk 切分"]
-        C --> D["Embedding 计算"]
-        D --> E["rag.db / runtime_pack.json"]
-    end
-
-    subgraph Runtime["运行侧（端侧设备）"]
-    direction TB
-        F["文本输入 / 麦克风 / 未来传感器"] --> G["MainEngine"]
-        G --> H["Orchestrator"]
-        H --> TR["TopicRouter 标签路由"]
-        TR --> PM["协议匹配"]
-        PM -->|命中| PA["协议动作 / 协议回复"]
-        PA --> PG["Guard 安全过滤"]
-        PG --> OP["OutputPipeline"]
-        PM -->|未命中| RE["RAG 检索"]
-        RE --> LE{"低证据判断"}
-        LE -->|证据不足| LR["低证据回退"]
-        LR --> OP
-        LE -->|证据充足| GEN["LLM 生成"]
-        GEN --> OP
-        OP --> OUT["TTS / 播放 / 未来灯光与屏幕反馈"]
-    end
-
-    E -->|"rag.db 供向量检索"| RE
-    E -->|"runtime_pack.json 供协议加载"| PM
-```
+![MoniBox 系统总览流程图](docs/images/monibox-system-overview.png)
 
 当前阶段可以理解为：Windows 侧承担主开发、调试和语音闭环验证；Radxa Zero 3W 一类 ARM64 边缘板卡是目标运行平台，用来验证真实资源、时延、音频设备和软硬件协同表现。
+
+除了核心离线运行主链，当前仓库还额外提供了三套对外/对内界面，用来做联调、演示和调试：
+
+- **CLI 主入口**：`monibox`，直接启动文本或语音模式的端侧运行链路。
+- **FastAPI 接口层**：`monibox-api`，对外暴露状态、对话、RAG、协议调试接口，供前端或外部工具调用。
+- **React 控制台**：`frontend/`，基于 Vite + React，提供 Chat / RAG / Protocol / System 四个工作区页面。
+- **Streamlit WebUI**：`monibox-ui`，保留为内部图形化调试台，便于单机快速验证模型、RAG 和协议流程。
 
 ## 软硬件协同
 
@@ -112,14 +89,27 @@ uv sync --extra remote-llm
 # 同步知识库构建依赖（Embedding / DeepSeek 构建客户端）
 uv sync --extra knowledge
 
+# 同步 FastAPI 接口层
+uv sync --extra api
+
 # 同步含语音链路的完整依赖
 uv sync --extra voice
 
 # 同步含本地 LLM（llama-cpp-python，macOS 上可能需要额外编译工具链）
 uv sync --extra local-llm
 
+# 同步 Streamlit WebUI
+uv sync --extra webui
+
 # 含开发依赖
 uv sync --extra dev
+```
+
+如果要启用 React 前端，还需要在 `frontend/` 目录安装 Node 依赖：
+
+```bash
+cd frontend
+npm install
 ```
 
 ### 运行项目
@@ -130,14 +120,33 @@ uv run monibox --mode text
 
 # 语音模式（单轮验收）
 uv run monibox --mode mic_vad --once
+
+# 指定 profile 启动
+uv run monibox --mode text --profile windows
+
+# 启动 FastAPI
+uv run --extra api monibox-api
+
+# 启动 Streamlit WebUI
+uv run --extra webui monibox-ui
+```
+
+React 前端开发模式：
+
+```bash
+cd frontend
+npm run dev
 ```
 
 ### 常用命令
 
 ```bash
 uv run --extra dev pytest        # 运行测试
+uv run --extra knowledge monibox-build-rag   # 构建本地 rag.db 和 runtime_pack.json
 uv run monibox-chat --no_llm     # 纯文本 RAG 调试入口
 uv run monibox-rag --q "我好冷"   # 快速查看 RAG 检索结果
+uv run --extra api monibox-api   # 本地 API 调试
+uv run --extra webui monibox-ui  # 启动 Streamlit 调试台
 uv pip list                      # 查看已安装包
 uv lock                          # 更新 uv.lock
 ```
@@ -146,17 +155,26 @@ uv lock                          # 更新 uv.lock
 
 ### 应用入口 `app/`
 
-`monibox` 命令是唯一正式运行入口，负责启动 `MainEngine`，并提供文本模式与 VAD 语音模式。
+`app/` 负责统一 CLI 入口、日志与配置加载。`monibox` 命令仍然是正式运行入口，负责启动 `MainEngine`，并提供文本模式与 VAD 语音模式，同时支持 `--profile` 切换 `profiles/*.yaml`。
 
 ```bash
 uv run monibox --mode text
 uv run monibox --mode mic_vad --once
+uv run monibox --mode text --profile windows
 ```
+
+| 文件            | 职责                                                                 |
+| --------------- | -------------------------------------------------------------------- |
+| `cli.py`        | CLI 入口：解析 `--mode` / `--profile` / `--once`，启动 `MainEngine` |
+| `settings.py`   | 统一配置加载器：合并 `base.yaml`、平台 profile 与 `.env` 机密         |
+| `config.py`     | 项目路径与旧配置兼容入口                                             |
+| `log.py`        | 日志初始化与 logger 封装                                             |
 
 ### 调试工具 `devtools/`
 
 | 文件               | 职责                           |
 | ------------------ | ------------------------------ |
+| `build_rag.py`     | 从知识 chunk 构建 `rag.db` 与 `runtime_pack.json` |
 | `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口  |
 | `rag_query.py`     | 单条查询的 RAG 检索结果查看器  |
 | `protocol_mock.py` | 协议优先链路的轻量 smoke check |
@@ -174,7 +192,7 @@ uv run monibox --mode mic_vad --once
 
 | 文件                   | 职责                                                                                 |
 | ---------------------- | ------------------------------------------------------------------------------------ |
-| `orchestrator.py`      | **Orchestrator**：主编排器，协调 handle() 主流程；组装 RAG、协议、安全、TTS 等子模块 |
+| `orchestrator.py`      | **MoniSession** 主编排器：协调 `handle()` 主流程；组装 TopicRouter、RAG、协议、安全、TTS 等子模块 |
 | `protocol_matcher.py`  | 协议匹配引擎：做协议判定与状态处理                                                   |
 | `protocol_fsm.py`      | 协议 QA 状态机，处理协议命中后的动作与回复                                           |
 | `slot_parser.py`       | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                      |
@@ -191,6 +209,45 @@ uv run monibox --mode mic_vad --once
 | `monitor.py`           | 性能与内存监控                                                                       |
 | `topic_router.py`      | 主题路由器：基于 taxonomy 做标签路由                                                 |
 | `scoring.py`           | 检索结果评分/重排序策略                                                              |
+
+### HTTP 接口层 `api/`
+
+`api/` 是当前新增的 FastAPI 对外接口层，主要服务 React 控制台和后续独立前端接入。它并不替代核心运行链路，而是把 `MoniSession`、RAG 和协议调试能力包装成 HTTP API。
+
+| 文件/目录                | 职责                                                            |
+| ------------------------ | --------------------------------------------------------------- |
+| `main.py`                | FastAPI 入口，注册 CORS、中间件与路由                           |
+| `routers/status.py`      | 系统状态接口：返回 profile、LLM/TTS 后端、RAG DB、runtime pack 状态 |
+| `routers/chat.py`        | 对话接口：将消息送入 `MoniSession` 并返回回复与 trace           |
+| `routers/rag.py`         | RAG 检索调试接口                                                |
+| `routers/protocol.py`    | 协议测试与命中链路调试接口                                      |
+| `services/chat_service.py` | 会话管理：维护 session、串行化请求、组织 debug 信息           |
+
+### React 前端层 `frontend/`
+
+`frontend/` 是基于 React + Vite 的控制台原型，当前主要面向开发联调和演示，不是端侧正式运行界面。
+
+| 文件/目录               | 职责                                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| `package.json`          | 前端依赖与 `dev/build/preview` 脚本                          |
+| `src/App.jsx`           | 控制台总壳层，组织左侧导航、主工作区和右侧 Inspector         |
+| `src/pages/`            | 四个主页面：`Chat`、`Rag`、`Protocol`、`System`              |
+| `src/hooks/`            | 前端状态钩子，如对话发送、系统健康检查                       |
+| `src/services/api.js`   | 调用 FastAPI 的请求封装                                      |
+| `src/data/testScenarios.js` | 预置测试场景与导航定义                                   |
+| `src/styles.css`        | 当前控制台整体视觉样式                                       |
+
+### Streamlit 调试台 `webui/`
+
+`webui/` 保留为内部图形化测试前端，适合在单机环境快速验证对话、RAG、协议和系统状态。
+
+| 文件/目录                  | 职责                                                      |
+| -------------------------- | --------------------------------------------------------- |
+| `launch.py`                | `monibox-ui` 启动入口，拉起 Streamlit                     |
+| `bootstrap.py`             | 修正 `sys.path` 后再加载真正的 WebUI 主程序               |
+| `main.py`                  | Streamlit 主界面，组织 Chat / RAG / Protocol / Status 四个标签页 |
+| `components/`              | 各个功能标签页组件                                        |
+| `adapters/web_tts.py`      | WebUI 侧 TTS 适配层                                       |
 
 ### 模型能力层
 
@@ -230,14 +287,17 @@ uv run monibox --mode mic_vad --once
 
 ### 配置层 `profiles/`
 
+当前配置体系已重构为：`profiles/base.yaml` 提供全局默认值，`profiles/{profile}.yaml` 提供平台或场景覆盖，`.env` 只注入 API Key 等机密，统一由 `app/settings.py` 加载与校验。
+
 | 文件                          | 职责                                                      |
 | ----------------------------- | --------------------------------------------------------- |
-| `radxa.yaml` / `windows.yaml` | 平台级基线配置                                            |
+| `base.yaml`                  | 全平台默认配置基线                                        |
+| `radxa.yaml` / `windows.yaml` | 平台级覆盖配置                                            |
 | `*_mvp.yaml` / `radxa_*.yaml` | 运行配置文件（extreme、full、light、text_mvp、voice_mvp） |
 
 ### 测试层 `tests/`
 
-`tests/` 存放自动化回归测试，当前主要覆盖项目路径、配置加载和重构后的目录约定。
+`tests/` 存放自动化回归测试，当前主要覆盖项目路径、跨平台依赖、统一配置加载和重构后的目录约定。
 
 ### 知识库工具层 `knowledgekit/`
 
@@ -253,6 +313,14 @@ uv run monibox --mode mic_vad --once
 | `store.py`       | sqlite-vec 向量数据库封装         |
 | `tags.py`        | 标签注册与归一化                  |
 
+### 其他辅助目录
+
+| 目录/文件         | 职责                                                |
+| ----------------- | --------------------------------------------------- |
+| `scoring/`        | 检索与策略评分的说明与策略文件                      |
+| `tools/offline-tts.py` | 端侧/离线 TTS 相关辅助脚本                    |
+| `docs/`           | 架构说明、RAG 安全设计、React + FastAPI 迁移文档等 |
+
 ## 核心调用链（以语音模式为例）
 
 ```text
@@ -260,9 +328,9 @@ monibox --mode mic_vad
   └─ Engine.start()
        ├─ 启动 ASR 线程 (speech.whisper / speech.worker)
        ├─ 启动音频播放线程
-       ├─ 创建 Orchestrator
+       ├─ 创建 MoniSession
        └─ 协调线程调度事件队列
-            └─ Orchestrator.handle(user_input)
+            └─ MoniSession.handle(user_input)
                  ├─ TopicRouter 标签路由
                  ├─ ProtocolMatcher 协议匹配
                  │    ├─ 命中 → ProtocolFsm 执行协议动作/回复
