@@ -50,7 +50,6 @@ MoniBox 按"构建侧"和"运行侧"两条主线组织。
 - **CLI 主入口**：`monibox`，直接启动文本或语音模式的端侧运行链路。
 - **FastAPI 接口层**：`monibox-api`，对外暴露状态、对话、RAG、协议调试接口，供前端或外部工具调用。
 - **React 控制台**：`frontend/`，基于 Vite + React，提供 Chat / RAG / Protocol / System 四个工作区页面。
-- **Streamlit WebUI**：`monibox-ui`，保留为内部图形化调试台，便于单机快速验证模型、RAG 和协议流程。
 
 ## 软硬件协同
 
@@ -73,9 +72,10 @@ MoniBox 不是单纯的对话应用，而是为软硬件协同终端预留运行
 
 需要特别注意的是，TTS 不只是"能发声"的模块，而是输出管线的一部分，需要同时服务于句长控制、重复抑制、音频队列播放、ASR 暂停恢复和端侧延迟控制。
 
-## 环境管理（uv）
+## 环境管理
 
-本项目使用 uv 作为 Python 包与环境管理工具。
+- 后端：uv
+- 前端：pnpm
 
 ### 初始化环境
 
@@ -163,22 +163,22 @@ uv run monibox --mode mic_vad --once
 uv run monibox --mode text --profile windows
 ```
 
-| 文件            | 职责                                                                 |
-| --------------- | -------------------------------------------------------------------- |
-| `cli.py`        | CLI 入口：解析 `--mode` / `--profile` / `--once`，启动 `MainEngine` |
-| `settings.py`   | 统一配置加载器：合并 `base.yaml`、平台 profile 与 `.env` 机密         |
-| `config.py`     | 项目路径与旧配置兼容入口                                             |
-| `log.py`        | 日志初始化与 logger 封装                                             |
+| 文件          | 职责                                                                |
+| ------------- | ------------------------------------------------------------------- |
+| `cli.py`      | CLI 入口：解析 `--mode` / `--profile` / `--once`，启动 `MainEngine` |
+| `settings.py` | 统一配置加载器：合并 `base.yaml`、平台 profile 与 `.env` 机密       |
+| `config.py`   | 项目路径与旧配置兼容入口                                            |
+| `log.py`      | 日志初始化与 logger 封装                                            |
 
 ### 调试工具 `devtools/`
 
-| 文件               | 职责                           |
-| ------------------ | ------------------------------ |
+| 文件               | 职责                                              |
+| ------------------ | ------------------------------------------------- |
 | `build_rag.py`     | 从知识 chunk 构建 `rag.db` 与 `runtime_pack.json` |
-| `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口  |
-| `rag_query.py`     | 单条查询的 RAG 检索结果查看器  |
-| `protocol_mock.py` | 协议优先链路的轻量 smoke check |
-| `win_e2e_demo.py`  | Windows 端到端语音验证（早期） |
+| `chat.py`          | 纯文本 RAG / RAG+LLM 调试入口                     |
+| `rag_query.py`     | 单条查询的 RAG 检索结果查看器                     |
+| `protocol_mock.py` | 协议优先链路的轻量 smoke check                    |
+| `win_e2e_demo.py`  | Windows 端到端语音验证（早期）                    |
 
 ### 运行协调层 `core/`
 
@@ -190,64 +190,64 @@ uv run monibox --mode text --profile windows
 
 ### 会话与策略层 `runtime/`（业务核心）
 
-| 文件                   | 职责                                                                                 |
-| ---------------------- | ------------------------------------------------------------------------------------ |
+| 文件                   | 职责                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------- |
 | `orchestrator.py`      | **MoniSession** 主编排器：协调 `handle()` 主流程；组装 TopicRouter、RAG、协议、安全、TTS 等子模块 |
-| `protocol_matcher.py`  | 协议匹配引擎：做协议判定与状态处理                                                   |
-| `protocol_fsm.py`      | 协议 QA 状态机，处理协议命中后的动作与回复                                           |
-| `slot_parser.py`       | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                      |
-| `rag_engine.py`        | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                                    |
-| `generator.py`         | RAG 生成器：将检索结果交给 LLM 组织生成回复                                          |
-| `evidence_router.py`   | 低证据路由：检索证据不足时走保守输出，而非强行生成                                   |
-| `guard.py`             | 安全护栏：对输出内容进行安全过滤与处理                                               |
-| `rewriter.py`          | 回复改写器：适配语音播报场景                                                         |
-| `response_pipeline.py` | 响应管线：整合改写、重复抑制、TTS 调度                                               |
-| `preprocessor.py`      | 文本预处理器：去重、句式转换、关键词风控等                                           |
-| `primitives.py`        | 运行时原语：工作记忆、重复抑制、变体库、硬件接口抽象                                 |
-| `emotions.py`          | 情绪策略与策略书                                                                     |
-| `runtime_config.py`    | 运行时统一配置，收敛所有环境变量读取                                                 |
-| `monitor.py`           | 性能与内存监控                                                                       |
-| `topic_router.py`      | 主题路由器：基于 taxonomy 做标签路由                                                 |
-| `scoring.py`           | 检索结果评分/重排序策略                                                              |
+| `protocol_matcher.py`  | 协议匹配引擎：做协议判定与状态处理                                                                |
+| `protocol_fsm.py`      | 协议 QA 状态机，处理协议命中后的动作与回复                                                        |
+| `slot_parser.py`       | Slot 解析器：从用户输入抽取地点、yes/no 等 slot                                                   |
+| `rag_engine.py`        | RAG 检索引擎，基于 SQLite + sqlite-vec 做向量检索                                                 |
+| `generator.py`         | RAG 生成器：将检索结果交给 LLM 组织生成回复                                                       |
+| `evidence_router.py`   | 低证据路由：检索证据不足时走保守输出，而非强行生成                                                |
+| `guard.py`             | 安全护栏：对输出内容进行安全过滤与处理                                                            |
+| `rewriter.py`          | 回复改写器：适配语音播报场景                                                                      |
+| `response_pipeline.py` | 响应管线：整合改写、重复抑制、TTS 调度                                                            |
+| `preprocessor.py`      | 文本预处理器：去重、句式转换、关键词风控等                                                        |
+| `primitives.py`        | 运行时原语：工作记忆、重复抑制、变体库、硬件接口抽象                                              |
+| `emotions.py`          | 情绪策略与策略书                                                                                  |
+| `runtime_config.py`    | 运行时统一配置，收敛所有环境变量读取                                                              |
+| `monitor.py`           | 性能与内存监控                                                                                    |
+| `topic_router.py`      | 主题路由器：基于 taxonomy 做标签路由                                                              |
+| `scoring.py`           | 检索结果评分/重排序策略                                                                           |
 
 ### HTTP 接口层 `api/`
 
 `api/` 是当前新增的 FastAPI 对外接口层，主要服务 React 控制台和后续独立前端接入。它并不替代核心运行链路，而是把 `MoniSession`、RAG 和协议调试能力包装成 HTTP API。
 
-| 文件/目录                | 职责                                                            |
-| ------------------------ | --------------------------------------------------------------- |
-| `main.py`                | FastAPI 入口，注册 CORS、中间件与路由                           |
-| `routers/status.py`      | 系统状态接口：返回 profile、LLM/TTS 后端、RAG DB、runtime pack 状态 |
-| `routers/chat.py`        | 对话接口：将消息送入 `MoniSession` 并返回回复与 trace           |
-| `routers/rag.py`         | RAG 检索调试接口                                                |
-| `routers/protocol.py`    | 协议测试与命中链路调试接口                                      |
-| `services/chat_service.py` | 会话管理：维护 session、串行化请求、组织 debug 信息           |
+| 文件/目录                  | 职责                                                                |
+| -------------------------- | ------------------------------------------------------------------- |
+| `main.py`                  | FastAPI 入口，注册 CORS、中间件与路由                               |
+| `routers/status.py`        | 系统状态接口：返回 profile、LLM/TTS 后端、RAG DB、runtime pack 状态 |
+| `routers/chat.py`          | 对话接口：将消息送入 `MoniSession` 并返回回复与 trace               |
+| `routers/rag.py`           | RAG 检索调试接口                                                    |
+| `routers/protocol.py`      | 协议测试与命中链路调试接口                                          |
+| `services/chat_service.py` | 会话管理：维护 session、串行化请求、组织 debug 信息                 |
 
 ### React 前端层 `frontend/`
 
 `frontend/` 是基于 React + Vite 的控制台原型，当前主要面向开发联调和演示，不是端侧正式运行界面。
 
-| 文件/目录               | 职责                                                         |
-| ----------------------- | ------------------------------------------------------------ |
-| `package.json`          | 前端依赖与 `dev/build/preview` 脚本                          |
-| `src/App.jsx`           | 控制台总壳层，组织左侧导航、主工作区和右侧 Inspector         |
-| `src/pages/`            | 四个主页面：`Chat`、`Rag`、`Protocol`、`System`              |
-| `src/hooks/`            | 前端状态钩子，如对话发送、系统健康检查                       |
-| `src/services/api.js`   | 调用 FastAPI 的请求封装                                      |
-| `src/data/testScenarios.js` | 预置测试场景与导航定义                                   |
-| `src/styles.css`        | 当前控制台整体视觉样式                                       |
+| 文件/目录                   | 职责                                                 |
+| --------------------------- | ---------------------------------------------------- |
+| `package.json`              | 前端依赖与 `dev/build/preview` 脚本                  |
+| `src/App.jsx`               | 控制台总壳层，组织左侧导航、主工作区和右侧 Inspector |
+| `src/pages/`                | 四个主页面：`Chat`、`Rag`、`Protocol`、`System`      |
+| `src/hooks/`                | 前端状态钩子，如对话发送、系统健康检查               |
+| `src/services/api.js`       | 调用 FastAPI 的请求封装                              |
+| `src/data/testScenarios.js` | 预置测试场景与导航定义                               |
+| `src/styles.css`            | 当前控制台整体视觉样式                               |
 
 ### Streamlit 调试台 `webui/`
 
 `webui/` 保留为内部图形化测试前端，适合在单机环境快速验证对话、RAG、协议和系统状态。
 
-| 文件/目录                  | 职责                                                      |
-| -------------------------- | --------------------------------------------------------- |
-| `launch.py`                | `monibox-ui` 启动入口，拉起 Streamlit                     |
-| `bootstrap.py`             | 修正 `sys.path` 后再加载真正的 WebUI 主程序               |
-| `main.py`                  | Streamlit 主界面，组织 Chat / RAG / Protocol / Status 四个标签页 |
-| `components/`              | 各个功能标签页组件                                        |
-| `adapters/web_tts.py`      | WebUI 侧 TTS 适配层                                       |
+| 文件/目录             | 职责                                                             |
+| --------------------- | ---------------------------------------------------------------- |
+| `launch.py`           | `monibox-ui` 启动入口，拉起 Streamlit                            |
+| `bootstrap.py`        | 修正 `sys.path` 后再加载真正的 WebUI 主程序                      |
+| `main.py`             | Streamlit 主界面，组织 Chat / RAG / Protocol / Status 四个标签页 |
+| `components/`         | 各个功能标签页组件                                               |
+| `adapters/web_tts.py` | WebUI 侧 TTS 适配层                                              |
 
 ### 模型能力层
 
@@ -291,7 +291,7 @@ uv run monibox --mode text --profile windows
 
 | 文件                          | 职责                                                      |
 | ----------------------------- | --------------------------------------------------------- |
-| `base.yaml`                  | 全平台默认配置基线                                        |
+| `base.yaml`                   | 全平台默认配置基线                                        |
 | `radxa.yaml` / `windows.yaml` | 平台级覆盖配置                                            |
 | `*_mvp.yaml` / `radxa_*.yaml` | 运行配置文件（extreme、full、light、text_mvp、voice_mvp） |
 
@@ -315,11 +315,11 @@ uv run monibox --mode text --profile windows
 
 ### 其他辅助目录
 
-| 目录/文件         | 职责                                                |
-| ----------------- | --------------------------------------------------- |
-| `scoring/`        | 检索与策略评分的说明与策略文件                      |
-| `tools/offline-tts.py` | 端侧/离线 TTS 相关辅助脚本                    |
-| `docs/`           | 架构说明、RAG 安全设计、React + FastAPI 迁移文档等 |
+| 目录/文件              | 职责                                               |
+| ---------------------- | -------------------------------------------------- |
+| `scoring/`             | 检索与策略评分的说明与策略文件                     |
+| `tools/offline-tts.py` | 端侧/离线 TTS 相关辅助脚本                         |
+| `docs/`                | 架构说明、RAG 安全设计、React + FastAPI 迁移文档等 |
 
 ## 核心调用链（以语音模式为例）
 

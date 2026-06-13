@@ -9,9 +9,16 @@ authors = [
 ]
 
 dependencies = [
+  "numpy>=2.0",
+  "openai>=2.41",
+  "psutil>=6.0.0",
   "pydantic>=2.0",
   "pydantic-settings>=2.0",
+  "python-dotenv>=1.0.1",
   "pyyaml>=6.0",
+  "sentence-transformers>=5",
+  "soundfile>=0.12.1",
+  "sqlite-vec>=0.1.6"
 ]
 
 [project.scripts]
@@ -21,39 +28,21 @@ monibox-build-rag = "devtools.build_rag:main"
 monibox-chat = "devtools.chat:main"
 monibox-protocol-mock = "devtools.protocol_mock:main"
 monibox-rag = "devtools.rag_query:main"
-monibox-ui = "webui.launch:main"
 
 [project.optional-dependencies]
-dev = [
-  "pytest>=9.0.0",
-]
 api = [
   "fastapi>=0.115.0",
   "uvicorn>=0.30.0",
 ]
-env = [
-  "python-dotenv>=1.0.1",
+dev = [
+  "pytest>=9.0.0",
+  "ruff>=0.15.11",
 ]
 json = [
   "json5>=0.14",
 ]
-knowledge = [
-  "numpy>=2.0",
-  "openai>=2.41",
-  "sentence-transformers>=5",
-  "sqlite-vec>=0.1.6",
-]
 local-llm = [
   "llama-cpp-python>=0.3",
-]
-perf = [
-  "psutil>=6.0.0",
-]
-remote-llm = [
-  "openai>=2.41",
-]
-tools = [
-  "soundfile>=0.12.1",
 ]
 voice = [
   "comtypes>=1.4.16; sys_platform == 'win32'",
@@ -64,9 +53,13 @@ voice = [
   "sherpa-onnx>=1.12.29",
   "pywin32>=306; sys_platform == 'win32'",
 ]
-webui = [
-  "streamlit>=1.38.0",
-  "scipy>=1.14",
+
+[dependency-groups]
+dev = [
+  "jupyter>=1.1.1",
+  "matplotlib>=3.10.9",
+  "pandas>=3.0.3",
+  "pymoo>=0.6.1.6",
 ]
 
 [build-system]
@@ -84,51 +77,66 @@ only-include = [
   "language",
   "runtime",
   "speech",
-  "webui",
 ]
 
 [tool.ruff]
+fix = true
+target-version = "py311"
 line-length = 88
 
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 60
+line-ending = "lf"
+skip-magic-trailing-comma = true
+
 [tool.ruff.lint]
-select = [
-  "E4",
-  "E7",
-  "E9",
+extend-select = [
+  "E",
+  "W",
   "F",
-  "I",
   "B",
-  "SIM",
+  "C4",
+  "EM",
+  "FA",
+  "G",
+  "INT",
+  "PIE",
+  "PT",
+  "PYI",
+  "Q",
   "RET",
-  "ARG",
-  "TRY",
-  "S",
-  "UP",
+  "RSE",
+  "SLOT",
+  "T10",
+  "YTT",
+  "DTZ",
+  "I",
+  "ISC",
+  "PERF",
   "RUF",
+  "S",
+  "SIM",
+  "TID",
+  "UP"
 ]
+fixable = ["ALL"]
 ignore = [
+  "EM101",
+  "EM102",
+  "ISC001",
   "E501",
-  "PLC0415",
   "RUF001",
   "RUF002",
   "RUF003",
-  "TRY003",
-  "TRY004",
-  "TRY400",
+  "S101"
 ]
 
-[tool.ruff.lint.per-file-ignores]
-"runtime/rag_engine.py" = ["S608"]
-"tests/**/*.py" = ["S101"]
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
-[tool.uv]
-default-groups = []
-package = true
-
-[dependency-groups]
-dev = [
-    "jupyter>=1.1.1",
-    "matplotlib>=3.10.9",
-    "pandas>=3.0.3",
-    "pymoo>=0.6.1.6",
-]
+[tool.ruff.lint.isort]
+case-sensitive = true
+combine-as-imports = true
+force-wrap-aliases = true
+order-by-type = true

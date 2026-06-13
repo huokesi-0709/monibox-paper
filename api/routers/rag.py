@@ -4,8 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from fastapi import APIRouter
-from fastapi import HTTPException
+from fastapi import APIRouter, HTTPException
 
 from app.config import settings
 from runtime.rag_engine import RagEngine
@@ -21,10 +20,7 @@ def search(query: str = "", top_k: int = 5) -> dict[str, object]:
 
     rag_db_path = Path(settings.rag_db_path)
     if not rag_db_path.exists():
-        raise HTTPException(
-            status_code=400,
-            detail=f"未找到 RAG 数据库：{rag_db_path}",
-        )
+        raise HTTPException(status_code=400, detail=f"未找到 RAG 数据库：{rag_db_path}")
 
     engine = RagEngine(str(rag_db_path))
     routing = engine.router.route(text, top_tags=2)
