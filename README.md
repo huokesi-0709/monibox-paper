@@ -98,19 +98,18 @@ uv sync --extra voice
 # 同步含本地 LLM（llama-cpp-python，macOS 上可能需要额外编译工具链）
 uv sync --extra local-llm
 
-# 同步 Streamlit WebUI
-uv sync --extra webui
-
 # 含开发依赖
 uv sync --extra dev
 ```
 
-如果要启用 React 前端，还需要在 `frontend/` 目录安装 Node 依赖：
+如果要启用 React 前端，还需要在 `frontend/` 目录安装 Node 依赖。本项目前端使用 **pnpm** 管理依赖（不再使用 npm）：
 
 ```bash
 cd frontend
-npm install
+pnpm install
 ```
+
+> 提示：pnpm 是性能更优的包管理器。如果你尚未安装 pnpm，可通过 `npm install -g pnpm` 全局安装。
 
 ### 运行项目
 
@@ -126,16 +125,13 @@ uv run monibox --mode text --profile windows
 
 # 启动 FastAPI
 uv run --extra api monibox-api
-
-# 启动 Streamlit WebUI
-uv run --extra webui monibox-ui
 ```
 
 React 前端开发模式：
 
 ```bash
 cd frontend
-npm run dev
+pnpm run dev
 ```
 
 ### 常用命令
@@ -146,7 +142,6 @@ uv run --extra knowledge monibox-build-rag   # 构建本地 rag.db 和 runtime_p
 uv run monibox-chat --no_llm     # 纯文本 RAG 调试入口
 uv run monibox-rag --q "我好冷"   # 快速查看 RAG 检索结果
 uv run --extra api monibox-api   # 本地 API 调试
-uv run --extra webui monibox-ui  # 启动 Streamlit 调试台
 uv pip list                      # 查看已安装包
 uv lock                          # 更新 uv.lock
 ```
@@ -236,18 +231,6 @@ uv run monibox --mode text --profile windows
 | `src/services/api.js`       | 调用 FastAPI 的请求封装                              |
 | `src/data/testScenarios.js` | 预置测试场景与导航定义                               |
 | `src/styles.css`            | 当前控制台整体视觉样式                               |
-
-### Streamlit 调试台 `webui/`
-
-`webui/` 保留为内部图形化测试前端，适合在单机环境快速验证对话、RAG、协议和系统状态。
-
-| 文件/目录             | 职责                                                             |
-| --------------------- | ---------------------------------------------------------------- |
-| `launch.py`           | `monibox-ui` 启动入口，拉起 Streamlit                            |
-| `bootstrap.py`        | 修正 `sys.path` 后再加载真正的 WebUI 主程序                      |
-| `main.py`             | Streamlit 主界面，组织 Chat / RAG / Protocol / Status 四个标签页 |
-| `components/`         | 各个功能标签页组件                                               |
-| `adapters/web_tts.py` | WebUI 侧 TTS 适配层                                              |
 
 ### 模型能力层
 
