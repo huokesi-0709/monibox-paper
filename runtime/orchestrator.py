@@ -16,6 +16,7 @@ from runtime.emotions import EmotionStrategy, EmotionStrategyBook
 from runtime.evidence_router import LowEvidenceRouter
 from runtime.generator import RagGenerator
 from runtime.guard import SafetyGuard
+from runtime.input_normalizer import InputNormalizer
 from runtime.monitor import PerfMonitor
 from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
 from runtime.primitives import RepeatGuard, WorkingMemory, build_default_variant_bank
@@ -140,10 +141,14 @@ class MoniSession:
         self.pending_bucket: str | None = None
         self.pending_until: float = 0.0
         self.last_trace: dict[str, Any] = {}
+        self._input_trace: dict[str, Any] = {}
+        self.input_normalizer = kwargs.get("input_normalizer") or InputNormalizer()
         self.current_interaction_id: str | None = None
 
     def _set_trace(self, **kwargs) -> None:
-        self.last_trace = dict(kwargs)
+        trace = dict(self._input_trace)
+        trace.update(kwargs)
+        self.last_trace = trace
 
     # ========== 低证据辅助 ==========
 
@@ -265,8 +270,16 @@ class MoniSession:
         from runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         events = events or []
-        user_text = (user_text or "").strip()
+        normalized = self.input_normalizer.normalize(user_text or "")
+        self._input_trace = {
+            "raw_text": normalized.raw_text,
+            "canonical_text": normalized.canonical_text,
+            "corrections": [item.to_dict() for item in normalized.corrections],
+            "input_normalization": normalized.trace_dict(),
+        }
+        user_text = normalized.canonical_text.strip()
         if not user_text:
+            self._set_trace(decision="empty_input")
             return ""
 
         self.mem.push_user(user_text)

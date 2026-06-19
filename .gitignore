@@ -1,10 +1,13 @@
 # 环境
 .env
+.env.*
+!.env.example
 .venv/
+.uv-cache/
 .python-version
 
 # 构建产物
-build/
+build/runtime_logs/
 dist/
 *.egg-info/
 

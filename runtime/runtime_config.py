@@ -138,6 +138,7 @@ class RuntimeConfig:
     tts_sherpa_noise_scale_w: float = 0.85
 
     # ---- LLM ----
+    llm_backend: str = "auto"
     llm_ctx: int = 2048
     llm_threads: int = 6
     llm_gpu_layers: int = 0
@@ -196,6 +197,7 @@ def _settings_to_flat(cfg: MoniboxSettings) -> dict[str, Any]:
         "tts_sherpa_noise_scale": cfg.speech.tts.sherpa_noise_scale,
         "tts_sherpa_noise_scale_w": cfg.speech.tts.sherpa_noise_scale_w,
         # LLM
+        "llm_backend": "null" if cfg.llm.backend is None else cfg.llm.backend,
         "llm_ctx": cfg.llm.ctx,
         "llm_threads": cfg.llm.threads,
         "llm_gpu_layers": cfg.llm.gpu_layers,
@@ -248,6 +250,7 @@ def load_runtime_config(profile: str | None = None) -> RuntimeConfig:
             values[field_name] = _coerce_like(os.getenv(env_key), values[field_name])
 
     # 3. 标准化
+    values["llm_backend"] = str(values["llm_backend"] or "auto").strip().lower()
     values["tts_backend"] = str(values["tts_backend"]).strip().lower()
     values["tts_sherpa_model_type"] = (
         str(values["tts_sherpa_model_type"]).strip().lower()

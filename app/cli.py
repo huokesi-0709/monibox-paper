@@ -27,6 +27,8 @@ _PROFILE_CHOICES = [
     "radxa_extreme",
     "radxa_full",
     "radxa_light",
+    "paper_eval",
+    "paper_text",
     "text_mvp",
     "voice_mvp",
 ]

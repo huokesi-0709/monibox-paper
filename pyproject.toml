@@ -26,6 +26,8 @@ monibox = "app.cli:main"
 monibox-api = "api.main:main"
 monibox-build-rag = "devtools.build_rag:main"
 monibox-chat = "devtools.chat:main"
+monibox-de = "experiments.de_pymoo_optimize:main"
+monibox-eval = "benchmarks.run_eval:main"
 monibox-protocol-mock = "devtools.protocol_mock:main"
 monibox-rag = "devtools.rag_query:main"
 
@@ -43,6 +45,11 @@ json = [
 ]
 local-llm = [
   "llama-cpp-python>=0.3",
+]
+paper = [
+  "pymoo>=0.6.1.6",
+  "pandas>=2",
+  "matplotlib>=3",
 ]
 voice = [
   "comtypes>=1.4.16; sys_platform == 'win32'",
@@ -70,9 +77,11 @@ build-backend = "hatchling.build"
 only-include = [
   "app",
   "api",
+  "benchmarks",
   "core",
   "devices",
   "devtools",
+  "experiments",
   "knowledgekit",
   "language",
   "runtime",

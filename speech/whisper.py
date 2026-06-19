@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-import contextlib
-import json
-import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from faster_whisper import WhisperModel
 
-from app.config import PROJECT_ROOT
+from runtime.input_normalizer import InputNormalizer
 
 DEFAULT_RESCUE_INITIAL_PROMPT = (
     "这是中文灾害救援对话。常见词：腿、手、胳膊、头、脑袋、流血、伤口、骨折、"
@@ -37,16 +34,6 @@ def build_default_initial_prompt(extra: str = "") -> str:
     if extra:
         prompt = f"{prompt} {extra}"
     return prompt
-
-
-def normalize_rescue_phrase(text: str) -> str:
-    t = (text or "").strip()
-    if not t:
-        return t
-
-    return re.sub(
-        r"([腿手脚胳膊头脑袋伤口])[、，,\s]*[腺在现线][、，,\s]*流血", r"\1在流血", t
-    )
 
 
 def _has_repeated_long_chunk(text: str, min_len: int = 6, min_repeats: int = 3) -> bool:
@@ -111,26 +98,7 @@ class FasterWhisperASR:
             str(p), device=cfg.device, compute_type=cfg.compute_type
         )
 
-        self.corrections: dict[str, str] = {}
-        self.fuzzy_rules: list = []
-
-        # 优先从本地知识库加载增强纠错字典。
-        dict_path = PROJECT_ROOT / "knowledge" / "asr_corrections.json"
-        if dict_path.exists():
-            try:
-                data = json.loads(dict_path.read_text(encoding="utf-8"))
-                self.corrections = data.get("corrections", {})
-                self.fuzzy_rules = data.get("fuzzy_patterns", {}).get("rules", [])
-            except Exception as e:
-                print(f"[ASR] Failed to load {dict_path}: {e}")
-        else:
-            # 兼容老的环境变量配置
-            cj = (os.getenv("ASR_CORRECTIONS_JSON") or "").strip()
-            if cj:
-                try:
-                    self.corrections = json.loads(cj)
-                except Exception:
-                    self.corrections = {}
+        self.input_normalizer = InputNormalizer()
 
         # 多字优先
         self.tc_sc_map = {
@@ -174,29 +142,8 @@ class FasterWhisperASR:
         # 1) 繁->简
         t = self._to_simplified_light(t)
 
-        # 2) 字典精准纠错（多字在配置时已排前）
-        for k, v in self.corrections.items():
-            if k and v:
-                t = t.replace(k, v)
-
-        # 2.5) 结构化救援短语归并，例如“腿、腺、流血”
-        t = normalize_rescue_phrase(t)
-
-        # 3) 上下文感知的模糊音纠错
-        for rule in self.fuzzy_rules:
-            ctx_kw = rule.get("context_keywords", [])
-            pattern = rule.get("pattern", "")
-            replace = rule.get("replacement", "")
-            if not pattern or not replace:
-                continue
-            # 若句子中包含任一触发上下文，则应用替换
-            if not ctx_kw or any(kw in t for kw in ctx_kw):
-                with contextlib.suppress(Exception):
-                    t = re.sub(pattern, replace, t)
-
-        # 4) 保守内置纠错示例
-        if "我的手" in t and "手段" in t:
-            t = t.replace("手段", "手断了")
+        # 2) Shared conservative normalization for ASR/text/benchmark input.
+        t = self.input_normalizer.normalize(t).canonical_text
 
         if is_probable_junk_transcript(t):
             return ""

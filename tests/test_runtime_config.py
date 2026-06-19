@@ -1,7 +1,6 @@
 from app.config import PROJECT_ROOT
 from runtime.runtime_config import (
     _ENV_FIELD_MAP,
-    _resolve_profile_path,
     load_runtime_config,
 )
 
@@ -15,10 +14,11 @@ def test_profile_names_resolve_to_profiles_directory(monkeypatch):
     monkeypatch.delenv("RUNTIME_CONFIG_PATH", raising=False)
     monkeypatch.delenv("RUNTIME_PROFILE", raising=False)
 
-    path = _resolve_profile_path("voice_mvp")
+    path = PROJECT_ROOT / "profiles" / "voice_mvp.yaml"
+    cfg = load_runtime_config("voice_mvp")
 
-    assert path == PROJECT_ROOT / "profiles" / "voice_mvp.yaml"
     assert path.exists()
+    assert cfg.tts_max_chars == 82
 
 
 def test_profile_values_override_runtime_defaults(monkeypatch):

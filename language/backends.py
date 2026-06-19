@@ -175,7 +175,7 @@ def create_llm_backend() -> LLMBackend:
     from runtime.runtime_config import load_runtime_config
 
     rt = load_runtime_config()
-    backend = (os.getenv("LLM_BACKEND", "auto") or "auto").strip().lower()
+    backend = (os.getenv("LLM_BACKEND") or rt.llm_backend or "auto").strip().lower()
 
     gguf_path = os.getenv("LLM_GGUF_PATH", "")
     deepseek_api_key = os.getenv("DEEPSEEK_API_KEY", "")

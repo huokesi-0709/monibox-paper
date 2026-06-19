@@ -1,0 +1,28 @@
+# Deterministic offline profile for paper reproduction experiments.
+
+app:
+  mode: text
+
+llm:
+  backend: null
+  temperature: 0.0
+  stream: false
+
+rewrite:
+  enabled: false
+  protocol_enabled: false
+  low_evidence_enabled: false
+
+speech:
+  tts:
+    backend: ""
+
+hardware:
+  enable_led: false
+  enable_screen: false
+
+debug:
+  runtime_trace_enabled: true
+  trace_path: build/eval/traces/paper_eval_trace.jsonl
+  debug_runtime: false
+  debug_tts: false
