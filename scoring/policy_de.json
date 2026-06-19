@@ -1,0 +1,17 @@
+{
+  "version": "de-placeholder-v1",
+  "weights": {
+    "w_vec": 0.32,
+    "w_sparse": 0.16,
+    "w_quality": 0.12,
+    "w_tag": 0.14,
+    "w_risk": 0.18,
+    "w_unsafe": 0.22,
+    "w_redundancy": 0.08
+  },
+  "thresholds": {
+    "min_final_score": 0.0,
+    "unsafe_soft_penalty": 0.35,
+    "redundancy_overlap": 0.72
+  }
+}

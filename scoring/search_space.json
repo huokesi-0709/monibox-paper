@@ -1,0 +1,33 @@
+{
+  "version": "hsc-rag-de-search-space-v1",
+  "weights": {
+    "w_vec": {
+      "low": 0.15,
+      "high": 0.55
+    },
+    "w_sparse": {
+      "low": 0.05,
+      "high": 0.30
+    },
+    "w_quality": {
+      "low": 0.02,
+      "high": 0.25
+    },
+    "w_tag": {
+      "low": 0.02,
+      "high": 0.25
+    },
+    "w_risk": {
+      "low": 0.05,
+      "high": 0.35
+    },
+    "w_unsafe": {
+      "low": 0.05,
+      "high": 0.45
+    },
+    "w_redundancy": {
+      "low": 0.00,
+      "high": 0.20
+    }
+  }
+}

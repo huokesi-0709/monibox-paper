@@ -16,8 +16,8 @@ from runtime.emotions import EmotionStrategy, EmotionStrategyBook
 from runtime.evidence_router import LowEvidenceRouter
 from runtime.generator import RagGenerator
 from runtime.guard import SafetyGuard
-from runtime.intent_extractor import IntentExtractor
 from runtime.input_normalizer import InputNormalizer
+from runtime.intent_extractor import IntentExtractor
 from runtime.monitor import PerfMonitor
 from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
 from runtime.primitives import RepeatGuard, WorkingMemory, build_default_variant_bank
@@ -161,6 +161,21 @@ class MoniSession:
         if best.status == "启用" and float(best.quality_score) >= 5.0:
             return False
         return float(best.distance) > self.rt.rag_max_distance
+
+    def _trace_top_chunks(self, results: list[SearchResult]) -> list[dict[str, Any]]:
+        return [
+            {
+                "chunk_id": item.chunk_id,
+                "display_id": item.display_id,
+                "distance": item.distance,
+                "final_distance": item.final_distance,
+                "quality_score": item.quality_score,
+                "risk": item.risk,
+                "scene": item.scene,
+                "score_breakdown": item.score_breakdown,
+            }
+            for item in results
+        ]
 
     def _try_pending_bucket_followup(self, user_text: str) -> tuple | None:
         if not self.pending_bucket:
@@ -614,6 +629,7 @@ class MoniSession:
                 decision="low_evidence_rag_fallback",
                 bucket=r.bucket,
                 emotion=emotion.emotion,
+                top_chunks=self._trace_top_chunks(results),
             )
             if self.rt.debug_runtime:
                 print(f"[LOW_EVIDENCE_ROUTE] bucket={r.bucket}")
@@ -651,6 +667,14 @@ class MoniSession:
             if self.rt.debug_runtime:
                 print(f"[PERF] RAG Gen (Stream) Took {elapsed_llm:.2f}s")
 
+            top_chunk_id = results[0].chunk_id if results else None
+            self._set_trace(
+                decision="rag_normal_stream",
+                top_chunk_id=top_chunk_id,
+                low_evidence=False,
+                result_count=len(results),
+                top_chunks=self._trace_top_chunks(results),
+            )
             return reply
 
         # 非流式回退
@@ -665,6 +689,7 @@ class MoniSession:
             top_chunk_id=top_chunk_id,
             low_evidence=False,
             result_count=len(results),
+            top_chunks=self._trace_top_chunks(results),
         )
         return self.output.emit(
             reply,

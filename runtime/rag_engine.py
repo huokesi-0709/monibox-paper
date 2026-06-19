@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+# ruff: noqa: S608
 import re
 import sqlite3
 import struct
-from collections import Counter
 from collections.abc import Iterable
 from dataclasses import dataclass
 from typing import Any
 
-from runtime.scoring import RerankPolicy, final_distance
+from runtime.scoring import RerankPolicy, final_distance, load_policy, rerank_chunks
 from runtime.topic_router import AutoRouter
 
 try:
@@ -41,12 +41,15 @@ class SearchResult:
     hardware_action_hint: str | None
     distance: float
     final_distance: float
+    tags_flat: str = ""
+    score_breakdown: dict[str, Any] | None = None
 
 
 class RagEngine:
     def __init__(self, db_path: str):
         self.db_path = db_path
         self.policy = RerankPolicy.load_default()
+        self.hsc_policy = load_policy()
         self.router = AutoRouter()
 
     def _open_db(self) -> sqlite3.Connection:
@@ -227,6 +230,23 @@ class RagEngine:
             return 0.0
         return 0.0 if chunk_id in whitelist else 0.08
 
+    def _hsc_rerank(
+        self,
+        query: str,
+        candidates: list[SearchResult],
+        topk: int,
+        tags: list[str] | None = None,
+        max_per_group: int = 1,
+    ) -> list[SearchResult]:
+        return rerank_chunks(
+            query=query,
+            chunks=candidates,
+            policy=self.hsc_policy,
+            routed_tags=tags,
+            topk=topk,
+            max_per_group=max_per_group,
+        )
+
     def _fallback_search(
         self,
         query: str,
@@ -302,31 +322,8 @@ class RagEngine:
             )
             scored.append((d_final, d, r))
 
-        scored.sort(key=lambda x: x[0])
-
-        picked = []
-        group_cnt = Counter()
-        for d_final, d, r in scored:
-            gid = r["group_id"] or ""
-            if gid and group_cnt[gid] >= max_per_group:
-                continue
-            picked.append((d_final, d, r))
-            if gid:
-                group_cnt[gid] += 1
-            if len(picked) >= topk:
-                break
-
-        if len(picked) < topk:
-            exists = {r["chunk_id"] for _, _, r in picked}
-            for d_final, d, r in scored:
-                if r["chunk_id"] in exists:
-                    continue
-                picked.append((d_final, d, r))
-                if len(picked) >= topk:
-                    break
-
         out: list[SearchResult] = []
-        for d_final, d, r in picked:
+        for d_final, d, r in scored:
             out.append(
                 SearchResult(
                     chunk_id=r["chunk_id"],
@@ -345,9 +342,16 @@ class RagEngine:
                     hardware_action_hint=r["hardware_action_hint"],
                     distance=float(d),
                     final_distance=float(d_final),
+                    tags_flat=str(r["tags_flat"] or ""),
                 )
             )
-        return out
+        return self._hsc_rerank(
+            query=query,
+            candidates=out,
+            topk=topk,
+            tags=tags,
+            max_per_group=max_per_group,
+        )
 
     def search(
         self,
@@ -419,6 +423,7 @@ class RagEngine:
           c.chunk_id, c.display_id, c.group_id,
           c.text, c.category, c.sub_category, c.dimension, c.risk, c.scene,
           c.source_id, c.status, c.quality_score, c.priority, c.hardware_action_hint,
+          c.tags_flat,
           knn.distance
         FROM knn
         JOIN chunks c ON c.id = knn.rowid
@@ -481,32 +486,8 @@ class RagEngine:
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
             )
-        scored.sort(key=lambda x: x[0])
-
-        # diversify by group_id
-        picked = []
-        group_cnt = Counter()
-        for d_final, r in scored:
-            gid = r["group_id"] or ""
-            if gid and group_cnt[gid] >= max_per_group:
-                continue
-            picked.append((d_final, r))
-            if gid:
-                group_cnt[gid] += 1
-            if len(picked) >= topk:
-                break
-
-        if len(picked) < topk:
-            exists = {r["chunk_id"] for _, r in picked}
-            for d_final, r in scored:
-                if r["chunk_id"] in exists:
-                    continue
-                picked.append((d_final, r))
-                if len(picked) >= topk:
-                    break
-
         out: list[SearchResult] = []
-        for d_final, r in picked:
+        for d_final, r in scored:
             out.append(
                 SearchResult(
                     chunk_id=r["chunk_id"],
@@ -525,9 +506,16 @@ class RagEngine:
                     hardware_action_hint=r["hardware_action_hint"],
                     distance=float(r["distance"]),
                     final_distance=float(d_final),
+                    tags_flat=str(r["tags_flat"] or ""),
                 )
             )
-        return out
+        return self._hsc_rerank(
+            query=query,
+            candidates=out,
+            topk=topk,
+            tags=tags,
+            max_per_group=max_per_group,
+        )
 
     def auto_search(
         self, query: str, topk: int = 5, auto_top_tags: int = 2
