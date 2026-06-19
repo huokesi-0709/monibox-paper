@@ -8,6 +8,9 @@
 
 # 构建产物
 build/runtime_logs/
+build/eval/**/*.jsonl
+build/eval/**/*.csv
+build/eval/**/*_summary.json
 dist/
 *.egg-info/
 
