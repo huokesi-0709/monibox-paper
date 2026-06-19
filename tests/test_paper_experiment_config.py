@@ -41,7 +41,7 @@ def test_paper_eval_profile_loads_as_offline_deterministic_config(monkeypatch):
 
 def test_paper_eval_null_backend_ignores_deepseek_key(monkeypatch):
     monkeypatch.setenv("RUNTIME_PROFILE", "paper_eval")
-    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-testpaperprofileoffline000000")
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "paper-profile-offline-key")
     monkeypatch.delenv("LLM_BACKEND", raising=False)
     monkeypatch.delenv("LLM_GGUF_PATH", raising=False)
 

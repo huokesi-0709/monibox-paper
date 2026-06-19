@@ -67,6 +67,8 @@ dev = [
   "matplotlib>=3.10.9",
   "pandas>=3.0.3",
   "pymoo>=0.6.1.6",
+  "pytest>=9.0.0",
+  "ruff>=0.15.11",
 ]
 
 [build-system]
@@ -92,6 +94,9 @@ only-include = [
 fix = true
 target-version = "py311"
 line-length = 88
+
+[tool.pytest.ini_options]
+addopts = "-p no:cacheprovider"
 
 [tool.ruff.format]
 docstring-code-format = true

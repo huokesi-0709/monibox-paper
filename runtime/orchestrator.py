@@ -16,12 +16,13 @@ from runtime.emotions import EmotionStrategy, EmotionStrategyBook
 from runtime.evidence_router import LowEvidenceRouter
 from runtime.generator import RagGenerator
 from runtime.guard import SafetyGuard
+from runtime.intent_extractor import IntentExtractor
 from runtime.input_normalizer import InputNormalizer
 from runtime.monitor import PerfMonitor
 from runtime.preprocessor import dedup_sentences, force_second_person, smart_cut
 from runtime.primitives import RepeatGuard, WorkingMemory, build_default_variant_bank
 from runtime.protocol_fsm import ProtocolHandler
-from runtime.protocol_matcher import ProtocolEngine
+from runtime.protocol_matcher import ProtocolEngine, ProtocolMatchResult
 from runtime.rag_engine import RagEngine, SearchResult
 from runtime.response_pipeline import OutputPipeline
 from runtime.rewriter import ResponseRewriter
@@ -143,6 +144,7 @@ class MoniSession:
         self.last_trace: dict[str, Any] = {}
         self._input_trace: dict[str, Any] = {}
         self.input_normalizer = kwargs.get("input_normalizer") or InputNormalizer()
+        self.intent_extractor = kwargs.get("intent_extractor") or IntentExtractor()
         self.current_interaction_id: str | None = None
 
     def _set_trace(self, **kwargs) -> None:
@@ -282,6 +284,15 @@ class MoniSession:
             self._set_trace(decision="empty_input")
             return ""
 
+        intent_context = self.intent_extractor.extract(user_text)
+        self._input_trace.update(
+            {
+                "intent_context": intent_context.to_dict(),
+                "primary_intent": intent_context.primary_intent,
+                "intent_risk_score": intent_context.risk_score,
+            }
+        )
+
         self.mem.push_user(user_text)
         rr = self.rag.router.route(user_text, top_tags=auto_top_tags)
 
@@ -311,7 +322,36 @@ class MoniSession:
             )
 
         # 1) protocol match（高优抢占判断）
-        hit = self.prot.match(user_text, rr.tags, events)
+        if hasattr(self.prot, "match_with_score"):
+            protocol_match = self.prot.match_with_score(
+                user_text, rr.tags, events, intent_context=intent_context
+            )
+        else:
+            legacy_hit = self.prot.match(user_text, rr.tags, events)
+            protocol_match = ProtocolMatchResult(
+                matched=legacy_hit is not None,
+                protocol_id=str(legacy_hit.get("protocol_id") or "")
+                if legacy_hit
+                else None,
+                protocol_name=str(legacy_hit.get("name") or "") if legacy_hit else None,
+                confidence=1.0 if legacy_hit else 0.0,
+                priority=int(legacy_hit.get("priority", 0) or 0) if legacy_hit else 0,
+                matched_terms=[],
+                body_part_matches=[],
+                scene_matches=[],
+                negation_conflict=False,
+                reason=["legacy protocol engine match() used"],
+                protocol=legacy_hit,
+            )
+        self._input_trace.update(
+            {
+                "protocol_match": protocol_match.to_dict(),
+                "protocol_confidence": protocol_match.confidence,
+                "protocol_matched_terms": protocol_match.matched_terms,
+                "protocol_match_reason": protocol_match.reason,
+            }
+        )
+        hit = protocol_match.protocol if protocol_match.matched else None
         hit_priority = int(hit.get("priority", 0) or 0) if hit else -1
 
         current_priority = -1
@@ -473,6 +513,9 @@ class MoniSession:
                 decision="protocol_main",
                 protocol_id=pid,
                 protocol_name=hit.get("name"),
+                protocol_confidence=protocol_match.confidence,
+                matched_terms=protocol_match.matched_terms,
+                reason=protocol_match.reason,
                 priority=int(hit.get("priority", 0) or 0),
                 preempted=preempted,
                 followup=is_followup,
