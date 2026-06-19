@@ -27,12 +27,10 @@ runtime/runtime_config.py
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, fields
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Any
 
-from app.settings import load_settings, MoniboxSettings
-from app.config import PROJECT_ROOT
+from app.settings import MoniboxSettings, load_settings
 
 PROFILE_ENV = "RUNTIME_PROFILE"
 PROFILE_PATH_ENV = "RUNTIME_CONFIG_PATH"
@@ -88,6 +86,8 @@ _ENV_FIELD_MAP = {
     "ENABLE_LED": "enable_led",
     "ENABLE_SCREEN": "enable_screen",
     "ENABLE_PRECOMPUTED_AUDIO": "enable_precomputed_audio",
+    "RUNTIME_TRACE_ENABLED": "runtime_trace_enabled",
+    "RUNTIME_TRACE_PATH": "trace_path",
     "DEBUG_RUNTIME": "debug_runtime",
     "DEBUG_TTS": "debug_tts",
     "PERF_WARNING_MB": "perf_warning_mb",
@@ -155,6 +155,8 @@ class RuntimeConfig:
     variant_mode: str = "rr"
 
     # ---- 调试 ----
+    runtime_trace_enabled: bool = True
+    trace_path: str = "build/runtime_logs/interaction_trace.jsonl"
     debug_runtime: bool = False
     debug_tts: bool = False
     perf_warning_mb: int = 600
@@ -211,6 +213,8 @@ def _settings_to_flat(cfg: MoniboxSettings) -> dict[str, Any]:
         "repeat_threshold": cfg.repeat.threshold,
         "variant_mode": cfg.repeat.variant_mode,
         # Debug
+        "runtime_trace_enabled": cfg.debug.runtime_trace_enabled,
+        "trace_path": cfg.debug.trace_path,
         "debug_runtime": cfg.debug.debug_runtime,
         "debug_tts": cfg.debug.debug_tts,
         "perf_warning_mb": cfg.hardware.perf_warning_mb,

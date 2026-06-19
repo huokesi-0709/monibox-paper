@@ -11,8 +11,9 @@ _apply_repeat_and_variants 等方法。
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 
-from runtime.guard import SafetyGuard
+from runtime.guard import GuardResult, SafetyGuard
 from runtime.preprocessor import (
     dedup_sentences,
     force_second_person,
@@ -23,6 +24,22 @@ from runtime.preprocessor import (
 from runtime.primitives import RepeatGuard, VariantBank, WorkingMemory
 from runtime.rewriter import ResponseRewriter
 from runtime.runtime_config import RuntimeConfig
+
+
+@dataclass
+class OutputResult:
+    raw_text: str
+    final_text: str
+    guard_level: str | None
+    guard_reasons: list[str]
+
+    def to_dict(self) -> dict:
+        return {
+            "raw_text": self.raw_text,
+            "final_text": self.final_text,
+            "guard_level": self.guard_level,
+            "guard_reasons": list(self.guard_reasons),
+        }
 
 
 class OutputPipeline:
@@ -49,6 +66,8 @@ class OutputPipeline:
         self.repeat_guard = repeat_guard
         self.cfg = cfg
         self._turn_context: dict = {}
+        self.last_guard_result: GuardResult | None = None
+        self.last_output_result: OutputResult | None = None
 
     def set_turn_context(self, metadata: dict | None) -> None:
         self._turn_context = dict(metadata or {})
@@ -162,6 +181,13 @@ class OutputPipeline:
 
         gr = self.guard.check(t)
         out = self.postprocess_text(gr.safe_text, max_chars=max_chars)
+        self.last_guard_result = gr
+        self.last_output_result = OutputResult(
+            raw_text=t,
+            final_text=out,
+            guard_level=gr.level,
+            guard_reasons=list(gr.reasons),
+        )
         self.speak(out, style=style)
         self.mem.push_bot(out)
         return out
@@ -177,6 +203,13 @@ class OutputPipeline:
         gr = self.guard.check(t)
         # 流式单句不强制截断 (999)
         out = self.postprocess_text(gr.safe_text, max_chars=999)
+        self.last_guard_result = gr
+        self.last_output_result = OutputResult(
+            raw_text=t,
+            final_text=out,
+            guard_level=gr.level,
+            guard_reasons=list(gr.reasons),
+        )
         if out:
             self.speak(out, style=style)
         return out

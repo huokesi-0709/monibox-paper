@@ -10,6 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
+from uuid import uuid4
 
 from language.backends import create_llm_backend
 from runtime.emotions import EmotionStrategy, EmotionStrategyBook
@@ -28,6 +29,12 @@ from runtime.response_pipeline import OutputPipeline
 from runtime.rewriter import ResponseRewriter
 from runtime.runtime_config import load_runtime_config
 from runtime.slot_parser import infer_slot_from_text
+from runtime.trace import (
+    InteractionTrace,
+    TraceTopChunk,
+    append_trace_jsonl,
+    trace_to_dict,
+)
 
 # NOTE: TTS 模块延迟加载——纯文本模式无需安装 pyttsx3 / pywin32
 try:
@@ -152,6 +159,86 @@ class MoniSession:
         trace.update(kwargs)
         self.last_trace = trace
 
+    def _build_interaction_trace(
+        self, reply: str, latency_ms: float
+    ) -> InteractionTrace:
+        base = dict(self.last_trace or self._input_trace or {})
+        output_result = getattr(self.output, "last_output_result", None)
+        guard_result = getattr(self.output, "last_guard_result", None)
+
+        guard_level = getattr(output_result, "guard_level", None) or getattr(
+            guard_result, "level", None
+        )
+        guard_reasons = list(
+            getattr(output_result, "guard_reasons", None)
+            or getattr(guard_result, "reasons", None)
+            or []
+        )
+
+        top_chunks = [
+            TraceTopChunk(**item) if isinstance(item, dict) else item
+            for item in base.get("top_chunks", [])
+        ]
+        evidence_score = None
+        if top_chunks:
+            first = top_chunks[0]
+            score_breakdown = getattr(first, "score_breakdown", None)
+            if isinstance(score_breakdown, dict):
+                evidence_score = score_breakdown.get("final_score")
+            if evidence_score is None and getattr(first, "final_distance", None) is not None:
+                evidence_score = 1.0 - float(first.final_distance)
+
+        intent_context = base.get("intent_context") or {}
+        secondary_intents = []
+        if isinstance(intent_context, dict):
+            secondary_intents = list(intent_context.get("secondary_intents") or [])
+
+        metadata = {
+            key: value
+            for key, value in base.items()
+            if key
+            not in {
+                "query_id",
+                "raw_text",
+                "canonical_text",
+                "corrections",
+                "route",
+                "primary_intent",
+                "protocol_id",
+                "protocol_confidence",
+                "top_chunks",
+            }
+        }
+
+        return InteractionTrace(
+            query_id=base.get("query_id"),
+            raw_text=base.get("raw_text"),
+            canonical_text=base.get("canonical_text"),
+            corrections=list(base.get("corrections") or []),
+            route=base.get("route"),
+            primary_intent=base.get("primary_intent"),
+            secondary_intents=secondary_intents,
+            risk_score=base.get("intent_risk_score") or base.get("risk_score"),
+            protocol_id=base.get("protocol_id"),
+            protocol_confidence=base.get("protocol_confidence"),
+            evidence_score=evidence_score,
+            top_chunks=top_chunks,
+            guard_level=guard_level,
+            guard_reasons=guard_reasons,
+            latency_ms=latency_ms,
+            reply=reply,
+            metadata=metadata,
+        )
+
+    def _finalize_interaction_trace(self, reply: str, latency_ms: float) -> None:
+        trace = self._build_interaction_trace(reply=reply, latency_ms=latency_ms)
+        trace_dict = trace_to_dict(trace)
+        compatibility = dict(self.last_trace or {})
+        compatibility.update(trace_dict)
+        self.last_trace = compatibility
+        if self.rt.runtime_trace_enabled and self.rt.trace_path:
+            append_trace_jsonl(self.rt.trace_path, trace)
+
     # ========== 低证据辅助 ==========
 
     def _is_low_evidence(self, results: list[SearchResult]) -> bool:
@@ -271,10 +358,13 @@ class MoniSession:
     ) -> str:
         """主入口 Wrapper，用于包裹总耗时和内存监控"""
         self.perf.start_timer("total_handle")
+        reply = ""
         try:
-            return self._handle(user_text, events, auto_top_tags)
+            reply = self._handle(user_text, events, auto_top_tags)
+            return reply  # noqa: RET504 - finally uses reply for trace finalization.
         finally:
             total_time = self.perf.end_timer("total_handle")
+            self._finalize_interaction_trace(reply, total_time * 1000.0)
             mem_mb = self.perf.check_memory(interaction_id=self.current_interaction_id)
             if self.rt.debug_runtime:
                 print(
@@ -287,8 +377,15 @@ class MoniSession:
         from runtime.preprocessor import HIGH_RISK_KEYWORDS, contains_any
 
         events = events or []
+        if hasattr(self.output, "last_guard_result"):
+            self.output.last_guard_result = None
+        if hasattr(self.output, "last_output_result"):
+            self.output.last_output_result = None
         normalized = self.input_normalizer.normalize(user_text or "")
+        query_id = uuid4().hex
+        self.current_interaction_id = query_id
         self._input_trace = {
+            "query_id": query_id,
             "raw_text": normalized.raw_text,
             "canonical_text": normalized.canonical_text,
             "corrections": [item.to_dict() for item in normalized.corrections],
@@ -310,6 +407,11 @@ class MoniSession:
 
         self.mem.push_user(user_text)
         rr = self.rag.router.route(user_text, top_tags=auto_top_tags)
+        self._input_trace["route"] = {
+            "tags": list(getattr(rr, "tags", []) or []),
+            "cross_dimension": bool(getattr(rr, "cross_dimension", False)),
+            "dimension": getattr(rr, "dimension", None),
+        }
 
         if self._is_localized_pain_query(user_text):
             r = self.low_router.route(user_text)
