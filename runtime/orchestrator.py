@@ -152,6 +152,7 @@ class MoniSession:
         self._input_trace: dict[str, Any] = {}
         self.input_normalizer = kwargs.get("input_normalizer") or InputNormalizer()
         self.intent_extractor = kwargs.get("intent_extractor") or IntentExtractor()
+        self.method_config = kwargs.get("method_config")
         self.current_interaction_id: str | None = None
 
     def _set_trace(self, **kwargs) -> None:
@@ -209,6 +210,14 @@ class MoniSession:
                 "top_chunks",
             }
         }
+        if self.method_config is not None:
+            metadata.setdefault(
+                "method", getattr(self.method_config, "name", str(self.method_config))
+            )
+            metadata.setdefault(
+                "disabled_modules",
+                list(getattr(self.method_config, "disabled_modules", []) or []),
+            )
 
         return InteractionTrace(
             query_id=base.get("query_id"),

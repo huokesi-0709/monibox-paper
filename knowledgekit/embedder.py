@@ -21,11 +21,27 @@ from typing import Any
 
 import numpy as np
 
-from app.config import PROJECT_ROOT, settings
+from app.config import PROJECT_ROOT
+from app.settings import load_settings
 
 _model: Any | None = None
+_fallback_reason: str | None = None
+_warned_model_unavailable = False
+_warned_hash_fallback = False
 
 EMBED_DIM = 512
+
+
+def _configured_embedding_model() -> str:
+    explicit = os.getenv("EMBEDDING_MODEL", "").strip()
+    if explicit:
+        return explicit
+
+    try:
+        profile = (os.getenv("RUNTIME_PROFILE", "") or "").strip() or None
+        return load_settings(profile=profile).build.embedding_model
+    except Exception:
+        return "models/embedding/bge-small-zh-v1.5"
 
 
 def _resolve_model_ref(model_id_or_path: str) -> str:
@@ -59,7 +75,10 @@ def get_model():
     """
     单例加载 embedding 模型，避免重复加载占内存。
     """
-    global _model
+    global _fallback_reason, _model
+    if _fallback_reason is not None:
+        raise RuntimeError(_fallback_reason)
+
     if _model is None:
         try:
             from sentence_transformers import SentenceTransformer
@@ -69,7 +88,7 @@ def get_model():
                 "请先执行 `uv sync --extra knowledge`。"
             ) from exc
 
-        model_ref = _resolve_model_ref(settings.embedding_model)
+        model_ref = _resolve_model_ref(_configured_embedding_model())
 
         # 仅在本地目录模式下强制离线，避免把 HuggingFace 模型 ID 误伤。
         if Path(model_ref).exists():
@@ -105,14 +124,15 @@ def get_model():
             except TypeError as exc:
                 last_exc = exc
                 continue
-            except OSError as exc:
+            except Exception as exc:
                 last_exc = exc
                 continue
 
         if _model is None:
-            raise RuntimeError(
+            _fallback_reason = (
                 "embedding 模型加载失败。请确认本地模型完整，并检查 Windows 分页文件/可用内存。"
-            ) from last_exc
+            )
+            raise RuntimeError(_fallback_reason) from last_exc
 
     return _model
 
@@ -146,7 +166,10 @@ def _fallback_embed_text(text: str) -> list[float]:
 
 
 def _fallback_embed_texts(texts: list[str]) -> list[list[float]]:
-    print("[embedding][WARN] using hash fallback embeddings")
+    global _warned_hash_fallback
+    if not _warned_hash_fallback:
+        print("[embedding][WARN] using hash fallback embeddings")
+        _warned_hash_fallback = True
     return [_fallback_embed_text(text) for text in texts]
 
 
@@ -157,9 +180,20 @@ def embed_texts(texts: list[str]) -> list[list[float]]:
     try:
         model = get_model()
     except Exception as exc:
-        print(f"[embedding][WARN] model unavailable, fallback enabled: {exc}")
+        global _warned_model_unavailable
+        if not _warned_model_unavailable:
+            print(f"[embedding][WARN] model unavailable, fallback enabled: {exc}")
+            _warned_model_unavailable = True
         return _fallback_embed_texts(texts)
 
     emb = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
     emb = np.asarray(emb, dtype=np.float32)
     return emb.tolist()
+
+
+def reset_embedding_model_cache() -> None:
+    global _fallback_reason, _model, _warned_hash_fallback, _warned_model_unavailable
+    _model = None
+    _fallback_reason = None
+    _warned_model_unavailable = False
+    _warned_hash_fallback = False
