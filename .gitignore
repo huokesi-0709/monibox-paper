@@ -11,6 +11,7 @@ build/runtime_logs/
 build/eval/**/*.jsonl
 build/eval/**/*.csv
 build/eval/**/*_summary.json
+build/eval/perturbation_report.json
 dist/
 *.egg-info/
 

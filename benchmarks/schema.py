@@ -12,6 +12,8 @@ from app.config import PROJECT_ROOT
 class BenchmarkCase:
     id: str
     query: str
+    clean_id: str | None = None
+    canonical_id: str | None = None
     clean_query: str | None = None
     perturbation_type: str | None = None
     risk_level: str | None = None
@@ -28,6 +30,8 @@ class BenchmarkCase:
         return BenchmarkCase(
             id=str(data.get("id") or ""),
             query=str(data.get("query") or ""),
+            clean_id=data.get("clean_id"),
+            canonical_id=data.get("canonical_id"),
             clean_query=data.get("clean_query"),
             perturbation_type=data.get("perturbation_type"),
             risk_level=data.get("risk_level"),
@@ -44,6 +48,8 @@ class BenchmarkCase:
         return {
             "id": self.id,
             "query": self.query,
+            "clean_id": self.clean_id,
+            "canonical_id": self.canonical_id,
             "clean_query": self.clean_query,
             "perturbation_type": self.perturbation_type,
             "risk_level": self.risk_level,

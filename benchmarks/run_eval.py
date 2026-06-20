@@ -15,6 +15,7 @@ from benchmarks.schema import BenchmarkCase, load_cases
 from runtime.input_normalizer import InputNormalizer
 from runtime.intent_extractor import IntentExtractor
 from runtime.orchestrator import MoniSession, SessionConfig
+from runtime.primitives import WorkingMemory
 from runtime.protocol_matcher import ProtocolEngine
 from runtime.runtime_config import load_runtime_config
 from runtime.scoring import load_policy
@@ -83,6 +84,29 @@ def _create_session(profile: str, policy_path: str | None) -> MoniSession:
     return session
 
 
+def _reset_session_for_case(session: MoniSession) -> None:
+    session.pending_bucket = None
+    session.pending_until = 0.0
+    session.current_interaction_id = None
+    session.last_trace = {}
+    session._input_trace = {}
+
+    if hasattr(session.proto_handler, "clear_state"):
+        session.proto_handler.clear_state()
+    if hasattr(session.proto_handler, "_prot_state"):
+        session.proto_handler._prot_state.clear()
+
+    session.mem = WorkingMemory()
+    if hasattr(session.output, "mem"):
+        session.output.mem = session.mem
+    if hasattr(session.output, "last_guard_result"):
+        session.output.last_guard_result = None
+    if hasattr(session.output, "last_output_result"):
+        session.output.last_output_result = None
+    if hasattr(session.output, "vb") and hasattr(session.output.vb, "rr_index"):
+        session.output.vb.rr_index.clear()
+
+
 def _predict_with_baseline(case: BenchmarkCase) -> dict[str, Any]:
     normalizer = InputNormalizer()
     intent_extractor = IntentExtractor()
@@ -133,6 +157,7 @@ def _predict_with_baseline(case: BenchmarkCase) -> dict[str, Any]:
 def _predict_with_session(
     case: BenchmarkCase, session: MoniSession, method: str
 ) -> dict[str, Any]:
+    _reset_session_for_case(session)
     reply = session.handle(case.query)
     trace = dict(session.last_trace)
     return {
