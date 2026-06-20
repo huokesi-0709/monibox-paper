@@ -1,17 +1,27 @@
 {
-  "version": "de-placeholder-v1",
-  "weights": {
-    "w_vec": 0.32,
-    "w_sparse": 0.16,
-    "w_quality": 0.12,
-    "w_tag": 0.14,
-    "w_risk": 0.18,
-    "w_unsafe": 0.22,
-    "w_redundancy": 0.08
+  "metadata": {
+    "best_fitness": 0.753095238095238,
+    "dev_datasets": [
+      "benchmarks/data/clean_dev.jsonl",
+      "benchmarks/data/robustness_dev.jsonl"
+    ],
+    "n_eval": 160,
+    "optimizer": "pymoo.DE",
+    "seed": 42
   },
   "thresholds": {
     "min_final_score": 0.0,
-    "unsafe_soft_penalty": 0.35,
-    "redundancy_overlap": 0.72
+    "redundancy_overlap": 0.72,
+    "unsafe_soft_penalty": 0.35
+  },
+  "version": "hsc-rag-de-v1",
+  "weights": {
+    "w_quality": 0.1893300114898331,
+    "w_redundancy": 0.1052301365183491,
+    "w_risk": 0.3402846342865205,
+    "w_sparse": 0.05675741558843926,
+    "w_tag": 0.09264617505926764,
+    "w_unsafe": 0.35181045066894734,
+    "w_vec": 0.27940736471404914
   }
 }

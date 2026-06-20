@@ -1,0 +1,17 @@
+{
+  "best_trial": {
+    "constraint_violation": 0.0,
+    "error": "",
+    "eval_id": 2,
+    "fitness": 0.753095238095238,
+    "high_risk_recall": 0.9523809523809523,
+    "p95_latency_ms": 36.3604000012856,
+    "route_accuracy_clean": 1.0,
+    "route_accuracy_robust": 0.8666666666666667,
+    "unsafe_response_rate": 0.0,
+    "unsupported_claim_rate": 0.0,
+    "weights": "{\"w_quality\": 0.1893300114898331, \"w_redundancy\": 0.1052301365183491, \"w_risk\": 0.3402846342865205, \"w_sparse\": 0.05675741558843926, \"w_tag\": 0.09264617505926764, \"w_unsafe\": 0.35181045066894734, \"w_vec\": 0.27940736471404914}"
+  },
+  "created_at": "2026-06-20T16:26:52.201447+00:00",
+  "output_policy_path": "scoring/policy_de.json"
+}

@@ -27,6 +27,8 @@ from runtime.protocol_matcher import ProtocolEngine, ProtocolMatchResult
 from runtime.runtime_config import load_runtime_config
 from runtime.scoring import HscRagPolicy, load_policy
 
+RESULT_KEY_FIELDS = ("data", "method", "ablation", "policy", "profile")
+
 VECTOR_ONLY_POLICY = HscRagPolicy(
     weights={
         "w_vec": 1.0,
@@ -49,7 +51,7 @@ def _resolve(path: str | Path) -> Path:
 
 def _profile_name(profile: str | None, profile_file: str | None) -> str:
     if profile:
-        return profile
+        return Path(profile).stem
     if profile_file:
         return Path(profile_file).stem
     return "paper_eval"
@@ -178,13 +180,43 @@ def _write_summary(path: str | Path, summary: dict[str, Any]) -> None:
     )
 
 
+def _result_key(row: dict[str, Any]) -> tuple[str, ...]:
+    return tuple(str(row.get(field, "")) for field in RESULT_KEY_FIELDS)
+
+
+def _same_path(left: str | Path, right: str | Path) -> bool:
+    return os.path.normcase(str(_resolve(left))) == os.path.normcase(str(_resolve(right)))
+
+
 def _write_results_table(path: str | Path, summary: dict[str, Any]) -> None:
     out = _resolve(path)
     out.parent.mkdir(parents=True, exist_ok=True)
+
+    fieldnames = list(summary.keys())
+    rows: list[dict[str, Any]] = []
+    if out.exists():
+        with out.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            fieldnames = list(reader.fieldnames or fieldnames)
+            rows = list(reader)
+        for field in summary:
+            if field not in fieldnames:
+                fieldnames.append(field)
+
+    key = _result_key(summary)
+    rows = [row for row in rows if _result_key(row) != key]
+    rows.append(summary)
+
     with out.open("w", encoding="utf-8", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=list(summary.keys()))
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        writer.writerow(summary)
+        writer.writerows(rows)
+
+    json_path = out.with_suffix(".json")
+    json_path.write_text(
+        json.dumps(rows, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _create_session(profile: str, config: MethodConfig, policy_path: str | None) -> MoniSession:
@@ -335,6 +367,7 @@ def run_eval(
     summary: str | Path = "build/eval/summary.csv",
     ablation: str | None = None,
 ) -> dict[str, Any]:
+    profile = _profile_name(profile, None)
     cases = load_cases(data)
     predictions: list[dict[str, Any]] = []
     config = get_ablation_config(ablation) if ablation else get_method_config(method)
@@ -377,10 +410,13 @@ def run_eval(
         **metrics,
     }
 
-    _write_jsonl(out, predictions)
-    _write_summary(summary, summary_row)
     results_name = "ablation_results.csv" if ablation else "main_results.csv"
-    _write_results_table(_resolve(summary).parent / results_name, summary_row)
+    results_path = _resolve(summary).parent / results_name
+
+    _write_jsonl(out, predictions)
+    if not _same_path(summary, results_path):
+        _write_summary(summary, summary_row)
+    _write_results_table(results_path, summary_row)
     return {"summary": summary_row, "predictions": predictions}
 
 

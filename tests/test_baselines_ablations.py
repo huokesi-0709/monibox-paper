@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+import csv
 import json
 
 import runtime.rag_engine as rag_engine
 from benchmarks.ablations import ABLATION_NAMES, get_ablation_config
 from benchmarks.baselines import METHOD_CONFIGS, get_method_config
-from benchmarks.run_eval import run_eval
+from benchmarks.run_eval import _profile_name, run_eval
 
 
 def _mini_data(tmp_path):
@@ -37,6 +38,11 @@ def _mini_data(tmp_path):
     return data
 
 
+def _read_rows(path):
+    with path.open("r", encoding="utf-8", newline="") as f:
+        return list(csv.DictReader(f))
+
+
 def test_each_method_config_can_be_constructed():
     for name in [
         "rule-only",
@@ -49,6 +55,12 @@ def test_each_method_config_can_be_constructed():
         assert config.name == name
         assert name in METHOD_CONFIGS
         assert isinstance(config.disabled_modules, list)
+
+
+def test_profile_name_accepts_profile_file_path():
+    assert _profile_name("profiles/paper_eval.yaml", None) == "paper_eval"
+    assert _profile_name("paper_eval", None) == "paper_eval"
+    assert _profile_name(None, "profiles/paper_eval.yaml") == "paper_eval"
 
 
 def test_ablation_configs_disable_expected_modules():
@@ -91,6 +103,40 @@ def test_run_eval_can_run_vanilla_rag_and_records_disabled_modules(tmp_path, mon
     assert trace["metadata"]["method"] == "vanilla-rag"
     assert "protocol_gate" in trace["metadata"]["disabled_modules"]
     assert "safety_guard" in trace["metadata"]["disabled_modules"]
+
+
+def test_run_eval_accumulates_and_replaces_main_results(tmp_path, monkeypatch):
+    monkeypatch.setattr(rag_engine, "sqlite_vec", None)
+    data = _mini_data(tmp_path)
+    summary = tmp_path / "main_results.csv"
+
+    run_eval(
+        data=data,
+        method="rule-only",
+        profile="paper_eval",
+        out=tmp_path / "rule_predictions.jsonl",
+        summary=summary,
+    )
+    run_eval(
+        data=data,
+        method="baseline",
+        profile="paper_eval",
+        out=tmp_path / "baseline_predictions.jsonl",
+        summary=summary,
+    )
+    run_eval(
+        data=data,
+        method="rule-only",
+        profile="paper_eval",
+        out=tmp_path / "rule_predictions_rerun.jsonl",
+        summary=summary,
+    )
+
+    rows = _read_rows(summary)
+    methods = [row["method"] for row in rows]
+
+    assert methods == ["baseline", "rule-only"]
+    assert len(rows) == 2
 
 
 def test_run_eval_can_run_hsc_rag_manual(tmp_path, monkeypatch):

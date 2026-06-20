@@ -29,7 +29,7 @@ bash scripts/export_tables.sh
 
 ```bash
 monibox-eval --profile-file profiles/paper_eval.yaml --suite clean --output-dir build/eval/clean
-monibox-de --profile-file profiles/paper_eval.yaml --output-dir build/eval/de
+monibox-de --config experiments/configs/de_hsc_rag.yaml
 ```
 
 API 服务和 `frontend/` 控制台只用于演示、联调和原型验证；论文中的 clean/robust/DE/ablation 结果应以 `profiles/paper_eval.yaml` 和 `build/eval/` 下的离线实验产物为准。

@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "created_at": "2026-06-20T16:26:08.215869+00:00",
+    "eval_id": 107
+  },
+  "thresholds": {
+    "min_final_score": 0.0,
+    "redundancy_overlap": 0.72,
+    "unsafe_soft_penalty": 0.35
+  },
+  "version": "hsc-rag-de-candidate",
+  "weights": {
+    "w_quality": 0.23288619611138373,
+    "w_redundancy": 0.08533520321967797,
+    "w_risk": 0.20499590116708793,
+    "w_sparse": 0.2643937610068324,
+    "w_tag": 0.17924357970332833,
+    "w_unsafe": 0.3429757384549853,
+    "w_vec": 0.3262792246299746
+  }
+}

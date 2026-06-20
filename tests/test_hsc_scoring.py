@@ -39,7 +39,7 @@ def test_policy_manual_can_load():
 
 def test_policy_de_can_load_by_path():
     policy = load_policy("scoring/policy_de.json")
-    assert policy.version == "de-placeholder-v1"
+    assert policy.version == "hsc-rag-de-v1"
     assert "w_unsafe" in policy.weights
 
 
