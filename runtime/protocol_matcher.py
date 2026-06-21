@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
 from app.config import PROJECT_ROOT
-from runtime.intent_extractor import INTENT_PRIORITY, INTENT_TERMS, IntentContext
+from runtime.intent_extractor import (
+    INTENT_PRIORITY,
+    INTENT_TAGS,
+    INTENT_TERMS,
+    IntentContext,
+    IntentExtractor,
+)
 
 
 @dataclass(frozen=True)
@@ -22,6 +28,11 @@ class ProtocolMatchResult:
     negation_conflict: bool
     reason: list[str]
     protocol: dict[str, Any] | None
+    score_breakdown: dict[str, float] = field(default_factory=dict)
+    threshold: float = 0.0
+    active_risks: list[str] = field(default_factory=list)
+    negated_risks: list[str] = field(default_factory=list)
+    protocol_risks: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
@@ -103,13 +114,23 @@ class ProtocolEngine:
         routed_tags: list[str] | None = None,
         events: list[str] | None = None,
     ) -> dict[str, Any] | None:
+        # Legacy compatibility only. Paper evaluation and the main MoniSession
+        # path should use match_with_score(), which returns confidence and
+        # traceable reasons instead of a trigger-only dict/None result.
         text = text or ""
         routed_tags = routed_tags or []
         events = events or []
 
-        result = self.match_with_score(text, routed_tags, events)
+        result = self.match_with_score(
+            text,
+            routed_tags,
+            events,
+            intent_context=IntentExtractor().extract(text),
+        )
         if result.matched:
             return result.protocol
+        if result.negation_conflict:
+            return None
 
         # Compatibility fallback: old callers expect pure trigger hit behavior.
         for p in self.protocols:
@@ -152,6 +173,7 @@ class ProtocolEngine:
                 negation_conflict=False,
                 reason=["no protocols loaded"],
                 protocol=None,
+                threshold=self.MATCH_THRESHOLD,
             )
         return best
 
@@ -188,11 +210,19 @@ class ProtocolEngine:
             str(ctx.get("primary_intent") or ""),
             *[str(x) for x in ctx.get("secondary_intents", [])],
         }
+        active_risks.discard("")
+        active_risks.discard("out_of_scope")
         negated_risks = {str(x) for x in ctx.get("negated_risks", [])}
+        negated_risks.discard("")
         risk_term_hit = 1.0 if protocol_risks & active_risks else 0.0
         negation_conflict = bool(protocol_risks & negated_risks)
 
-        routed_tag_match = 1.0 if self._has_tag_match(trigger, routed_tags, ctx) else 0.0
+        routed_tag_match = (
+            1.0
+            if self._has_tag_match(trigger, routed_tags, ctx)
+            or self._has_protocol_risk_tag_match(protocol_risks, routed_tags, ctx)
+            else 0.0
+        )
         body_part_match = 1.0 if body_part_matches and protocol_risks else 0.0
         scene_match = 1.0 if scene_matches else 0.0
 
@@ -202,6 +232,7 @@ class ProtocolEngine:
 
         confidence = (
             0.35 * keyword_hit
+            + 0.25 * float(event_hit)
             + 0.20 * risk_term_hit
             + 0.15 * body_part_match
             + 0.15 * scene_match
@@ -233,6 +264,16 @@ class ProtocolEngine:
         if not reason:
             reason.append("no explanatory evidence matched")
 
+        score_breakdown = {
+            "keyword_hit": keyword_hit,
+            "event_hit": float(event_hit),
+            "risk_term_hit": risk_term_hit,
+            "body_part_match": body_part_match,
+            "scene_match": scene_match,
+            "routed_tag_match": routed_tag_match,
+            "priority_norm": round(priority_norm, 4),
+            "negation_penalty": 0.30 if negation_conflict else 0.0,
+        }
         matched = confidence >= self.MATCH_THRESHOLD and not none_conflict
         return ProtocolMatchResult(
             matched=matched,
@@ -246,6 +287,11 @@ class ProtocolEngine:
             negation_conflict=negation_conflict,
             reason=reason,
             protocol=protocol if matched else None,
+            score_breakdown=score_breakdown,
+            threshold=self.MATCH_THRESHOLD,
+            active_risks=sorted(active_risks),
+            negated_risks=sorted(negated_risks),
+            protocol_risks=sorted(protocol_risks),
         )
 
     def _eval_trigger(
@@ -381,6 +427,16 @@ class ProtocolEngine:
         intent_tags = [str(x) for x in ctx.get("tags", [])]
         all_tags = set(routed_tags or []) | set(intent_tags)
         return self._trigger_tag_match(trigger, all_tags)
+
+    def _has_protocol_risk_tag_match(
+        self, protocol_risks: set[str], routed_tags: list[str], ctx: dict[str, Any]
+    ) -> bool:
+        intent_tags = {str(x) for x in ctx.get("tags", [])}
+        all_tags = set(routed_tags or []) | intent_tags
+        for risk in protocol_risks:
+            if any(tag in all_tags for tag in INTENT_TAGS.get(risk, ())):
+                return True
+        return False
 
     def _trigger_tag_match(self, value: Any, tags: set[str]) -> bool:
         if isinstance(value, dict):
