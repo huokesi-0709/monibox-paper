@@ -1,15 +1,17 @@
 from __future__ import annotations
 
 import re
-import subprocess
+import subprocess  # nosec B404 - tests call git with fixed arguments.
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
 FORBIDDEN_PATHS = [
     ".env",
     ".uv-cache",
+    "__pycache__",
+    "node_modules",
+    "dist",
     "frontend/node_modules",
     "frontend/dist",
     "frontend/.npm-cache",
@@ -41,8 +43,8 @@ SECRET_PATTERNS = [
 
 
 def _git_paths(*args: str) -> list[str]:
-    result = subprocess.run(
-        ["git", *args],
+    result = subprocess.run(  # noqa: S603
+        ["git", *args],  # noqa: S607
         cwd=ROOT,
         check=True,
         capture_output=True,
@@ -56,15 +58,19 @@ def _is_forbidden(path: str) -> bool:
     normalized = path.replace("\\", "/")
     return (
         normalized == ".env"
-        or normalized.startswith(".env.")
-        and normalized != ".env.example"
-        or normalized.startswith(".uv-cache/")
+        or (normalized.startswith(".env.")
+        and normalized != ".env.example")
+        or normalized.startswith(
+            (
+                ".uv-cache/",
+                "frontend/node_modules/",
+                "frontend/dist/",
+                "frontend/.npm-cache/",
+                "build/runtime_logs/",
+            )
+        )
         or "/__pycache__/" in normalized
         or normalized.endswith(".pyc")
-        or normalized.startswith("frontend/node_modules/")
-        or normalized.startswith("frontend/dist/")
-        or normalized.startswith("frontend/.npm-cache/")
-        or normalized.startswith("build/runtime_logs/")
     )
 
 
@@ -75,6 +81,28 @@ def test_private_files_are_not_commit_candidates() -> None:
 
     assert not forbidden, "private/cache files can be committed:\n" + "\n".join(
         forbidden
+    )
+
+
+def test_gitignore_covers_private_and_cache_artifacts() -> None:
+    gitignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
+    required_patterns = [
+        ".env",
+        ".uv-cache/",
+        "__pycache__/",
+        "*.pyc",
+        "node_modules/",
+        "dist/",
+        "frontend/node_modules/",
+        "frontend/dist/",
+        "frontend/.npm-cache/",
+        "build/runtime_logs/",
+    ]
+
+    missing = [pattern for pattern in required_patterns if pattern not in gitignore]
+
+    assert not missing, ".gitignore missing private/cache patterns:\n" + "\n".join(
+        missing
     )
 
 

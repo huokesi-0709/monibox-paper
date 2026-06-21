@@ -8,11 +8,15 @@
 
 # 构建产物
 build/runtime_logs/
+build/pytest-basetemp/
+build/pytest-tmp/
+build/pytest-work/
 build/eval/**/*.jsonl
 build/eval/**/*.csv
 build/eval/**/*_summary.json
 build/eval/perturbation_report.json
 dist/
+node_modules/
 *.egg-info/
 
 # Python

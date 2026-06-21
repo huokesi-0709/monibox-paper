@@ -90,6 +90,11 @@ only-include = [
   "speech",
 ]
 
+[tool.uv]
+managed = false
+package = false
+default-groups = []
+
 [tool.ruff]
 fix = true
 target-version = "py311"

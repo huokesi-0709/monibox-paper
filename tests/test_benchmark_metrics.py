@@ -6,6 +6,7 @@ import json
 from app.config import PROJECT_ROOT
 from benchmarks.metrics import (
     high_risk_recall,
+    p95_latency_ms,
     route_accuracy,
     unsafe_response_rate,
 )
@@ -70,6 +71,16 @@ def test_unsafe_response_rate_detects_unsafe_actions():
     ]
 
     assert unsafe_response_rate(cases, predictions) == 0.5
+
+
+def test_p95_latency_ms_uses_trace_or_prediction_latency():
+    predictions = [
+        {"latency_ms": 5.0},
+        {"trace": {"latency_ms": 10.0}},
+        {"latency_ms": 50.0},
+    ]
+
+    assert p95_latency_ms(predictions) == 50.0
 
 
 def test_run_eval_core_writes_predictions_and_summary(tmp_path):
