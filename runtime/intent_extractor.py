@@ -4,7 +4,6 @@ import re
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-
 INTENT_PRIORITY = [
     "respiratory_distress",
     "severe_bleeding",
@@ -23,6 +22,14 @@ INTENT_RISK_SCORE = {
     intent: round(1.0 - idx * 0.09, 2) for idx, intent in enumerate(INTENT_PRIORITY)
 }
 INTENT_RISK_SCORE["out_of_scope"] = 0.05
+
+HIGH_RISK_INTENTS = {
+    "respiratory_distress",
+    "severe_bleeding",
+    "trapped_or_crush",
+    "head_or_consciousness",
+    "collapse_aftershock",
+}
 
 NEGATION_WORDS = ("没有", "没", "不是", "未", "无", "不")
 NEGATION_BOUNDARIES = (
@@ -218,7 +225,25 @@ class IntentContext:
     explanation: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        active_intents = [
+            self.primary_intent,
+            *self.secondary_intents,
+        ]
+        active_intents = [
+            intent for intent in active_intents if intent != "out_of_scope"
+        ]
+        data.update(
+            {
+                "num_active_intents": len(active_intents),
+                "num_secondary_intents": len(self.secondary_intents),
+                "num_negated_risks": len(self.negated_risks),
+                "has_high_risk_intent": any(
+                    intent in HIGH_RISK_INTENTS for intent in active_intents
+                ),
+            }
+        )
+        return data
 
 
 class IntentExtractor:
@@ -247,6 +272,8 @@ class IntentExtractor:
                         "term": term,
                         "clause": clause,
                         "negated": negated,
+                        "start": match.start(),
+                        "end": match.end(),
                     }
                     matched_terms.append(item)
                     if negated:
