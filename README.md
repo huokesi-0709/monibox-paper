@@ -4,6 +4,10 @@ MoniBox / HSC-RAG-DE 是论文《面向灾害受困场景的鲁棒启发式安�
 
 本仓库的论文主线是 **HSC-RAG**：在离线知识库、协议优先、安全约束和低随机性的设置下复现应急回复生成实验。`pymoo` Differential Evolution 仅用于离线权重优化；MoniBox API 与 React frontend 仅用于原型/demo 验证，不参与论文主实验。
 
+## Paper Scope Notice
+
+本仓库主实验以 `profiles/paper_eval.yaml` 为准；API、frontend、voice、hardware 只用于 demo、联调和原型验证。论文结果以 `build/eval/` 下的离线实验产物为准。HSC-RAG-DE 当前更准确地说是“离线约束式应急回复生成方法”，不是依赖远端 LLM 的开放式聊天系统。
+
 ## Paper Reproduction Quickstart
 
 论文实验默认使用 `profiles/paper_eval.yaml`，该 profile 关闭远端 LLM、关闭 rewrite、关闭语音/硬件输出，并将 trace 写入 `build/eval/`，用于离线、确定性、可复现实验。
