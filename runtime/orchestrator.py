@@ -708,7 +708,13 @@ class MoniSession:
         # 8) RAG search -> low evidence deterministic
         dim = None if rr.cross_dimension else rr.dimension
         results = self.rag.search(
-            user_text, topk=6, pool_mult=8, dimension=dim, tags=rr.tags, max_per_group=1
+            user_text,
+            topk=6,
+            pool_mult=8,
+            dimension=dim,
+            tags=rr.tags,
+            max_per_group=1,
+            intent_context=intent_context,
         )
         if not results:
             results = self.rag.search(
@@ -718,6 +724,7 @@ class MoniSession:
                 dimension=None,
                 tags=None,
                 max_per_group=1,
+                intent_context=intent_context,
             )
 
         low_evidence = self._is_low_evidence(results)

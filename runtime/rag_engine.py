@@ -237,12 +237,14 @@ class RagEngine:
         topk: int,
         tags: list[str] | None = None,
         max_per_group: int = 1,
+        intent_context: Any = None,
     ) -> list[SearchResult]:
         return rerank_chunks(
             query=query,
             chunks=candidates,
             policy=self.hsc_policy,
             routed_tags=tags,
+            intent_context=intent_context,
             topk=topk,
             max_per_group=max_per_group,
         )
@@ -255,6 +257,7 @@ class RagEngine:
         tags: list[str] | None = None,
         status_exclude: str = "停用",
         max_per_group: int = 1,
+        intent_context: Any = None,
     ) -> list[SearchResult]:
 
         if self._is_vague_query(query):
@@ -351,6 +354,7 @@ class RagEngine:
             topk=topk,
             tags=tags,
             max_per_group=max_per_group,
+            intent_context=intent_context,
         )
 
     def search(
@@ -362,6 +366,7 @@ class RagEngine:
         tags: list[str] | None = None,
         status_exclude: str = "停用",
         max_per_group: int = 1,
+        intent_context: Any = None,
     ) -> list[SearchResult]:
 
         try:
@@ -377,6 +382,7 @@ class RagEngine:
                 tags=tags,
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
+                intent_context=intent_context,
             )
 
         try:
@@ -390,6 +396,7 @@ class RagEngine:
                 tags=tags,
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
+                intent_context=intent_context,
             )
 
         where = ["c.status <> :ex_status"]
@@ -448,6 +455,7 @@ class RagEngine:
                 tags=tags,
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
+                intent_context=intent_context,
             )
 
         if not rows:
@@ -458,6 +466,7 @@ class RagEngine:
                 tags=tags,
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
+                intent_context=intent_context,
             )
 
         scored = []
@@ -485,6 +494,7 @@ class RagEngine:
                 tags=tags,
                 status_exclude=status_exclude,
                 max_per_group=max_per_group,
+                intent_context=intent_context,
             )
         out: list[SearchResult] = []
         for d_final, r in scored:
@@ -515,6 +525,7 @@ class RagEngine:
             topk=topk,
             tags=tags,
             max_per_group=max_per_group,
+            intent_context=intent_context,
         )
 
     def auto_search(
