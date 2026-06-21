@@ -7,12 +7,23 @@
 .python-version
 
 # 构建产物
+build/rag.db
+build/runtime_pack.json
+build/*.db
+build/*.sqlite
+build/*.sqlite3
 build/runtime_logs/
 build/pytest-basetemp/
 build/pytest-tmp/
 build/pytest-work/
+build/eval/**/*.json
 build/eval/**/*.jsonl
 build/eval/**/*.csv
+build/eval/**/*.png
+build/eval/**/*.pdf
+build/eval/**/*.xlsx
+build/eval/**/*.html
+build/eval/**/*.log
 build/eval/**/*_summary.json
 build/eval/perturbation_report.json
 dist/

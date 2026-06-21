@@ -35,6 +35,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.config import PROJECT_ROOT
 
+ALLOW_PAPER_ENV_OVERRIDE_ENV = "ALLOW_PAPER_ENV_OVERRIDE"
+
 
 # ============================================================================
 # 子系统配置模型
@@ -224,7 +226,7 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
             return data if isinstance(data, dict) else {}
     except Exception:
@@ -272,6 +274,15 @@ def _apply_env_overrides(config_data: dict[str, Any]) -> dict[str, Any]:
     return config_data
 
 
+def _allow_paper_env_override() -> bool:
+    return os.getenv(ALLOW_PAPER_ENV_OVERRIDE_ENV, "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 def load_settings(
     profile: str | None = None,
     profiles_dir: str | Path = "profiles",
@@ -303,8 +314,11 @@ def load_settings(
         if override:
             config_data = _deep_merge(config_data, override)
 
-    # 3. 环境变量覆盖（__ 分隔符，如 SPEECH__TTS__BACKEND=pyttsx3）
-    config_data = _apply_env_overrides(config_data)
+    # 3. 环境变量覆盖（__ 分隔符，如 SPEECH__TTS__BACKEND=pyttsx3）。
+    # paper_eval 默认锁定，避免本地 demo/API/voice/hardware 环境变量污染论文复现实验；
+    # 如确需调试，可显式设置 ALLOW_PAPER_ENV_OVERRIDE=1。
+    if profile_name != "paper_eval" or _allow_paper_env_override():
+        config_data = _apply_env_overrides(config_data)
 
     # 4. Pydantic 校验 + .env 机密注入
     return MoniboxSettings(**config_data)

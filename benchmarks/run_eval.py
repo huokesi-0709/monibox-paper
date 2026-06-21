@@ -50,6 +50,23 @@ def _resolve(path: str | Path) -> Path:
 
 
 def _profile_name(profile: str | None, profile_file: str | None) -> str:
+    if profile_file:
+        profile_path = _resolve(profile_file)
+        if not profile_path.exists():
+            msg = (
+                f"--profile-file does not exist: {profile_file}. "
+                "Paper evaluation refuses to silently fall back to another profile."
+            )
+            raise FileNotFoundError(msg)
+        profiles_dir = (PROJECT_ROOT / "profiles").resolve()
+        try:
+            profile_path.resolve().relative_to(profiles_dir)
+        except ValueError as exc:
+            msg = (
+                f"--profile-file must be under profiles/ for the current profile "
+                f"loader: {profile_file}."
+            )
+            raise ValueError(msg) from exc
     if profile:
         return Path(profile).stem
     if profile_file:

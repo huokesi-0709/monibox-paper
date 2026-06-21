@@ -34,6 +34,7 @@ from app.settings import MoniboxSettings, load_settings
 
 PROFILE_ENV = "RUNTIME_PROFILE"
 PROFILE_PATH_ENV = "RUNTIME_CONFIG_PATH"
+ALLOW_PAPER_ENV_OVERRIDE_ENV = "ALLOW_PAPER_ENV_OVERRIDE"
 
 # 保留向后兼容的别名映射（新体系下不再扩展，仅维护存量）
 _PROFILE_FIELD_ALIASES = {
@@ -233,6 +234,23 @@ def _coerce_like(value: Any, default: Any) -> Any:
     return str(value).strip()
 
 
+def _effective_profile_name(profile: str | None) -> str:
+    return (profile or os.getenv(PROFILE_ENV, "") or "").strip()
+
+
+def _is_paper_profile(profile: str | None) -> bool:
+    return _effective_profile_name(profile) == "paper_eval"
+
+
+def _allow_paper_env_override() -> bool:
+    return os.getenv(ALLOW_PAPER_ENV_OVERRIDE_ENV, "").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
+
+
 def load_runtime_config(profile: str | None = None) -> RuntimeConfig:
     """
     从统一配置体系加载运行时配置。
@@ -248,10 +266,13 @@ def load_runtime_config(profile: str | None = None) -> RuntimeConfig:
     settings = load_settings(profile=profile)
     values = _settings_to_flat(settings)
 
-    # 2. 向后兼容：环境变量仍可覆盖（仅维护存量，不再扩展）
-    for env_key, field_name in _ENV_FIELD_MAP.items():
-        if env_key in os.environ and field_name in values:
-            values[field_name] = _coerce_like(os.getenv(env_key), values[field_name])
+    # 2. 向后兼容：环境变量仍可覆盖（仅维护存量，不再扩展）。
+    # paper_eval 默认锁定，避免本地 demo/voice/hardware 环境变量污染论文复现实验；
+    # 如确需调试，可显式设置 ALLOW_PAPER_ENV_OVERRIDE=1。
+    if not _is_paper_profile(profile) or _allow_paper_env_override():
+        for env_key, field_name in _ENV_FIELD_MAP.items():
+            if env_key in os.environ and field_name in values:
+                values[field_name] = _coerce_like(os.getenv(env_key), values[field_name])
 
     # 3. 标准化
     values["llm_backend"] = str(values["llm_backend"] or "auto").strip().lower()

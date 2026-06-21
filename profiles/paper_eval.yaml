@@ -1,17 +1,34 @@
-# Deterministic offline profile for paper reproduction experiments.
+# Paper reproduction profile for deterministic offline experiments.
+# This file is a paper experiment contract, not a demo/runtime tuning profile.
+# Do not change it for API, frontend, voice, hardware, or local demo debugging.
 
 app:
   mode: text
+  log_level: INFO
 
 llm:
   backend: null
   temperature: 0.0
   stream: false
 
+rag:
+  top_k: 5
+  max_distance: 0.42
+  low_evidence_threshold: 0.3
+  db_path: build/rag.db
+  runtime_pack_path: build/runtime_pack.json
+
+protocol:
+  pending_ttl_sec: 15.0
+  qa_ttl_sec: 25.0
+  active_ttl_sec: 45.0
+  default_cooldown_sec: 20.0
+
 rewrite:
   enabled: false
   protocol_enabled: false
   low_evidence_enabled: false
+  temperature: 0.0
 
 speech:
   tts:
@@ -20,6 +37,11 @@ speech:
 hardware:
   enable_led: false
   enable_screen: false
+  enable_precomputed_audio: false
+
+repeat:
+  threshold: 0.92
+  variant_mode: rr
 
 debug:
   runtime_trace_enabled: true
