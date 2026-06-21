@@ -28,13 +28,30 @@ class NormalizedInput:
     repeated_terms_collapsed: list[str]
 
     def trace_dict(self) -> dict[str, object]:
+        normalized_raw = InputNormalizer.normalize_form(self.raw_text)
         return {
             "raw_text": self.raw_text,
             "canonical_text": self.canonical_text,
             "corrections": [item.to_dict() for item in self.corrections],
             "noise_removed": list(self.noise_removed),
             "repeated_terms_collapsed": list(self.repeated_terms_collapsed),
+            "changed": (
+                self.canonical_text != normalized_raw
+                or bool(self.corrections)
+                or bool(self.noise_removed)
+                or bool(self.repeated_terms_collapsed)
+            ),
+            "num_corrections": len(self.corrections),
+            "num_noise_removed": len(self.noise_removed),
+            "num_repeated_terms_collapsed": len(self.repeated_terms_collapsed),
         }
+
+
+@dataclass(frozen=True)
+class FuzzyCorrectionRule:
+    context_keywords: tuple[str, ...]
+    pattern: str
+    replacement: str
 
 
 BUILTIN_CORRECTIONS: tuple[Correction, ...] = (
@@ -103,6 +120,52 @@ def _load_asr_corrections(path: Path) -> list[Correction]:
     return corrections
 
 
+def _load_fuzzy_correction_rules(path: Path) -> list[FuzzyCorrectionRule]:
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return []
+
+    fuzzy_patterns = data.get("fuzzy_patterns", {})
+    if not isinstance(fuzzy_patterns, dict):
+        return []
+
+    raw_rules = fuzzy_patterns.get("rules", [])
+    if not isinstance(raw_rules, list):
+        return []
+
+    rules: list[FuzzyCorrectionRule] = []
+    for raw_rule in raw_rules:
+        if not isinstance(raw_rule, dict):
+            continue
+        context_keywords = raw_rule.get("context_keywords", [])
+        pattern = raw_rule.get("pattern")
+        replacement = raw_rule.get("replacement")
+        if (
+            not isinstance(context_keywords, list)
+            or not all(isinstance(item, str) and item for item in context_keywords)
+            or not isinstance(pattern, str)
+            or not pattern
+            or not isinstance(replacement, str)
+            or not replacement
+        ):
+            continue
+        try:
+            re.compile(pattern)
+        except re.error:
+            continue
+        rules.append(
+            FuzzyCorrectionRule(
+                context_keywords=tuple(context_keywords),
+                pattern=pattern,
+                replacement=replacement,
+            )
+        )
+    return rules
+
+
 class InputNormalizer:
     def __init__(self, corrections_path: str | Path | None = None):
         path = (
@@ -112,10 +175,11 @@ class InputNormalizer:
         )
         self._corrections = [*BUILTIN_CORRECTIONS, *_load_asr_corrections(path)]
         self._corrections.sort(key=lambda item: len(item.source), reverse=True)
+        self._fuzzy_rules = _load_fuzzy_correction_rules(path)
 
     def normalize(self, raw_text: str) -> NormalizedInput:
         raw = "" if raw_text is None else str(raw_text)
-        text = self._normalize_form(raw)
+        text = self.normalize_form(raw)
         corrections: list[Correction] = []
         noise_removed: list[str] = []
         repeated_terms_collapsed: list[str] = []
@@ -134,6 +198,9 @@ class InputNormalizer:
         text, phrase_corrections = self._normalize_rescue_phrase(text)
         corrections.extend(phrase_corrections)
 
+        text, fuzzy_corrections = self._apply_fuzzy_context_corrections(text)
+        corrections.extend(fuzzy_corrections)
+
         text, collapsed = self._collapse_repeated_terms(text)
         repeated_terms_collapsed.extend(collapsed)
         text = self._final_cleanup(text)
@@ -147,12 +214,13 @@ class InputNormalizer:
         )
 
     @staticmethod
-    def _normalize_form(text: str) -> str:
+    def normalize_form(text: str) -> str:
         normalized = unicodedata.normalize("NFKC", text or "")
         normalized = normalized.replace("\u3000", " ")
         normalized = normalized.translate(PUNCTUATION_TRANSLATION)
-        normalized = re.sub(r"\s+", " ", normalized).strip()
-        return normalized
+        return re.sub(r"\s+", " ", normalized).strip()
+
+    _normalize_form = normalize_form
 
     @staticmethod
     def _remove_oral_noise(text: str) -> tuple[str, list[str]]:
@@ -163,6 +231,9 @@ class InputNormalizer:
             if re.search(pattern, result):
                 removed.append(token)
                 result = re.sub(pattern, " ", result)
+        if removed:
+            result = re.sub(r"\s*([,.;:!?])(?:\s*[,.;:!?])+", r"\1", result)
+            result = re.sub(r"^[\s,.;:!?]+|[\s,.;:!?]+$", "", result)
         result = re.sub(r"\s+", " ", result).strip()
         return result, removed
 
@@ -197,9 +268,35 @@ class InputNormalizer:
 
         return pattern.sub(repl, text), corrections
 
+    def _apply_fuzzy_context_corrections(
+        self, text: str
+    ) -> tuple[str, list[Correction]]:
+        corrections: list[Correction] = []
+        result = text
+
+        for rule in self._fuzzy_rules:
+            if not any(keyword in result for keyword in rule.context_keywords):
+                continue
+
+            replacement = rule.replacement
+
+            def repl(
+                match: re.Match[str], replacement: str = replacement
+            ) -> str:
+                source = match.group(0)
+                target = match.expand(replacement)
+                if source != target:
+                    corrections.append(
+                        Correction(source, target, "knowledge_asr_fuzzy_context")
+                    )
+                return target
+
+            result = re.sub(rule.pattern, repl, result)
+
+        return result, corrections
+
     @staticmethod
     def _final_cleanup(text: str) -> str:
         result = re.sub(r"\s+", " ", text).strip()
         result = re.sub(r"\s*([,.;:!?])\s*", r"\1", result)
-        result = re.sub(r"(?<=[\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])", "", result)
-        return result
+        return re.sub(r"(?<=[\u4e00-\u9fff])\s+(?=[\u4e00-\u9fff])", "", result)
