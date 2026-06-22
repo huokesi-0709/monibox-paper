@@ -21,18 +21,22 @@ def get_ablation_config(name: str) -> MethodConfig:
     if name == "without_input_normalization":
         return replace(base, name=name, use_input_normalization=False)
     if name == "without_multi_intent":
+        # Strong ablation: disables the whole risk-aware intent extraction stage,
+        # not only secondary-intent output.
         return replace(base, name=name, use_intent_extraction=False)
     if name == "without_negation":
         return replace(base, name=name, use_negation_handling=False)
     if name == "without_protocol_gate":
         return replace(base, name=name, use_protocol_gate=False)
     if name == "without_safety_rerank":
+        # run_eval._create_session maps this switch to VECTOR_ONLY_POLICY.
         return replace(base, name=name, use_safety_rerank=False)
     if name == "without_low_evidence":
         return replace(base, name=name, use_low_evidence_routing=False)
     if name == "without_guard":
         return replace(base, name=name, use_safety_guard=False)
     if name == "without_de_optimization":
+        # Keep HSC-RAG active but use the manual policy instead of the DE policy.
         return replace(base, name=name, policy_path="scoring/policy_manual.json")
 
     known = ", ".join(sorted(ABLATION_NAMES))

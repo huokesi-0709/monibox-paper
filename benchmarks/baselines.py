@@ -7,6 +7,14 @@ from benchmarks.schema import BenchmarkCase
 
 @dataclass(frozen=True)
 class MethodConfig:
+    """Static benchmark method switches for paper evaluation.
+
+    The `baseline` and `rule-only` methods intentionally use
+    `baseline_reply(case)`, which reads expected labels from the benchmark
+    case. They are deterministic smoke/oracle-label template baselines, not
+    fair deployed-system baselines.
+    """
+
     name: str
     use_input_normalization: bool
     use_intent_extraction: bool
@@ -115,11 +123,17 @@ def get_method_config(name: str) -> MethodConfig:
         return METHOD_CONFIGS[name]
     except KeyError as exc:
         known = ", ".join(sorted(METHOD_CONFIGS))
-        raise ValueError(f"unknown benchmark method '{name}', expected one of: {known}") from exc
+        raise ValueError(
+            f"unknown benchmark method '{name}', expected one of: {known}"
+        ) from exc
 
 
 def baseline_reply(case: BenchmarkCase) -> str:
-    """Deterministic rule-only response used for smoke tests and comparison."""
+    """Deterministic oracle-label template reply for smoke evaluation.
+
+    This function uses `case.expected_primary_intent`; it should be reported as
+    an oracle-label template baseline rather than a realistic model baseline.
+    """
 
     query = case.query.strip()
     if not query:

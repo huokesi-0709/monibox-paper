@@ -204,3 +204,60 @@ def test_baseline_trace_metadata_uses_paper_schema(tmp_path):
     assert metadata["policy"] == "scoring/policy_manual.json"
     assert metadata["suite"] == "clean"
     assert isinstance(metadata["disabled_modules"], list)
+
+
+def test_run_eval_without_guard_writes_ablation_results(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        run_eval_mod,
+        "_create_session",
+        lambda profile, config, policy_path: _FakeSession(),
+    )
+    data = tmp_path / "robust_fake.jsonl"
+    out = tmp_path / "without_guard_predictions.jsonl"
+    summary = tmp_path / "without_guard_summary.csv"
+    _write_cases(data)
+
+    result = run_eval_mod.run_eval(
+        data=data,
+        method="hsc-rag-de",
+        profile="paper_eval",
+        out=out,
+        summary=summary,
+        ablation="without_guard",
+    )
+
+    assert result["summary"]["method"] == "without_guard"
+    assert result["summary"]["ablation"] == "without_guard"
+    assert "safety_guard" in result["summary"]["disabled_modules"]
+    assert (tmp_path / "ablation_results.csv").exists()
+    assert (tmp_path / "ablation_results.json").exists()
+    first_trace = result["predictions"][0]["trace"]
+    assert first_trace["metadata"]["ablation"] == "without_guard"
+
+
+def test_run_eval_without_de_optimization_uses_manual_policy(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        run_eval_mod,
+        "_create_session",
+        lambda profile, config, policy_path: _FakeSession(),
+    )
+    data = tmp_path / "robust_fake.jsonl"
+    out = tmp_path / "without_de_predictions.jsonl"
+    summary = tmp_path / "without_de_summary.csv"
+    _write_cases(data)
+
+    result = run_eval_mod.run_eval(
+        data=data,
+        method="hsc-rag-de",
+        profile="paper_eval",
+        out=out,
+        summary=summary,
+        ablation="without_de_optimization",
+    )
+
+    assert result["summary"]["method"] == "without_de_optimization"
+    assert result["summary"]["policy"] == "scoring/policy_manual.json"
+    assert "de_optimization" in result["summary"]["disabled_modules"]
+    first_trace = result["predictions"][0]["trace"]
+    assert first_trace["metadata"]["policy"] == "scoring/policy_manual.json"
+    assert first_trace["metadata"]["ablation"] == "without_de_optimization"
