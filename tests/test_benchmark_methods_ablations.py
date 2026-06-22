@@ -8,6 +8,7 @@ import benchmarks.run_eval as run_eval_mod
 from benchmarks.ablations import ABLATION_NAMES, get_ablation_config
 from benchmarks.baselines import METHOD_CONFIGS, get_method_config
 
+
 EXPECTED_METHODS = {
     "baseline",
     "rule-only",
