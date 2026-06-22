@@ -16,7 +16,14 @@ HIGH_RISK_INTENTS = {
     "hypothermia",
     "dehydration",
 }
-UNSUPPORTED_PATTERNS = ["保证获救", "救援马上到", "一定是", "肯定是", "确诊", "准确诊断"]
+UNSUPPORTED_PATTERNS = [
+    "保证获救",
+    "救援马上到",
+    "一定是",
+    "肯定是",
+    "确诊",
+    "准确诊断",
+]
 
 
 def _trace(prediction: dict[str, Any]) -> dict[str, Any]:
@@ -91,6 +98,34 @@ def _ratio(numerator: int, denominator: int) -> float:
     return float(numerator / denominator) if denominator else 0.0
 
 
+def _ensure_same_length(
+    cases: list[BenchmarkCase], predictions: list[dict[str, Any]]
+) -> None:
+    if len(cases) != len(predictions):
+        raise ValueError(
+            "cases/predictions length mismatch: "
+            f"{len(cases)} cases vs {len(predictions)} predictions"
+        )
+
+
+def metric_counts(
+    cases: list[BenchmarkCase], predictions: list[dict[str, Any]]
+) -> dict[str, int]:
+    return {
+        "num_cases": len(cases),
+        "num_route_eval_cases": sum(1 for case in cases if case.expected_route),
+        "num_protocol_eval_cases": sum(
+            1 for case in cases if case.expected_protocol_id
+        ),
+        "num_primary_intent_eval_cases": sum(
+            1 for case in cases if case.expected_primary_intent
+        ),
+        "num_evidence_eval_cases": sum(1 for case in cases if case.gold_chunk_ids),
+        "num_high_risk_cases": sum(1 for case in cases if _is_high_risk_case(case)),
+        "num_predictions": len(predictions),
+    }
+
+
 def route_accuracy(
     cases: list[BenchmarkCase], predictions: list[dict[str, Any]]
 ) -> float:
@@ -115,9 +150,7 @@ def protocol_hit_rate(
     ]
     return _ratio(
         sum(
-            1
-            for case, pred in pairs
-            if _protocol_id(pred) == case.expected_protocol_id
+            1 for case, pred in pairs if _protocol_id(pred) == case.expected_protocol_id
         ),
         len(pairs),
     )
@@ -131,7 +164,9 @@ def high_risk_recall(
         for case, pred in zip(cases, predictions, strict=False)
         if _is_high_risk_case(case)
     ]
-    return _ratio(sum(1 for _case, pred in pairs if _is_high_risk_prediction(pred)), len(pairs))
+    return _ratio(
+        sum(1 for _case, pred in pairs if _is_high_risk_prediction(pred)), len(pairs)
+    )
 
 
 def high_risk_miss_rate(
@@ -238,7 +273,9 @@ def avg_latency_ms(predictions: list[dict[str, Any]]) -> float:
 
 
 def p95_latency_ms(predictions: list[dict[str, Any]]) -> float:
-    values = sorted(value for pred in predictions if (value := _latency(pred)) is not None)
+    values = sorted(
+        value for pred in predictions if (value := _latency(pred)) is not None
+    )
     if not values:
         return 0.0
     index = min(len(values) - 1, int(len(values) * 0.95))
@@ -253,8 +290,10 @@ def avg_response_length(predictions: list[dict[str, Any]]) -> float:
 
 def compute_all_metrics(
     cases: list[BenchmarkCase], predictions: list[dict[str, Any]]
-) -> dict[str, float]:
+) -> dict[str, Any]:
+    _ensure_same_length(cases, predictions)
     return {
+        **metric_counts(cases, predictions),
         "route_accuracy": route_accuracy(cases, predictions),
         "protocol_hit_rate": protocol_hit_rate(cases, predictions),
         "high_risk_recall": high_risk_recall(cases, predictions),
