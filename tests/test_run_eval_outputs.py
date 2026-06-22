@@ -168,3 +168,39 @@ def test_run_eval_writes_predictions_summary_and_results_table(tmp_path, monkeyp
     with (tmp_path / "main_results.csv").open("r", encoding="utf-8", newline="") as f:
         result_rows = list(csv.DictReader(f))
     assert result_rows[0]["policy"] == "scoring/policy_de.json"
+
+
+def test_baseline_trace_metadata_uses_paper_schema(tmp_path):
+    data = tmp_path / "clean_baseline.jsonl"
+    out = tmp_path / "baseline_predictions.jsonl"
+    summary = tmp_path / "baseline_summary.csv"
+    _write_cases(data)
+
+    result = run_eval_mod.run_eval(
+        data=data,
+        method="baseline",
+        policy="scoring/policy_manual.json",
+        profile="paper_eval",
+        out=out,
+        summary=summary,
+    )
+
+    first = result["predictions"][0]
+    trace = first["trace"]
+    metadata = trace["metadata"]
+    assert trace["trace_version"] == "paper-trace-v1"
+    assert trace["case_id"] == "clean_1"
+    assert trace["method"] == "baseline"
+    assert trace["profile"] == "paper_eval"
+    assert trace["policy"] == "scoring/policy_manual.json"
+    assert trace["suite"] == "clean"
+    assert trace["input_normalization"]["canonical_text"] == "我的腿在流血"
+    assert trace["intent_context"]["primary_intent"] == "severe_bleeding"
+    assert "protocol_id" in trace["protocol_match"]
+    assert "protocol_matched_terms" in trace
+    assert "protocol_match_reason" in trace
+    assert metadata["method"] == "baseline"
+    assert metadata["profile"] == "paper_eval"
+    assert metadata["policy"] == "scoring/policy_manual.json"
+    assert metadata["suite"] == "clean"
+    assert isinstance(metadata["disabled_modules"], list)

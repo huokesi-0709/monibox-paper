@@ -305,8 +305,17 @@ def _reset_session_for_case(session: MoniSession) -> None:
         session.output.vb.rr_index.clear()
 
 
-def _predict_with_baseline(case: BenchmarkCase, config: MethodConfig) -> dict[str, Any]:
-    normalizer = InputNormalizer() if config.use_input_normalization else IdentityNormalizer()
+def _predict_with_baseline(
+    case: BenchmarkCase,
+    config: MethodConfig,
+    profile: str | None = None,
+    policy: str | None = None,
+    ablation: str | None = None,
+    data: str | Path | None = None,
+) -> dict[str, Any]:
+    normalizer = (
+        InputNormalizer() if config.use_input_normalization else IdentityNormalizer()
+    )
     if config.use_intent_extraction:
         intent_extractor = (
             IntentExtractor()
@@ -315,7 +324,9 @@ def _predict_with_baseline(case: BenchmarkCase, config: MethodConfig) -> dict[st
         )
     else:
         intent_extractor = DisabledIntentExtractor()
-    protocol_engine = ProtocolEngine() if config.use_protocol_gate else NoProtocolEngine()
+    protocol_engine = (
+        ProtocolEngine() if config.use_protocol_gate else NoProtocolEngine()
+    )
 
     normalized = normalizer.normalize(case.query)
     intent = intent_extractor.extract(normalized.canonical_text)
@@ -326,10 +337,33 @@ def _predict_with_baseline(case: BenchmarkCase, config: MethodConfig) -> dict[st
         intent_context=intent,
     )
     reply = baseline_reply(case)
+    suite = _suite_from_data(data)
+    input_trace = normalized.trace_dict()
+    intent_trace = intent.to_dict()
+    protocol_trace = protocol.to_dict()
+    metadata = {
+        "method": config.name,
+        "disabled_modules": config.disabled_modules,
+        "profile": profile or "",
+        "policy": policy or config.policy_path or "",
+        "ablation": ablation or "",
+        "data_path": str(data or ""),
+        "suite": suite or "",
+    }
     trace = {
+        "trace_version": "paper-trace-v1",
+        "case_id": case.id,
         "query_id": case.id,
+        "method": config.name,
+        "profile": profile or "",
+        "policy": policy or config.policy_path or "",
+        "ablation": ablation or "",
+        "suite": suite or "",
         "raw_text": normalized.raw_text,
         "canonical_text": normalized.canonical_text,
+        "input_normalization": input_trace,
+        "intent_context": intent_trace,
+        "protocol_match": protocol_trace,
         "corrections": [item.to_dict() for item in normalized.corrections],
         "route": {"tags": intent.tags},
         "primary_intent": intent.primary_intent,
@@ -337,16 +371,15 @@ def _predict_with_baseline(case: BenchmarkCase, config: MethodConfig) -> dict[st
         "risk_score": intent.risk_score,
         "protocol_id": protocol.protocol_id,
         "protocol_confidence": protocol.confidence,
+        "protocol_matched_terms": protocol.matched_terms,
+        "protocol_match_reason": protocol.reason,
         "evidence_score": None,
         "top_chunks": [],
         "guard_level": None,
         "guard_reasons": [],
         "latency_ms": 0.0,
         "reply": reply,
-        "metadata": {
-            "method": config.name,
-            "disabled_modules": config.disabled_modules,
-        },
+        "metadata": metadata,
     }
     return {
         "case": case.to_dict(),
@@ -439,7 +472,14 @@ def run_eval(
 
     for case in cases:
         if config.name in {"baseline", "rule-only"}:
-            prediction = _predict_with_baseline(case, config)
+            prediction = _predict_with_baseline(
+                case,
+                config,
+                profile=profile,
+                policy=policy,
+                ablation=ablation,
+                data=data,
+            )
         else:
             assert session is not None
             prediction = _predict_with_session(
