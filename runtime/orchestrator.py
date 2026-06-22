@@ -167,13 +167,30 @@ class MoniSession:
         output_result = getattr(self.output, "last_output_result", None)
         guard_result = getattr(self.output, "last_guard_result", None)
 
-        guard_level = getattr(output_result, "guard_level", None) or getattr(
-            guard_result, "level", None
+        guard_level = self._trace_value(output_result, "guard_level") or self._trace_value(
+            guard_result, "level"
         )
         guard_reasons = list(
-            getattr(output_result, "guard_reasons", None)
-            or getattr(guard_result, "reasons", None)
+            self._trace_value(output_result, "guard_reasons")
+            or self._trace_value(guard_result, "reasons")
             or []
+        )
+        output_guard = {
+            "guard_level": guard_level,
+            "guard_reasons": guard_reasons,
+            "raw_text": self._trace_value(output_result, "raw_text"),
+            "final_text": self._trace_value(output_result, "final_text"),
+        }
+        guard_payload = (
+            guard_result.to_dict()
+            if hasattr(guard_result, "to_dict")
+            else {
+                "level": self._trace_value(guard_result, "level"),
+                "reasons": self._trace_value(guard_result, "reasons") or [],
+                "safe_text": self._trace_value(guard_result, "safe_text"),
+            }
+            if guard_result is not None
+            else {}
         )
 
         top_chunks = [
@@ -207,6 +224,13 @@ class MoniSession:
                 "primary_intent",
                 "protocol_id",
                 "protocol_confidence",
+                "protocol_match",
+                "protocol_matched_terms",
+                "protocol_match_reason",
+                "input_normalization",
+                "intent_context",
+                "decision",
+                "low_evidence",
                 "top_chunks",
             }
         }
@@ -220,18 +244,33 @@ class MoniSession:
             )
 
         return InteractionTrace(
+            case_id=base.get("case_id"),
+            suite=base.get("suite"),
+            method=base.get("method") or metadata.get("method"),
+            profile=base.get("profile") or metadata.get("profile"),
+            policy=base.get("policy") or metadata.get("policy"),
+            ablation=base.get("ablation") or metadata.get("ablation"),
+            decision=base.get("decision"),
+            low_evidence=base.get("low_evidence"),
             query_id=base.get("query_id"),
             raw_text=base.get("raw_text"),
             canonical_text=base.get("canonical_text"),
             corrections=list(base.get("corrections") or []),
+            input_normalization=base.get("input_normalization") or {},
             route=base.get("route"),
+            intent_context=intent_context if isinstance(intent_context, dict) else {},
             primary_intent=base.get("primary_intent"),
             secondary_intents=secondary_intents,
             risk_score=base.get("intent_risk_score") or base.get("risk_score"),
+            protocol_match=base.get("protocol_match") or {},
             protocol_id=base.get("protocol_id"),
             protocol_confidence=base.get("protocol_confidence"),
+            protocol_matched_terms=list(base.get("protocol_matched_terms") or []),
+            protocol_match_reason=list(base.get("protocol_match_reason") or []),
             evidence_score=evidence_score,
             top_chunks=top_chunks,
+            output_guard=output_guard,
+            guard_result=guard_payload,
             guard_level=guard_level,
             guard_reasons=guard_reasons,
             latency_ms=latency_ms,
@@ -250,6 +289,12 @@ class MoniSession:
 
     # ========== 低证据辅助 ==========
 
+    @staticmethod
+    def _trace_value(obj: Any, name: str) -> Any:
+        if isinstance(obj, dict):
+            return obj.get(name)
+        return getattr(obj, name, None)
+
     def _is_low_evidence(self, results: list[SearchResult]) -> bool:
         if not results:
             return True
@@ -261,8 +306,14 @@ class MoniSession:
     def _trace_top_chunks(self, results: list[SearchResult]) -> list[dict[str, Any]]:
         return [
             {
+                "rank": rank,
                 "chunk_id": item.chunk_id,
                 "display_id": item.display_id,
+                "source_id": item.source_id,
+                "category": item.category,
+                "sub_category": item.sub_category,
+                "tags_flat": item.tags_flat,
+                "text_preview": (item.text or "")[:80],
                 "distance": item.distance,
                 "final_distance": item.final_distance,
                 "quality_score": item.quality_score,
@@ -270,7 +321,7 @@ class MoniSession:
                 "scene": item.scene,
                 "score_breakdown": item.score_breakdown,
             }
-            for item in results
+            for rank, item in enumerate(results, start=1)
         ]
 
     def _try_pending_bucket_followup(self, user_text: str) -> tuple | None:
@@ -430,6 +481,7 @@ class MoniSession:
             self._set_pending_bucket_if_needed(r.bucket, r.expect_yesno)
             self._set_trace(
                 decision="low_evidence_localized_pain",
+                low_evidence=True,
                 bucket=r.bucket,
                 emotion=emotion.emotion,
             )
@@ -745,6 +797,7 @@ class MoniSession:
             self._set_pending_bucket_if_needed(r.bucket, r.expect_yesno)
             self._set_trace(
                 decision="low_evidence_rag_fallback",
+                low_evidence=True,
                 bucket=r.bucket,
                 emotion=emotion.emotion,
                 top_chunks=self._trace_top_chunks(results),

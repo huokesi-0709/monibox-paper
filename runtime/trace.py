@@ -10,8 +10,14 @@ from app.config import PROJECT_ROOT
 
 @dataclass
 class TraceTopChunk:
+    rank: int | None = None
     chunk_id: str | None = None
     display_id: str | None = None
+    source_id: str | None = None
+    category: str | None = None
+    sub_category: str | None = None
+    tags_flat: str | None = None
+    text_preview: str | None = None
     distance: float | None = None
     final_distance: float | None = None
     quality_score: float | None = None
@@ -22,18 +28,34 @@ class TraceTopChunk:
 
 @dataclass
 class InteractionTrace:
+    trace_version: str = "paper-trace-v1"
     query_id: str | None = None
+    case_id: str | None = None
+    suite: str | None = None
+    method: str | None = None
+    profile: str | None = None
+    policy: str | None = None
+    ablation: str | None = None
+    decision: str | None = None
+    low_evidence: bool | None = None
     raw_text: str | None = None
     canonical_text: str | None = None
     corrections: list[dict[str, Any]] = field(default_factory=list)
+    input_normalization: dict[str, Any] = field(default_factory=dict)
     route: dict[str, Any] | None = None
+    intent_context: dict[str, Any] = field(default_factory=dict)
     primary_intent: str | None = None
     secondary_intents: list[str] = field(default_factory=list)
     risk_score: float | None = None
+    protocol_match: dict[str, Any] = field(default_factory=dict)
     protocol_id: str | None = None
     protocol_confidence: float | None = None
+    protocol_matched_terms: list[Any] = field(default_factory=list)
+    protocol_match_reason: list[str] = field(default_factory=list)
     evidence_score: float | None = None
     top_chunks: list[TraceTopChunk | dict[str, Any]] = field(default_factory=list)
+    output_guard: dict[str, Any] = field(default_factory=dict)
+    guard_result: dict[str, Any] = field(default_factory=dict)
     guard_level: str | None = None
     guard_reasons: list[str] = field(default_factory=list)
     latency_ms: float | None = None

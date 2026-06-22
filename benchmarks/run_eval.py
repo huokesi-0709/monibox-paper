@@ -88,6 +88,17 @@ def _default_summary(output_dir: str, suite: str, method: str) -> Path:
     return _resolve(output_dir) / f"{suite}_{method}_summary.csv"
 
 
+def _suite_from_data(data: str | Path | None) -> str | None:
+    if data is None:
+        return None
+    name = str(data).replace("\\", "/").lower()
+    if "robust" in name:
+        return "robust"
+    if "clean" in name:
+        return "clean"
+    return None
+
+
 class IdentityNormalizer:
     def normalize(self, raw_text: str) -> NormalizedInput:
         raw = "" if raw_text is None else str(raw_text)
@@ -352,7 +363,13 @@ def _predict_with_baseline(case: BenchmarkCase, config: MethodConfig) -> dict[st
 
 
 def _predict_with_session(
-    case: BenchmarkCase, session: MoniSession, config: MethodConfig
+    case: BenchmarkCase,
+    session: MoniSession,
+    config: MethodConfig,
+    profile: str | None = None,
+    policy: str | None = None,
+    ablation: str | None = None,
+    data: str | Path | None = None,
 ) -> dict[str, Any]:
     _reset_session_for_case(session)
     reply = session.handle(case.query)
@@ -360,7 +377,21 @@ def _predict_with_session(
     metadata = dict(trace.get("metadata") or {})
     metadata["method"] = config.name
     metadata["disabled_modules"] = config.disabled_modules
+    metadata["profile"] = profile or ""
+    metadata["policy"] = policy or config.policy_path or ""
+    metadata["ablation"] = ablation or ""
+    metadata["data_path"] = str(data or "")
+    suite = _suite_from_data(data)
+    if suite:
+        metadata["suite"] = suite
     trace["metadata"] = metadata
+    trace["case_id"] = trace.get("case_id") or case.id
+    trace["method"] = trace.get("method") or config.name
+    trace["profile"] = trace.get("profile") or profile or ""
+    trace["policy"] = trace.get("policy") or policy or config.policy_path or ""
+    trace["ablation"] = trace.get("ablation") or ablation or ""
+    if suite:
+        trace["suite"] = trace.get("suite") or suite
     return {
         "case": case.to_dict(),
         "case_id": case.id,
@@ -411,7 +442,15 @@ def run_eval(
             prediction = _predict_with_baseline(case, config)
         else:
             assert session is not None
-            prediction = _predict_with_session(case, session, config)
+            prediction = _predict_with_session(
+                case,
+                session,
+                config,
+                profile=profile,
+                policy=policy,
+                ablation=ablation,
+                data=data,
+            )
         predictions.append(prediction)
 
     metrics = compute_all_metrics(cases, predictions)
