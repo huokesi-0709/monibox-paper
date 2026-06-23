@@ -17,6 +17,11 @@ MAIN_FIELDS = [
     "unsupported_claim_rate",
     "avg_latency_ms",
     "p95_latency_ms",
+    "num_cases",
+    "num_predictions",
+    "num_evidence_eval_cases",
+    "num_high_risk_cases",
+    "num_protocol_eval_cases",
 ]
 
 ROBUSTNESS_FIELDS = [
@@ -26,6 +31,11 @@ ROBUSTNESS_FIELDS = [
     "protocol_false_trigger_rate",
     "robust_consistency",
     "unsafe_response_rate",
+    "num_cases",
+    "num_predictions",
+    "num_evidence_eval_cases",
+    "num_high_risk_cases",
+    "num_protocol_eval_cases",
 ]
 
 ABLATION_FIELDS = [
@@ -35,6 +45,9 @@ ABLATION_FIELDS = [
     "robust_route_accuracy",
     "high_risk_recall",
     "unsafe_response_rate",
+    "num_cases",
+    "num_predictions",
+    "num_high_risk_cases",
 ]
 
 DE_EFFECT_FIELDS = [
@@ -54,11 +67,26 @@ LATENCY_FIELDS = [
     "num_cases",
 ]
 
+TRACE_AUDIT_FIELDS = [
+    "method",
+    "suite",
+    "num_predictions",
+    "num_with_trace",
+    "num_low_evidence",
+    "low_evidence_rate",
+    "num_protocol_decisions",
+    "avg_protocol_confidence",
+    "num_guarded",
+    "num_with_top_chunks",
+    "num_with_score_breakdown",
+]
+
 TABLE_SPECS = {
     "main_results": MAIN_FIELDS,
     "robustness_results": ROBUSTNESS_FIELDS,
     "ablation_results": ABLATION_FIELDS,
     "de_effect_results": DE_EFFECT_FIELDS,
+    "trace_audit_results": TRACE_AUDIT_FIELDS,
 }
 
 
@@ -148,6 +176,17 @@ def _method(row: dict[str, Any]) -> str:
     return str(row.get("method") or row.get("ablation") or "unknown")
 
 
+def _suite_from_path(path: Path) -> str:
+    text = str(path).replace("\\", "/").lower()
+    if "ablation" in text:
+        return "ablation"
+    if "robust" in text or "robustness" in text:
+        return "robust"
+    if "clean" in text:
+        return "clean"
+    return "unknown"
+
+
 def _preferred_summary_key(row: dict[str, Any], suite: str) -> tuple[int, str]:
     source = str(row.get("_source") or "").replace("\\", "/").lower()
     official_rank = 0
@@ -209,6 +248,11 @@ def build_robustness_results(summaries: list[dict[str, Any]]) -> list[dict[str, 
             "protocol_false_trigger_rate": _metric(row, "protocol_false_trigger_rate"),
             "robust_consistency": _metric(row, "robust_consistency"),
             "unsafe_response_rate": _metric(row, "unsafe_response_rate"),
+            "num_cases": _metric(row, "num_cases"),
+            "num_predictions": _metric(row, "num_predictions"),
+            "num_evidence_eval_cases": _metric(row, "num_evidence_eval_cases"),
+            "num_high_risk_cases": _metric(row, "num_high_risk_cases"),
+            "num_protocol_eval_cases": _metric(row, "num_protocol_eval_cases"),
         }
         for row in _dedupe_summaries_by_method(candidates, "robust")
     ]
@@ -230,6 +274,9 @@ def build_ablation_results(summaries: list[dict[str, Any]]) -> list[dict[str, An
                 "robust_route_accuracy": "",
                 "high_risk_recall": "",
                 "unsafe_response_rate": "",
+                "num_cases": "",
+                "num_predictions": "",
+                "num_high_risk_cases": "",
             },
         )
         if _is_robust(row):
@@ -238,6 +285,9 @@ def build_ablation_results(summaries: list[dict[str, Any]]) -> list[dict[str, An
             current["route_accuracy"] = _metric(row, "route_accuracy")
         current["high_risk_recall"] = _metric(row, "high_risk_recall")
         current["unsafe_response_rate"] = _metric(row, "unsafe_response_rate")
+        current["num_cases"] = _metric(row, "num_cases")
+        current["num_predictions"] = _metric(row, "num_predictions")
+        current["num_high_risk_cases"] = _metric(row, "num_high_risk_cases")
         if row.get("disabled_modules"):
             current["disabled_modules"] = row["disabled_modules"]
     return sorted(grouped.values(), key=lambda item: str(item["ablation"]))
@@ -294,6 +344,173 @@ def build_de_effect_results(eval_dir: Path) -> tuple[list[dict[str, Any]], list[
     ], warnings
 
 
+def _read_predictions(eval_dir: Path) -> tuple[list[tuple[Path, dict[str, Any]]], list[str]]:
+    warnings: list[str] = []
+    rows: list[tuple[Path, dict[str, Any]]] = []
+    paths = sorted(eval_dir.rglob("*_predictions.jsonl"))
+    if not paths:
+        warnings.append(f"no *_predictions.jsonl found under {eval_dir}")
+        return rows, warnings
+
+    for path in paths:
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except Exception as exc:
+            warnings.append(f"skip unreadable predictions JSONL {path}: {exc}")
+            continue
+        for lineno, line in enumerate(lines, start=1):
+            if not line.strip():
+                continue
+            try:
+                obj = json.loads(line)
+            except Exception as exc:
+                warnings.append(f"skip invalid prediction {path}:line {lineno}: {exc}")
+                continue
+            if isinstance(obj, dict):
+                rows.append((path, obj))
+            else:
+                warnings.append(f"skip non-object prediction {path}:line {lineno}")
+    return rows, warnings
+
+
+def _trace(prediction: dict[str, Any]) -> dict[str, Any]:
+    trace = prediction.get("trace")
+    return trace if isinstance(trace, dict) else {}
+
+
+def _metadata(trace: dict[str, Any]) -> dict[str, Any]:
+    metadata = trace.get("metadata")
+    return metadata if isinstance(metadata, dict) else {}
+
+
+def _jsonish_text(value: Any) -> str:
+    if isinstance(value, (dict, list)):
+        return json.dumps(value, ensure_ascii=False, sort_keys=True)
+    return str(value or "")
+
+
+def _is_low_evidence(trace: dict[str, Any]) -> bool:
+    if bool(trace.get("low_evidence")):
+        return True
+    return "low_evidence" in _jsonish_text(trace.get("decision")).lower()
+
+
+def _is_protocol_decision(prediction: dict[str, Any], trace: dict[str, Any]) -> bool:
+    protocol_id = prediction.get("protocol_id") or trace.get("protocol_id")
+    if protocol_id:
+        return True
+    return _jsonish_text(trace.get("decision")).lower().startswith("protocol")
+
+
+def _is_guarded(trace: dict[str, Any]) -> bool:
+    guard_level = str(trace.get("guard_level") or "").lower()
+    guard_reasons = trace.get("guard_reasons") or []
+    if guard_level and guard_level != "allow":
+        return True
+    if isinstance(guard_reasons, list) and guard_reasons:
+        return True
+    output_guard = trace.get("output_guard") or trace.get("guard_result")
+    if isinstance(output_guard, dict):
+        level = str(output_guard.get("level") or "").lower()
+        reasons = output_guard.get("reasons") or []
+        return (bool(level) and level != "allow") or bool(reasons)
+    return False
+
+
+def _top_chunks(trace: dict[str, Any]) -> list[Any]:
+    chunks = trace.get("top_chunks")
+    return chunks if isinstance(chunks, list) else []
+
+
+def _protocol_confidence(trace: dict[str, Any]) -> float | None:
+    value = trace.get("protocol_confidence")
+    if value is None and isinstance(trace.get("protocol_match"), dict):
+        value = trace["protocol_match"].get("confidence")
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def build_trace_audit_results(eval_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
+    predictions, warnings = _read_predictions(eval_dir)
+    grouped: dict[tuple[str, str], dict[str, Any]] = {}
+
+    for path, prediction in predictions:
+        trace = _trace(prediction)
+        metadata = _metadata(trace)
+        method = str(
+            prediction.get("method") or metadata.get("method") or trace.get("method") or "unknown"
+        )
+        suite = str(metadata.get("suite") or trace.get("suite") or _suite_from_path(path))
+        key = (method, suite)
+        current = grouped.setdefault(
+            key,
+            {
+                "method": method,
+                "suite": suite,
+                "num_predictions": 0,
+                "num_with_trace": 0,
+                "num_low_evidence": 0,
+                "num_protocol_decisions": 0,
+                "protocol_confidence_sum": 0.0,
+                "protocol_confidence_count": 0,
+                "num_guarded": 0,
+                "num_with_top_chunks": 0,
+                "num_with_score_breakdown": 0,
+            },
+        )
+        current["num_predictions"] += 1
+        if trace:
+            current["num_with_trace"] += 1
+        if _is_low_evidence(trace):
+            current["num_low_evidence"] += 1
+        if _is_protocol_decision(prediction, trace):
+            current["num_protocol_decisions"] += 1
+        confidence = _protocol_confidence(trace)
+        if confidence is not None:
+            current["protocol_confidence_sum"] += confidence
+            current["protocol_confidence_count"] += 1
+        if _is_guarded(trace):
+            current["num_guarded"] += 1
+        chunks = _top_chunks(trace)
+        if chunks:
+            current["num_with_top_chunks"] += 1
+        if any(isinstance(chunk, dict) and chunk.get("score_breakdown") for chunk in chunks):
+            current["num_with_score_breakdown"] += 1
+
+    rows: list[dict[str, Any]] = []
+    for current in grouped.values():
+        num_predictions = int(current["num_predictions"])
+        confidence_count = int(current["protocol_confidence_count"])
+        rows.append(
+            {
+                "method": current["method"],
+                "suite": current["suite"],
+                "num_predictions": num_predictions,
+                "num_with_trace": current["num_with_trace"],
+                "num_low_evidence": current["num_low_evidence"],
+                "low_evidence_rate": (
+                    current["num_low_evidence"] / num_predictions
+                    if num_predictions
+                    else 0.0
+                ),
+                "num_protocol_decisions": current["num_protocol_decisions"],
+                "avg_protocol_confidence": (
+                    current["protocol_confidence_sum"] / confidence_count
+                    if confidence_count
+                    else 0.0
+                ),
+                "num_guarded": current["num_guarded"],
+                "num_with_top_chunks": current["num_with_top_chunks"],
+                "num_with_score_breakdown": current["num_with_score_breakdown"],
+            }
+        )
+    return sorted(rows, key=lambda item: (str(item["method"]), str(item["suite"]))), warnings
+
+
 def _write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as f:
@@ -332,12 +549,20 @@ def export_tables(
     de_rows, de_warnings = build_de_effect_results(eval_path)
     warnings.extend(de_warnings)
     tables["de_effect_results"] = de_rows
+    trace_rows, trace_warnings = build_trace_audit_results(eval_path)
+    warnings.extend(trace_warnings)
+    tables["trace_audit_results"] = trace_rows
 
+    outputs: dict[str, str] = {}
     for name, rows in tables.items():
         fields = TABLE_SPECS.get(name, LATENCY_FIELDS)
-        _write_csv(eval_path / f"{name}.csv", rows, fields)
+        csv_path = eval_path / f"{name}.csv"
+        _write_csv(csv_path, rows, fields)
+        outputs[f"{name}_csv"] = str(csv_path)
         if name in TABLE_SPECS:
-            _write_markdown(out_path / f"{name}.md", rows, fields)
+            md_path = out_path / f"{name}.md"
+            _write_markdown(md_path, rows, fields)
+            outputs[f"{name}_md"] = str(md_path)
         if not rows:
             warnings.append(f"no rows generated for {name}")
 
@@ -345,6 +570,7 @@ def export_tables(
         "eval_dir": str(eval_path),
         "out_dir": str(out_path),
         "counts": {name: len(rows) for name, rows in tables.items()},
+        "outputs": outputs,
         "warnings": warnings,
     }
 
