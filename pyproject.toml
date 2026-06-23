@@ -102,6 +102,13 @@ line-length = 88
 
 [tool.pytest.ini_options]
 addopts = "-p no:cacheprovider"
+testpaths = ["tests"]
+markers = [
+  "unit: fast deterministic unit tests",
+  "integration: lightweight integration tests with fakes",
+  "paper: paper reproduction contract tests",
+  "slow: slow/manual tests not run in default CI",
+]
 
 [tool.ruff.format]
 docstring-code-format = true
