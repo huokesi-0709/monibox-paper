@@ -88,6 +88,8 @@ class HscRagPolicy:
     version: str = "manual-v1"
 
     def normalized_weights(self) -> dict[str, float]:
+        # Historical name: returns merged scoring coefficients, not
+        # sum-normalized probabilities.
         merged = dict(DEFAULT_WEIGHTS)
         merged.update({k: float(v) for k, v in self.weights.items()})
         return merged
