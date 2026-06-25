@@ -83,6 +83,11 @@
         "src_ready_earthquake_trapped_v1"
       ],
       "priority": 97,
+      "aliases": [
+        "墙体又在响",
+        "又在响",
+        "墙体"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "继续护住头颈，贴着稳的地方。别钻进更窄的缝。声音是不是还在变大？",
@@ -154,6 +159,16 @@
         "src_red_cross_life_threatening_bleeding_v1"
       ],
       "priority": 95,
+      "aliases": [
+        "血一直往外冒",
+        "血一直",
+        "往外冒",
+        "被血浸湿",
+        "血浸湿",
+        "血没有停",
+        "伤口很深",
+        "被划开"
+      ],
       "cooldown_sec": 20,
       "qa_followups": {
         "location": "好，{location}在流血。继续压住别松手。布湿了就再加一层。血是不是少了？",
@@ -230,6 +245,17 @@
         "src_manual_gold_review_v1"
       ],
       "priority": 94,
+      "aliases": [
+        "喘不上气",
+        "胸口很闷",
+        "小口呼吸",
+        "胸口压",
+        "压得厉害",
+        "躺下更喘",
+        "呼吸很费力",
+        "说话也困难",
+        "坐起来也很难受"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "好，先保持半坐或前倾，少说话，按你自己的随身药说明使用。胸口有没有松一点？",
@@ -372,6 +398,9 @@
         "src_manual_gold_review_v1"
       ],
       "priority": 93,
+      "aliases": [
+        "胸口有点闷"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "先停止活动，半坐或侧卧，少说话。胸痛还在加重吗？",
@@ -439,6 +468,9 @@
         "src_manual_gold_review_v1"
       ],
       "priority": 92,
+      "aliases": [
+        "烟味很重"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "有刺鼻气味就继续捂紧口鼻，尽量低一点。别大口喘。烟是不是更浓了？",
@@ -593,6 +625,14 @@
         "src_medlineplus_crush_injury_v1"
       ],
       "priority": 89,
+      "aliases": [
+        "重物压着",
+        "拉不出来",
+        "地震后我被压住",
+        "被压住了",
+        "腿动不了",
+        "膝盖被压麻"
+      ],
       "cooldown_sec": 30,
       "qa_followups": {
         "yesno_true": "好，别硬拽出来。保持能呼吸的姿势，少说话。被压的地方有没有发麻发冷？",
@@ -660,6 +700,15 @@
         "src_manual_gold_review_v1"
       ],
       "priority": 88,
+      "aliases": [
+        "头部被砸到",
+        "意识有点不清楚",
+        "不清楚",
+        "额头出血",
+        "头很疼",
+        "撞到头",
+        "有点想吐"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "想睡也先别强撑站起来。保持侧躺，少动头颈。有没有恶心想吐？",
@@ -726,6 +775,12 @@
         "src_red_cross_muscle_bone_joint_injury_v1"
       ],
       "priority": 90,
+      "aliases": [
+        "摔倒",
+        "肿起来",
+        "腿很疼",
+        "脚踝疼"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "能动就好。继续固定别挪，少用力。疼痛有没有加重？",
@@ -1013,6 +1068,12 @@
         "src_red_cross_fainting_v1"
       ],
       "priority": 85,
+      "aliases": [
+        "短暂晕",
+        "迷糊",
+        "发黑",
+        "晕倒"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "有胸闷或出血要注意。先侧躺别动，慢慢呼气。你胸口是闷还是痛？",
@@ -1149,6 +1210,12 @@
         "src_cdc_hypothermia_winter_v1"
       ],
       "priority": 84,
+      "aliases": [
+        "衣服湿透",
+        "湿透",
+        "体温越来越低",
+        "水里出来"
+      ],
       "cooldown_sec": 30,
       "qa_followups": {
         "yesno_true": "能离开水就慢慢到更高更稳的地方，别涉急水。身上还能裹衣物吗？",
@@ -1284,6 +1351,10 @@
         "src_who_pfa_field_workers_v1"
       ],
       "priority": 80,
+      "aliases": [
+        "脑子很乱",
+        "发抖"
+      ],
       "cooldown_sec": 25,
       "followup_actions": [
         {
@@ -1536,6 +1607,10 @@
         "src_cdc_hypothermia_winter_v1"
       ],
       "priority": 75,
+      "aliases": [
+        "麻麻的",
+        "被砸到"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "可能是压到了。慢慢换个姿势，再轻轻活动几下。有没有好一点？",
@@ -1676,6 +1751,11 @@
         "src_medlineplus_crush_injury_v1"
       ],
       "priority": 77,
+      "aliases": [
+        "卡在",
+        "无法转身",
+        "墙和柜子中间"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "如果还能呼吸，先别硬挤出来。保持姿势，轻敲求救。有没有越来越紧？",
@@ -1752,6 +1832,15 @@
         "src_manual_gold_review_v1"
       ],
       "priority": 78,
+      "aliases": [
+        "没喝水",
+        "口干",
+        "嘴唇干裂",
+        "没力气",
+        "喝很多水",
+        "水不够",
+        "水很少"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "有水就小口慢慢喝，不要猛灌。先省力少说话。嘴还很干吗？",
@@ -1819,6 +1908,12 @@
         "src_cdc_hypothermia_winter_v1"
       ],
       "priority": 82,
+      "aliases": [
+        "冷风",
+        "哆嗦",
+        "冷得",
+        "手指发僵"
+      ],
       "cooldown_sec": 30,
       "enable_qa": true,
       "qa_followups": {
@@ -2561,6 +2656,10 @@
       ],
       "enable_qa": true,
       "priority": 30,
+      "aliases": [
+        "信号很差",
+        "电量很低"
+      ],
       "cooldown_sec": 60,
       "qa_followups": {
         "yesno_true": "好，我会尽量短句提醒。你优先说出血、喘不过气、被压住这些要紧情况。",
@@ -3277,6 +3376,10 @@
         "src_medlineplus_crush_injury_v1"
       ],
       "priority": 88,
+      "aliases": [
+        "被埋住",
+        "小声说话"
+      ],
       "cooldown_sec": 25,
       "qa_followups": {
         "yesno_true": "能呼吸就先别硬钻，清理口鼻附近灰尘，少说话。空间还在变小吗？",
@@ -3785,6 +3888,11 @@
       ],
       "enable_qa": true,
       "priority": 33,
+      "aliases": [
+        "百分之五",
+        "手机关机",
+        "只剩百分之五"
+      ],
       "cooldown_sec": 60,
       "qa_followups": {
         "yesno_true": "好，我会只保留关键提醒。你优先说出血、喘不过气、被压住。现在有哪一种？",
