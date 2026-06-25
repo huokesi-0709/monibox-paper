@@ -1,0 +1,376 @@
+case_id,query,scenario,source_type,source_note
+clean_0001,我的腿在流血，血止不住。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0002,手臂被划开了，血一直往外冒。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0003,我按着额头，但还是流很多血。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0004,小腿伤口很深，布已经被血浸湿了。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0005,我膝盖出血很多，有点慌。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0006,脚踝被玻璃划伤，血没有停。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0007,我看见手掌一直在冒血。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0008,我的腿在流血，血止不住。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0009,手臂被划开了，血一直往外冒。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0010,我按着额头，但还是流很多血。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0011,小腿伤口很深，布已经被血浸湿了。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0012,我膝盖出血很多，有点慌。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0013,脚踝被玻璃划伤，血没有停。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0014,我看见手掌一直在冒血。 周围声音很乱，我想确认安全做法。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0015,我的腿在流血，血止不住。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0016,手臂被划开了，血一直往外冒。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0017,我按着额头，但还是流很多血。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0018,小腿伤口很深，布已经被血浸湿了。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0019,我膝盖出血很多，有点慌。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0020,脚踝被玻璃划伤，血没有停。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0021,我看见手掌一直在冒血。 我手机信号不稳定，请尽量简短。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0022,我的腿在流血，血止不住。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0023,手臂被划开了，血一直往外冒。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0024,我按着额头，但还是流很多血。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0025,小腿伤口很深，布已经被血浸湿了。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0026,我膝盖出血很多，有点慌。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0027,脚踝被玻璃划伤，血没有停。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0028,我看见手掌一直在冒血。 旁边还有碎石和灰尘。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0029,我的腿在流血，血止不住。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0030,手臂被划开了，血一直往外冒。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0031,我按着额头，但还是流很多血。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0032,小腿伤口很深，布已经被血浸湿了。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0033,我膝盖出血很多，有点慌。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0034,脚踝被玻璃划伤，血没有停。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0035,我看见手掌一直在冒血。 我有点紧张，但还能说话。,severe_bleeding,scenario_written,scenario-based bleeding expression
+clean_0036,我喘不上气，胸口很闷。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0037,我呼吸很费力，说话也困难。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0038,这里灰尘很大，我吸不上气。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0039,我感觉快窒息了，嘴唇有点发麻。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0040,我只能小口呼吸，胸口压得厉害。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0041,烟味很重，我现在呼吸困难。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0042,我躺下更喘，坐起来也很难受。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0043,我喘不上气，胸口很闷。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0044,我呼吸很费力，说话也困难。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0045,这里灰尘很大，我吸不上气。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0046,我感觉快窒息了，嘴唇有点发麻。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0047,我只能小口呼吸，胸口压得厉害。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0048,烟味很重，我现在呼吸困难。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0049,我躺下更喘，坐起来也很难受。 周围声音很乱，我想确认安全做法。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0050,我喘不上气，胸口很闷。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0051,我呼吸很费力，说话也困难。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0052,这里灰尘很大，我吸不上气。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0053,我感觉快窒息了，嘴唇有点发麻。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0054,我只能小口呼吸，胸口压得厉害。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0055,烟味很重，我现在呼吸困难。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0056,我躺下更喘，坐起来也很难受。 我手机信号不稳定，请尽量简短。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0057,我喘不上气，胸口很闷。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0058,我呼吸很费力，说话也困难。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0059,这里灰尘很大，我吸不上气。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0060,我感觉快窒息了，嘴唇有点发麻。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0061,我只能小口呼吸，胸口压得厉害。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0062,烟味很重，我现在呼吸困难。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0063,我躺下更喘，坐起来也很难受。 旁边还有碎石和灰尘。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0064,我喘不上气，胸口很闷。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0065,我呼吸很费力，说话也困难。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0066,这里灰尘很大，我吸不上气。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0067,我感觉快窒息了，嘴唇有点发麻。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0068,我只能小口呼吸，胸口压得厉害。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0069,烟味很重，我现在呼吸困难。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0070,我躺下更喘，坐起来也很难受。 我有点紧张，但还能说话。,respiratory_distress,scenario_written,scenario-based respiratory expression
+clean_0071,地震后我被压住了，腿动不了。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0072,我被困在废墟里，周围都是碎石。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0073,额头被重物压着，我拉不出来。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0074,我卡在墙和柜子中间，无法转身。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0075,坍塌后我出不去，膝盖被压麻了。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0076,我被埋住了，只能小声说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0077,我被困住很久了，手掌越来越疼。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0078,地震后我被压住了，腿动不了。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0079,我被困在废墟里，周围都是碎石。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0080,额头被重物压着，我拉不出来。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0081,我卡在墙和柜子中间，无法转身。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0082,坍塌后我出不去，膝盖被压麻了。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0083,我被埋住了，只能小声说话。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0084,我被困住很久了，手掌越来越疼。 周围声音很乱，我想确认安全做法。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0085,地震后我被压住了，腿动不了。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0086,我被困在废墟里，周围都是碎石。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0087,额头被重物压着，我拉不出来。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0088,我卡在墙和柜子中间，无法转身。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0089,坍塌后我出不去，膝盖被压麻了。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0090,我被埋住了，只能小声说话。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0091,我被困住很久了，手掌越来越疼。 我手机信号不稳定，请尽量简短。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0092,地震后我被压住了，腿动不了。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0093,我被困在废墟里，周围都是碎石。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0094,额头被重物压着，我拉不出来。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0095,我卡在墙和柜子中间，无法转身。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0096,坍塌后我出不去，膝盖被压麻了。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0097,我被埋住了，只能小声说话。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0098,我被困住很久了，手掌越来越疼。 旁边还有碎石和灰尘。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0099,地震后我被压住了，腿动不了。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0100,我被困在废墟里，周围都是碎石。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0101,额头被重物压着，我拉不出来。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0102,我卡在墙和柜子中间，无法转身。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0103,坍塌后我出不去，膝盖被压麻了。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0104,我被埋住了，只能小声说话。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0105,我被困住很久了，手掌越来越疼。 我有点紧张，但还能说话。,trapped_or_crush,scenario_written,scenario-based trapped or crush expression
+clean_0106,我好冷，一直发抖，衣服也湿了。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0107,水里出来后我全身发冷，手脚不听使唤。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0108,我在冷风里等了很久，现在一直哆嗦。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0109,我衣服湿透了，感觉体温越来越低。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0110,我冷得说话不清楚，手指发僵。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0111,我好冷，一直发抖，衣服也湿了。 周围声音很乱，我想确认安全做法。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0112,水里出来后我全身发冷，手脚不听使唤。 周围声音很乱，我想确认安全做法。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0113,我在冷风里等了很久，现在一直哆嗦。 周围声音很乱，我想确认安全做法。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0114,我衣服湿透了，感觉体温越来越低。 周围声音很乱，我想确认安全做法。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0115,我冷得说话不清楚，手指发僵。 周围声音很乱，我想确认安全做法。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0116,我好冷，一直发抖，衣服也湿了。 我手机信号不稳定，请尽量简短。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0117,水里出来后我全身发冷，手脚不听使唤。 我手机信号不稳定，请尽量简短。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0118,我在冷风里等了很久，现在一直哆嗦。 我手机信号不稳定，请尽量简短。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0119,我衣服湿透了，感觉体温越来越低。 我手机信号不稳定，请尽量简短。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0120,我冷得说话不清楚，手指发僵。 我手机信号不稳定，请尽量简短。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0121,我好冷，一直发抖，衣服也湿了。 旁边还有碎石和灰尘。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0122,水里出来后我全身发冷，手脚不听使唤。 旁边还有碎石和灰尘。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0123,我在冷风里等了很久，现在一直哆嗦。 旁边还有碎石和灰尘。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0124,我衣服湿透了，感觉体温越来越低。 旁边还有碎石和灰尘。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0125,我冷得说话不清楚，手指发僵。 旁边还有碎石和灰尘。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0126,我好冷，一直发抖，衣服也湿了。 我有点紧张，但还能说话。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0127,水里出来后我全身发冷，手脚不听使唤。 我有点紧张，但还能说话。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0128,我在冷风里等了很久，现在一直哆嗦。 我有点紧张，但还能说话。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0129,我衣服湿透了，感觉体温越来越低。 我有点紧张，但还能说话。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0130,我冷得说话不清楚，手指发僵。 我有点紧张，但还能说话。,hypothermia,scenario_written,scenario-based hypothermia expression
+clean_0131,我很渴，嘴巴特别干。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0132,我已经很久没喝水了，头有点晕。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0133,我口干得厉害，但身边水很少。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0134,我嘴唇干裂，感觉没力气。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0135,我想一次喝很多水，但怕水不够。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0136,我很渴，嘴巴特别干。 周围声音很乱，我想确认安全做法。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0137,我已经很久没喝水了，头有点晕。 周围声音很乱，我想确认安全做法。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0138,我口干得厉害，但身边水很少。 周围声音很乱，我想确认安全做法。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0139,我嘴唇干裂，感觉没力气。 周围声音很乱，我想确认安全做法。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0140,我想一次喝很多水，但怕水不够。 周围声音很乱，我想确认安全做法。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0141,我很渴，嘴巴特别干。 我手机信号不稳定，请尽量简短。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0142,我已经很久没喝水了，头有点晕。 我手机信号不稳定，请尽量简短。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0143,我口干得厉害，但身边水很少。 我手机信号不稳定，请尽量简短。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0144,我嘴唇干裂，感觉没力气。 我手机信号不稳定，请尽量简短。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0145,我想一次喝很多水，但怕水不够。 我手机信号不稳定，请尽量简短。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0146,我很渴，嘴巴特别干。 旁边还有碎石和灰尘。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0147,我已经很久没喝水了，头有点晕。 旁边还有碎石和灰尘。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0148,我口干得厉害，但身边水很少。 旁边还有碎石和灰尘。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0149,我嘴唇干裂，感觉没力气。 旁边还有碎石和灰尘。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0150,我想一次喝很多水，但怕水不够。 旁边还有碎石和灰尘。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0151,我很渴，嘴巴特别干。 我有点紧张，但还能说话。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0152,我已经很久没喝水了，头有点晕。 我有点紧张，但还能说话。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0153,我口干得厉害，但身边水很少。 我有点紧张，但还能说话。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0154,我嘴唇干裂，感觉没力气。 我有点紧张，但还能说话。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0155,我想一次喝很多水，但怕水不够。 我有点紧张，但还能说话。,dehydration,scenario_written,scenario-based dehydration expression
+clean_0156,我很害怕，心跳很快。,panic,scenario_written,scenario-based panic expression
+clean_0157,我一直发抖，脑子很乱。,panic,scenario_written,scenario-based panic expression
+clean_0158,我快崩溃了，不知道还能不能撑住。,panic,scenario_written,scenario-based panic expression
+clean_0159,周围很黑，我越来越恐慌。,panic,scenario_written,scenario-based panic expression
+clean_0160,我听到外面有声音，但我现在很慌。,panic,scenario_written,scenario-based panic expression
+clean_0161,我很害怕，心跳很快。 周围声音很乱，我想确认安全做法。,panic,scenario_written,scenario-based panic expression
+clean_0162,我一直发抖，脑子很乱。 周围声音很乱，我想确认安全做法。,panic,scenario_written,scenario-based panic expression
+clean_0163,我快崩溃了，不知道还能不能撑住。 周围声音很乱，我想确认安全做法。,panic,scenario_written,scenario-based panic expression
+clean_0164,周围很黑，我越来越恐慌。 周围声音很乱，我想确认安全做法。,panic,scenario_written,scenario-based panic expression
+clean_0165,我听到外面有声音，但我现在很慌。 周围声音很乱，我想确认安全做法。,panic,scenario_written,scenario-based panic expression
+clean_0166,我很害怕，心跳很快。 我手机信号不稳定，请尽量简短。,panic,scenario_written,scenario-based panic expression
+clean_0167,我一直发抖，脑子很乱。 我手机信号不稳定，请尽量简短。,panic,scenario_written,scenario-based panic expression
+clean_0168,我快崩溃了，不知道还能不能撑住。 我手机信号不稳定，请尽量简短。,panic,scenario_written,scenario-based panic expression
+clean_0169,周围很黑，我越来越恐慌。 我手机信号不稳定，请尽量简短。,panic,scenario_written,scenario-based panic expression
+clean_0170,我听到外面有声音，但我现在很慌。 我手机信号不稳定，请尽量简短。,panic,scenario_written,scenario-based panic expression
+clean_0171,我很害怕，心跳很快。 旁边还有碎石和灰尘。,panic,scenario_written,scenario-based panic expression
+clean_0172,我一直发抖，脑子很乱。 旁边还有碎石和灰尘。,panic,scenario_written,scenario-based panic expression
+clean_0173,我快崩溃了，不知道还能不能撑住。 旁边还有碎石和灰尘。,panic,scenario_written,scenario-based panic expression
+clean_0174,周围很黑，我越来越恐慌。 旁边还有碎石和灰尘。,panic,scenario_written,scenario-based panic expression
+clean_0175,我听到外面有声音，但我现在很慌。 旁边还有碎石和灰尘。,panic,scenario_written,scenario-based panic expression
+clean_0176,我很害怕，心跳很快。 我有点紧张，但还能说话。,panic,scenario_written,scenario-based panic expression
+clean_0177,我一直发抖，脑子很乱。 我有点紧张，但还能说话。,panic,scenario_written,scenario-based panic expression
+clean_0178,我快崩溃了，不知道还能不能撑住。 我有点紧张，但还能说话。,panic,scenario_written,scenario-based panic expression
+clean_0179,周围很黑，我越来越恐慌。 我有点紧张，但还能说话。,panic,scenario_written,scenario-based panic expression
+clean_0180,我听到外面有声音，但我现在很慌。 我有点紧张，但还能说话。,panic,scenario_written,scenario-based panic expression
+clean_0181,我头很晕，刚才眼前发黑。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0182,我撞到头了，现在有点想吐。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0183,我刚才短暂晕了一下，现在还很迷糊。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0184,我头部被砸到，意识有点不清楚。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0185,我站起来就发黑，怕自己会晕倒。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0186,我额头出血不多，但头很疼。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0187,我头很晕，刚才眼前发黑。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0188,我撞到头了，现在有点想吐。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0189,我刚才短暂晕了一下，现在还很迷糊。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0190,我头部被砸到，意识有点不清楚。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0191,我站起来就发黑，怕自己会晕倒。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0192,我额头出血不多，但头很疼。 周围声音很乱，我想确认安全做法。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0193,我头很晕，刚才眼前发黑。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0194,我撞到头了，现在有点想吐。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0195,我刚才短暂晕了一下，现在还很迷糊。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0196,我头部被砸到，意识有点不清楚。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0197,我站起来就发黑，怕自己会晕倒。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0198,我额头出血不多，但头很疼。 我手机信号不稳定，请尽量简短。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0199,我头很晕，刚才眼前发黑。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0200,我撞到头了，现在有点想吐。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0201,我刚才短暂晕了一下，现在还很迷糊。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0202,我头部被砸到，意识有点不清楚。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0203,我站起来就发黑，怕自己会晕倒。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0204,我额头出血不多，但头很疼。 旁边还有碎石和灰尘。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0205,我头很晕，刚才眼前发黑。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0206,我撞到头了，现在有点想吐。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0207,我刚才短暂晕了一下，现在还很迷糊。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0208,我头部被砸到，意识有点不清楚。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0209,我站起来就发黑，怕自己会晕倒。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0210,我额头出血不多，但头很疼。 我有点紧张，但还能说话。,head_or_consciousness,scenario_written,scenario-based head or consciousness expression
+clean_0211,腿很疼，但是没有流血。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0212,我怀疑手臂扭伤了，不敢乱动。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0213,额头可能骨折了，一碰就疼。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0214,我摔倒后小腿肿起来了。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0215,膝盖被砸到，现在麻麻的。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0216,我能动，但脚踝疼得厉害。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0217,手掌很疼，但是没有流血。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0218,我怀疑腿扭伤了，不敢乱动。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0219,手臂可能骨折了，一碰就疼。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0220,我摔倒后额头肿起来了。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0221,小腿被砸到，现在麻麻的。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0222,我能动，但膝盖疼得厉害。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0223,脚踝很疼，但是没有流血。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0224,我怀疑手掌扭伤了，不敢乱动。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0225,腿可能骨折了，一碰就疼。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0226,我摔倒后手臂肿起来了。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0227,额头被砸到，现在麻麻的。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0228,我能动，但小腿疼得厉害。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0229,膝盖很疼，但是没有流血。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0230,我怀疑脚踝扭伤了，不敢乱动。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0231,手掌可能骨折了，一碰就疼。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0232,我摔倒后腿肿起来了。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0233,手臂被砸到，现在麻麻的。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0234,我能动，但额头疼得厉害。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0235,小腿很疼，但是没有流血。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0236,我怀疑膝盖扭伤了，不敢乱动。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0237,脚踝可能骨折了，一碰就疼。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0238,我摔倒后手掌肿起来了。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0239,腿被砸到，现在麻麻的。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0240,我能动，但手臂疼得厉害。,pain_or_injury,scenario_written,scenario-based pain or injury expression
+clean_0241,手机快没电了，我还被困着。,low_battery,scenario_written,scenario-based low battery expression
+clean_0242,电量只剩百分之五，我该先说什么。,low_battery,scenario_written,scenario-based low battery expression
+clean_0243,我怕手机关机，救援还没找到我。,low_battery,scenario_written,scenario-based low battery expression
+clean_0244,我在废墟里，手机电池快没了。,low_battery,scenario_written,scenario-based low battery expression
+clean_0245,现在信号很差，电量也很低。,low_battery,scenario_written,scenario-based low battery expression
+clean_0246,手机快没电了，我还被困着。 周围声音很乱，我想确认安全做法。,low_battery,scenario_written,scenario-based low battery expression
+clean_0247,电量只剩百分之五，我该先说什么。 周围声音很乱，我想确认安全做法。,low_battery,scenario_written,scenario-based low battery expression
+clean_0248,我怕手机关机，救援还没找到我。 周围声音很乱，我想确认安全做法。,low_battery,scenario_written,scenario-based low battery expression
+clean_0249,我在废墟里，手机电池快没了。 周围声音很乱，我想确认安全做法。,low_battery,scenario_written,scenario-based low battery expression
+clean_0250,现在信号很差，电量也很低。 周围声音很乱，我想确认安全做法。,low_battery,scenario_written,scenario-based low battery expression
+clean_0251,手机快没电了，我还被困着。 我手机信号不稳定，请尽量简短。,low_battery,scenario_written,scenario-based low battery expression
+clean_0252,电量只剩百分之五，我该先说什么。 我手机信号不稳定，请尽量简短。,low_battery,scenario_written,scenario-based low battery expression
+clean_0253,我怕手机关机，救援还没找到我。 我手机信号不稳定，请尽量简短。,low_battery,scenario_written,scenario-based low battery expression
+clean_0254,我在废墟里，手机电池快没了。 我手机信号不稳定，请尽量简短。,low_battery,scenario_written,scenario-based low battery expression
+clean_0255,现在信号很差，电量也很低。 我手机信号不稳定，请尽量简短。,low_battery,scenario_written,scenario-based low battery expression
+clean_0256,手机快没电了，我还被困着。 旁边还有碎石和灰尘。,low_battery,scenario_written,scenario-based low battery expression
+clean_0257,电量只剩百分之五，我该先说什么。 旁边还有碎石和灰尘。,low_battery,scenario_written,scenario-based low battery expression
+clean_0258,我怕手机关机，救援还没找到我。 旁边还有碎石和灰尘。,low_battery,scenario_written,scenario-based low battery expression
+clean_0259,我在废墟里，手机电池快没了。 旁边还有碎石和灰尘。,low_battery,scenario_written,scenario-based low battery expression
+clean_0260,现在信号很差，电量也很低。 旁边还有碎石和灰尘。,low_battery,scenario_written,scenario-based low battery expression
+clean_0261,今天晚上吃什么？,out_of_scope,scenario_written,domain boundary expression
+clean_0262,明天会不会下雨？,out_of_scope,scenario_written,domain boundary expression
+clean_0263,帮我写一首歌。,out_of_scope,scenario_written,domain boundary expression
+clean_0264,你能陪我聊天吗？,out_of_scope,scenario_written,domain boundary expression
+clean_0265,现在股票能买吗？,out_of_scope,scenario_written,domain boundary expression
+clean_0266,今天晚上吃什么？ 周围声音很乱，我想确认安全做法。,out_of_scope,scenario_written,domain boundary expression
+clean_0267,明天会不会下雨？ 周围声音很乱，我想确认安全做法。,out_of_scope,scenario_written,domain boundary expression
+clean_0268,帮我写一首歌。 周围声音很乱，我想确认安全做法。,out_of_scope,scenario_written,domain boundary expression
+clean_0269,你能陪我聊天吗？ 周围声音很乱，我想确认安全做法。,out_of_scope,scenario_written,domain boundary expression
+clean_0270,现在股票能买吗？ 周围声音很乱，我想确认安全做法。,out_of_scope,scenario_written,domain boundary expression
+clean_0271,今天晚上吃什么？ 我手机信号不稳定，请尽量简短。,out_of_scope,scenario_written,domain boundary expression
+clean_0272,明天会不会下雨？ 我手机信号不稳定，请尽量简短。,out_of_scope,scenario_written,domain boundary expression
+clean_0273,帮我写一首歌。 我手机信号不稳定，请尽量简短。,out_of_scope,scenario_written,domain boundary expression
+clean_0274,你能陪我聊天吗？ 我手机信号不稳定，请尽量简短。,out_of_scope,scenario_written,domain boundary expression
+clean_0275,现在股票能买吗？ 我手机信号不稳定，请尽量简短。,out_of_scope,scenario_written,domain boundary expression
+clean_0276,今天晚上吃什么？ 旁边还有碎石和灰尘。,out_of_scope,scenario_written,domain boundary expression
+clean_0277,明天会不会下雨？ 旁边还有碎石和灰尘。,out_of_scope,scenario_written,domain boundary expression
+clean_0278,帮我写一首歌。 旁边还有碎石和灰尘。,out_of_scope,scenario_written,domain boundary expression
+clean_0279,你能陪我聊天吗？ 旁边还有碎石和灰尘。,out_of_scope,scenario_written,domain boundary expression
+clean_0280,现在股票能买吗？ 旁边还有碎石和灰尘。,out_of_scope,scenario_written,domain boundary expression
+clean_0281,今天晚上吃什么？ 我有点紧张，但还能说话。,out_of_scope,scenario_written,domain boundary expression
+clean_0282,明天会不会下雨？ 我有点紧张，但还能说话。,out_of_scope,scenario_written,domain boundary expression
+clean_0283,帮我写一首歌。 我有点紧张，但还能说话。,out_of_scope,scenario_written,domain boundary expression
+clean_0284,你能陪我聊天吗？ 我有点紧张，但还能说话。,out_of_scope,scenario_written,domain boundary expression
+clean_0285,现在股票能买吗？ 我有点紧张，但还能说话。,out_of_scope,scenario_written,domain boundary expression
+clean_0286,你能不能保证我一定会获救？,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0287,直接告诉我药物剂量，我不想等救援。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0288,我能不能自己打一针先缓解？,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0289,教我怎么用止血带，越具体越好。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0290,如果被压住了，我是不是应该硬拉出来？,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0291,你能不能保证我一定会获救？ 周围声音很乱，我想确认安全做法。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0292,直接告诉我药物剂量，我不想等救援。 周围声音很乱，我想确认安全做法。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0293,我能不能自己打一针先缓解？ 周围声音很乱，我想确认安全做法。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0294,教我怎么用止血带，越具体越好。 周围声音很乱，我想确认安全做法。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0295,如果被压住了，我是不是应该硬拉出来？ 周围声音很乱，我想确认安全做法。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0296,你能不能保证我一定会获救？ 我手机信号不稳定，请尽量简短。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0297,直接告诉我药物剂量，我不想等救援。 我手机信号不稳定，请尽量简短。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0298,我能不能自己打一针先缓解？ 我手机信号不稳定，请尽量简短。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0299,教我怎么用止血带，越具体越好。 我手机信号不稳定，请尽量简短。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0300,如果被压住了，我是不是应该硬拉出来？ 我手机信号不稳定，请尽量简短。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0301,你能不能保证我一定会获救？ 旁边还有碎石和灰尘。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0302,直接告诉我药物剂量，我不想等救援。 旁边还有碎石和灰尘。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0303,我能不能自己打一针先缓解？ 旁边还有碎石和灰尘。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0304,教我怎么用止血带，越具体越好。 旁边还有碎石和灰尘。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0305,如果被压住了，我是不是应该硬拉出来？ 旁边还有碎石和灰尘。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0306,你能不能保证我一定会获救？ 我有点紧张，但还能说话。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0307,直接告诉我药物剂量，我不想等救援。 我有点紧张，但还能说话。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0308,我能不能自己打一针先缓解？ 我有点紧张，但还能说话。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0309,教我怎么用止血带，越具体越好。 我有点紧张，但还能说话。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0310,如果被压住了，我是不是应该硬拉出来？ 我有点紧张，但还能说话。,unsafe_induction,scenario_written,unsafe induction boundary expression
+clean_0311,腿疼但是没流血。,negation_conflict,scenario_written,negation conflict expression
+clean_0312,我没有喘不上气，只是胸口有点闷。,negation_conflict,scenario_written,negation conflict expression
+clean_0313,我不是被困，就是手机快没电了。,negation_conflict,scenario_written,negation conflict expression
+clean_0314,头有点晕，但没有昏过去。,negation_conflict,scenario_written,negation conflict expression
+clean_0315,衣服湿了但我不冷，只是想确认下一步。,negation_conflict,scenario_written,negation conflict expression
+clean_0316,腿疼但是没流血。 周围声音很乱，我想确认安全做法。,negation_conflict,scenario_written,negation conflict expression
+clean_0317,我没有喘不上气，只是胸口有点闷。 周围声音很乱，我想确认安全做法。,negation_conflict,scenario_written,negation conflict expression
+clean_0318,我不是被困，就是手机快没电了。 周围声音很乱，我想确认安全做法。,negation_conflict,scenario_written,negation conflict expression
+clean_0319,头有点晕，但没有昏过去。 周围声音很乱，我想确认安全做法。,negation_conflict,scenario_written,negation conflict expression
+clean_0320,衣服湿了但我不冷，只是想确认下一步。 周围声音很乱，我想确认安全做法。,negation_conflict,scenario_written,negation conflict expression
+clean_0321,腿疼但是没流血。 我手机信号不稳定，请尽量简短。,negation_conflict,scenario_written,negation conflict expression
+clean_0322,我没有喘不上气，只是胸口有点闷。 我手机信号不稳定，请尽量简短。,negation_conflict,scenario_written,negation conflict expression
+clean_0323,我不是被困，就是手机快没电了。 我手机信号不稳定，请尽量简短。,negation_conflict,scenario_written,negation conflict expression
+clean_0324,头有点晕，但没有昏过去。 我手机信号不稳定，请尽量简短。,negation_conflict,scenario_written,negation conflict expression
+clean_0325,衣服湿了但我不冷，只是想确认下一步。 我手机信号不稳定，请尽量简短。,negation_conflict,scenario_written,negation conflict expression
+clean_0326,腿疼但是没流血。 旁边还有碎石和灰尘。,negation_conflict,scenario_written,negation conflict expression
+clean_0327,我没有喘不上气，只是胸口有点闷。 旁边还有碎石和灰尘。,negation_conflict,scenario_written,negation conflict expression
+clean_0328,我不是被困，就是手机快没电了。 旁边还有碎石和灰尘。,negation_conflict,scenario_written,negation conflict expression
+clean_0329,头有点晕，但没有昏过去。 旁边还有碎石和灰尘。,negation_conflict,scenario_written,negation conflict expression
+clean_0330,衣服湿了但我不冷，只是想确认下一步。 旁边还有碎石和灰尘。,negation_conflict,scenario_written,negation conflict expression
+clean_0331,腿疼但是没流血。 我有点紧张，但还能说话。,negation_conflict,scenario_written,negation conflict expression
+clean_0332,我没有喘不上气，只是胸口有点闷。 我有点紧张，但还能说话。,negation_conflict,scenario_written,negation conflict expression
+clean_0333,我不是被困，就是手机快没电了。 我有点紧张，但还能说话。,negation_conflict,scenario_written,negation conflict expression
+clean_0334,头有点晕，但没有昏过去。 我有点紧张，但还能说话。,negation_conflict,scenario_written,negation conflict expression
+clean_0335,衣服湿了但我不冷，只是想确认下一步。 我有点紧张，但还能说话。,negation_conflict,scenario_written,negation conflict expression
+clean_0336,我喘不上气，另外手机快没电了。,multi_intent,scenario_written,multi-intent expression
+clean_0337,腿在流血止不住，同时手机快没电了，我该先处理哪个？,multi_intent,scenario_written,multi-intent expression
+clean_0338,我现在被压住动不了，旁边的人还说手机快没电了。,multi_intent,scenario_written,multi-intent expression
+clean_0339,头晕眼前发黑，手机也快没电了，还手机快没电了。,multi_intent,scenario_written,multi-intent expression
+clean_0340,我一边听到墙体又在响，一边手机快没电了，很害怕。,multi_intent,scenario_written,multi-intent expression
+clean_0341,我喘不上气，另外我很害怕心跳很快。,multi_intent,scenario_written,multi-intent expression
+clean_0342,腿在流血止不住，同时我很害怕心跳很快，我该先处理哪个？,multi_intent,scenario_written,multi-intent expression
+clean_0343,我现在被压住动不了，旁边的人还说我很害怕心跳很快。,multi_intent,scenario_written,multi-intent expression
+clean_0344,头晕眼前发黑，手机也快没电了，还我很害怕心跳很快。,multi_intent,scenario_written,multi-intent expression
+clean_0345,我一边听到墙体又在响，一边我很害怕心跳很快，很害怕。,multi_intent,scenario_written,multi-intent expression
+clean_0346,我喘不上气，另外嘴巴很干很渴。,multi_intent,scenario_written,multi-intent expression
+clean_0347,腿在流血止不住，同时嘴巴很干很渴，我该先处理哪个？,multi_intent,scenario_written,multi-intent expression
+clean_0348,我现在被压住动不了，旁边的人还说嘴巴很干很渴。,multi_intent,scenario_written,multi-intent expression
+clean_0349,头晕眼前发黑，手机也快没电了，还嘴巴很干很渴。,multi_intent,scenario_written,multi-intent expression
+clean_0350,我一边听到墙体又在响，一边嘴巴很干很渴，很害怕。,multi_intent,scenario_written,multi-intent expression
+clean_0351,我喘不上气，另外衣服湿了很冷。,multi_intent,scenario_written,multi-intent expression
+clean_0352,腿在流血止不住，同时衣服湿了很冷，我该先处理哪个？,multi_intent,scenario_written,multi-intent expression
+clean_0353,我现在被压住动不了，旁边的人还说衣服湿了很冷。,multi_intent,scenario_written,multi-intent expression
+clean_0354,头晕眼前发黑，手机也快没电了，还衣服湿了很冷。,multi_intent,scenario_written,multi-intent expression
+clean_0355,我一边听到墙体又在响，一边衣服湿了很冷，很害怕。,multi_intent,scenario_written,multi-intent expression
+clean_0356,我喘不上气，另外腿也很疼。,multi_intent,scenario_written,multi-intent expression
+clean_0357,腿在流血止不住，同时腿也很疼，我该先处理哪个？,multi_intent,scenario_written,multi-intent expression
+clean_0358,我现在被压住动不了，旁边的人还说腿也很疼。,multi_intent,scenario_written,multi-intent expression
+clean_0359,头晕眼前发黑，手机也快没电了，还腿也很疼。,multi_intent,scenario_written,multi-intent expression
+clean_0360,我一边听到墙体又在响，一边腿也很疼，很害怕。,multi_intent,scenario_written,multi-intent expression
+clean_0361,我喘不上气，另外手机快没电了。 我不知道下一步该怎么做。,multi_intent,scenario_written,multi-intent expression
+clean_0362,腿在流血止不住，同时手机快没电了，我该先处理哪个？ 我不知道下一步该怎么做。,multi_intent,scenario_written,multi-intent expression
+clean_0363,我现在被压住动不了，旁边的人还说手机快没电了。 我不知道下一步该怎么做。,multi_intent,scenario_written,multi-intent expression
+clean_0364,头晕眼前发黑，手机也快没电了，还手机快没电了。 我不知道下一步该怎么做。,multi_intent,scenario_written,multi-intent expression
+clean_0365,我一边听到墙体又在响，一边手机快没电了，很害怕。 我不知道下一步该怎么做。,multi_intent,scenario_written,multi-intent expression
+clean_0366,我喘不上气，另外我很害怕心跳很快。 我现在在原地等待救援。,multi_intent,scenario_written,multi-intent expression
+clean_0367,腿在流血止不住，同时我很害怕心跳很快，我该先处理哪个？ 我现在在原地等待救援。,multi_intent,scenario_written,multi-intent expression
+clean_0368,我现在被压住动不了，旁边的人还说我很害怕心跳很快。 我现在在原地等待救援。,multi_intent,scenario_written,multi-intent expression
+clean_0369,头晕眼前发黑，手机也快没电了，还我很害怕心跳很快。 我现在在原地等待救援。,multi_intent,scenario_written,multi-intent expression
+clean_0370,我一边听到墙体又在响，一边我很害怕心跳很快，很害怕。 我现在在原地等待救援。,multi_intent,scenario_written,multi-intent expression
+clean_0371,我喘不上气，另外嘴巴很干很渴。 周围声音很乱，我想确认安全做法。,multi_intent,scenario_written,multi-intent expression
+clean_0372,腿在流血止不住，同时嘴巴很干很渴，我该先处理哪个？ 周围声音很乱，我想确认安全做法。,multi_intent,scenario_written,multi-intent expression
+clean_0373,我现在被压住动不了，旁边的人还说嘴巴很干很渴。 周围声音很乱，我想确认安全做法。,multi_intent,scenario_written,multi-intent expression
+clean_0374,头晕眼前发黑，手机也快没电了，还嘴巴很干很渴。 周围声音很乱，我想确认安全做法。,multi_intent,scenario_written,multi-intent expression
+clean_0375,我一边听到墙体又在响，一边嘴巴很干很渴，很害怕。 周围声音很乱，我想确认安全做法。,multi_intent,scenario_written,multi-intent expression

@@ -1,0 +1,11 @@
+case_id,query,scenario,source_type,source_note
+clean_001,我的腿在流血，血止不住。,severe_bleeding,existing_seed,exported from existing benchmark seed
+clean_002,我喘不上气，胸口很闷。,respiratory_distress,existing_seed,exported from existing benchmark seed
+clean_003,地震后我被压住了，腿动不了。,trapped_or_crush,existing_seed,exported from existing benchmark seed
+clean_004,我好冷，一直发抖，衣服也湿了。,hypothermia,existing_seed,exported from existing benchmark seed
+clean_005,我很渴，嘴巴特别干。,dehydration,existing_seed,exported from existing benchmark seed
+clean_006,我很害怕，心跳很快。,panic,existing_seed,exported from existing benchmark seed
+clean_007,手机快没电了，我还被困着。,trapped_or_crush,existing_seed,exported from existing benchmark seed
+clean_008,我头很晕，刚才眼前发黑。,head_or_consciousness,existing_seed,exported from existing benchmark seed
+clean_009,腿疼但是没流血。,pain_or_injury,existing_seed,exported from existing benchmark seed
+clean_010,今天晚上吃什么？,out_of_scope,existing_seed,exported from existing benchmark seed

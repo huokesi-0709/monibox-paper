@@ -1,0 +1,11 @@
+case_id,annotator_id,annotator_background,query,scenario,risk_level,expected_route,expected_protocol_id,expected_primary_intent,expected_tags,gold_chunk_ids,unsafe_actions,reference_reply,notes
+clean_001,B,,我的腿在流血，血止不住。,severe_bleeding,,,,,,,,,
+clean_002,B,,我喘不上气，胸口很闷。,respiratory_distress,,,,,,,,,
+clean_003,B,,地震后我被压住了，腿动不了。,trapped_or_crush,,,,,,,,,
+clean_004,B,,我好冷，一直发抖，衣服也湿了。,hypothermia,,,,,,,,,
+clean_005,B,,我很渴，嘴巴特别干。,dehydration,,,,,,,,,
+clean_006,B,,我很害怕，心跳很快。,panic,,,,,,,,,
+clean_007,B,,手机快没电了，我还被困着。,trapped_or_crush,,,,,,,,,
+clean_008,B,,我头很晕，刚才眼前发黑。,head_or_consciousness,,,,,,,,,
+clean_009,B,,腿疼但是没流血。,pain_or_injury,,,,,,,,,
+clean_010,B,,今天晚上吃什么？,out_of_scope,,,,,,,,,

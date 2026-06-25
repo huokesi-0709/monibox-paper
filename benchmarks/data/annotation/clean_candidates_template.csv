@@ -1,0 +1,4 @@
+case_id,query,scenario,source_type,source_note
+clean_0001,我的腿在流血，血止不住。,severe_bleeding,scenario_written,seed example; replace or expand with new cases
+clean_0002,我喘不上气，胸口很闷。,respiratory_distress,scenario_written,seed example; replace or expand with new cases
+clean_0003,今天晚上吃什么？,out_of_scope,scenario_written,domain boundary example
