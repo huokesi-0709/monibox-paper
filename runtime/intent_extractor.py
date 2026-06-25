@@ -13,8 +13,8 @@ INTENT_PRIORITY = [
     "hypothermia",
     "dehydration",
     "pain_or_injury",
-    "panic",
     "low_battery",
+    "panic",
     "out_of_scope",
 ]
 
@@ -97,6 +97,11 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "气不够",
         "吸不上气",
         "胸闷喘",
+        "小口呼吸",
+        "胸口压",
+        "压得厉害",
+        "躺下更喘",
+        "更喘",
     ),
     "severe_bleeding": (
         "流血",
@@ -108,6 +113,13 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "好多血",
         "很多血",
         "伤口流血",
+        "血一直",
+        "往外冒",
+        "被血浸湿",
+        "血浸湿",
+        "血没有停",
+        "伤口很深",
+        "被划开",
     ),
     "trapped_or_crush": (
         "被困",
@@ -120,6 +132,11 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "废墟里",
         "塌下来",
         "困在废墟",
+        "重物压着",
+        "拉不出来",
+        "卡在",
+        "无法转身",
+        "墙和柜子中间",
     ),
     "collapse_aftershock": (
         "余震",
@@ -131,6 +148,9 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "倒塌",
         "墙在裂",
         "掉东西",
+        "墙体又在响",
+        "又在响",
+        "墙体",
     ),
     "head_or_consciousness": (
         "头晕",
@@ -142,15 +162,30 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "头部出血",
         "头撞",
         "脑袋疼",
+        "撞到头",
+        "短暂晕",
+        "迷糊",
+        "头部被砸到",
+        "不清楚",
+        "发黑",
+        "晕倒",
+        "额头出血",
+        "头很疼",
+        "有点想吐",
     ),
     "hypothermia": (
         "好冷",
         "很冷",
         "发冷",
-        "发抖",
         "失温",
         "冻",
         "体温低",
+        "冷风",
+        "哆嗦",
+        "湿透",
+        "体温越来越低",
+        "冷得",
+        "手指发僵",
     ),
     "dehydration": (
         "很渴",
@@ -160,6 +195,13 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "缺水",
         "嘴干",
         "脱水",
+        "没喝水",
+        "口干",
+        "嘴唇干裂",
+        "没力气",
+        "喝很多水",
+        "水不够",
+        "水很少",
     ),
     "pain_or_injury": (
         "疼",
@@ -171,6 +213,12 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "扭伤",
         "肿了",
         "麻了",
+        "摔倒",
+        "肿起来",
+        "膝盖",
+        "砸到",
+        "麻麻的",
+        "胸口有点闷",
     ),
     "panic": (
         "害怕",
@@ -180,6 +228,8 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "紧张",
         "崩溃",
         "想哭",
+        "脑子很乱",
+        "发抖",
     ),
     "low_battery": (
         "手机没电",
@@ -189,6 +239,11 @@ INTENT_TERMS: dict[str, tuple[str, ...]] = {
         "电快没了",
         "快关机",
         "电池快没",
+        "百分之五",
+        "手机关机",
+        "信号很差",
+        "电量很低",
+        "只剩",
     ),
 }
 
@@ -263,6 +318,9 @@ class IntentExtractor:
             for term in terms:
                 for match in re.finditer(re.escape(term), normalized):
                     clause = self._clause_for_match(clauses, term)
+                    hypothetical = self._is_hypothetical_advice(
+                        normalized, match.start(), match.end()
+                    )
                     negated = (
                         intent not in NON_NEGATED_INTENTS
                         and self._is_negated(normalized, match.start(), match.end())
@@ -272,11 +330,16 @@ class IntentExtractor:
                         "term": term,
                         "clause": clause,
                         "negated": negated,
+                        "hypothetical": hypothetical,
                         "start": match.start(),
                         "end": match.end(),
                     }
                     matched_terms.append(item)
-                    if negated:
+                    if hypothetical:
+                        explanation.append(
+                            f"{intent} matched '{term}' but looked hypothetical"
+                        )
+                    elif negated:
                         negated_risks.add(intent)
                         explanation.append(
                             f"{intent} matched '{term}' but was negated near the term"
@@ -344,6 +407,14 @@ class IntentExtractor:
         return any(word in left for word in NEGATION_WORDS) or any(
             word in right for word in NEGATION_WORDS
         )
+
+    @staticmethod
+    def _is_hypothetical_advice(text: str, start: int, end: int) -> bool:
+        del end
+        if "如果" not in text[: start + 1]:
+            return False
+        advice_markers = ("是不是", "是否", "应该", "可以", "能不能", "要不要")
+        return any(marker in text[start:] for marker in advice_markers)
 
     @staticmethod
     def _trim_left_boundary(text: str) -> str:

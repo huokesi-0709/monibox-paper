@@ -474,6 +474,18 @@ class ProtocolEngine:
             risks.add("trapped_or_crush")
         if "aftershock" in pid or "collapse" in pid:
             risks.add("collapse_aftershock")
+        if "head" in pid or "syncope" in pid or "blackout" in pid:
+            risks.add("head_or_consciousness")
+        if "hypothermia" in pid or "cold" in pid:
+            risks.add("hypothermia")
+        if "dehydration" in pid or "thirst" in pid:
+            risks.add("dehydration")
+        if "injury" in pid or "fracture" in pid or "numbness" in pid:
+            risks.add("pain_or_injury")
+        if "panic" in pid or "claustrophobia" in pid:
+            risks.add("panic")
+        if "battery" in pid:
+            risks.add("low_battery")
         return risks
 
     def _protocol_mentions(self, protocol: dict[str, Any], term: str) -> bool:
