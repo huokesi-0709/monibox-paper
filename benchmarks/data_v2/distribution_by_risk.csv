@@ -1,0 +1,17 @@
+﻿dataset,split,suite,value,count,percentage
+clean_dev,dev,clean,critical,243,48.6
+clean_dev,dev,clean,high,117,23.4
+clean_dev,dev,clean,low,33,6.6
+clean_dev,dev,clean,medium,107,21.4
+robustness_dev,dev,robust,critical,729,48.6
+robustness_dev,dev,robust,high,351,23.4
+robustness_dev,dev,robust,low,99,6.6
+robustness_dev,dev,robust,medium,321,21.4
+clean_test,test,clean,critical,487,48.7
+clean_test,test,clean,high,233,23.3
+clean_test,test,clean,low,67,6.7
+clean_test,test,clean,medium,213,21.3
+robustness_test,test,robust,critical,1461,48.7
+robustness_test,test,robust,high,699,23.3
+robustness_test,test,robust,low,201,6.7
+robustness_test,test,robust,medium,639,21.3

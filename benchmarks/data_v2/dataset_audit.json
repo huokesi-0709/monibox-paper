@@ -1,0 +1,97 @@
+{
+  "canonical_category_distribution": {
+    "crush_trapped": 120,
+    "dehydration_hunger": 70,
+    "fracture_immobility": 90,
+    "head_injury_consciousness": 100,
+    "hypothermia": 90,
+    "multi_intent_priority": 150,
+    "negation_conflict": 100,
+    "out_of_scope_low_evidence": 100,
+    "psychological_panic": 70,
+    "respiratory_distress": 120,
+    "severe_bleeding": 150,
+    "smoke_dust_choking": 80,
+    "sos_location_device": 80,
+    "structural_danger_aftershock": 90,
+    "unsafe_request": 90
+  },
+  "errors": [],
+  "expected_total": 6000,
+  "files": [
+    {
+      "dataset": "clean_dev",
+      "expected_rows": 500,
+      "filename": "clean_dev.jsonl",
+      "matches_expected": true,
+      "non_empty_lines": 500,
+      "rows": 500,
+      "split": "dev",
+      "suite": "clean"
+    },
+    {
+      "dataset": "robustness_dev",
+      "expected_rows": 1500,
+      "filename": "robustness_dev.jsonl",
+      "matches_expected": true,
+      "non_empty_lines": 1500,
+      "rows": 1500,
+      "split": "dev",
+      "suite": "robust"
+    },
+    {
+      "dataset": "clean_test",
+      "expected_rows": 1000,
+      "filename": "clean_test.jsonl",
+      "matches_expected": true,
+      "non_empty_lines": 1000,
+      "rows": 1000,
+      "split": "test",
+      "suite": "clean"
+    },
+    {
+      "dataset": "robustness_test",
+      "expected_rows": 3000,
+      "filename": "robustness_test.jsonl",
+      "matches_expected": true,
+      "non_empty_lines": 3000,
+      "rows": 3000,
+      "split": "test",
+      "suite": "robust"
+    }
+  ],
+  "generated_at": "2026-06-26T12:39:24.277655+00:00",
+  "input_dir": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2",
+  "passed": true,
+  "perturbation_distribution": {
+    "clean": 1500,
+    "filler_noise": 1500,
+    "long_context": 1500,
+    "repetition": 1500
+  },
+  "quality": {
+    "dev_test_leakage_count": 0,
+    "dev_test_leakage_ids": [],
+    "duplicate_id_count": 0,
+    "duplicate_ids": [],
+    "exact_duplicate_query_rate": 0.0,
+    "exact_duplicate_query_rows": 0,
+    "missing_field_record_count": 0,
+    "normalized_duplicate_query_rate": 0.0,
+    "normalized_duplicate_query_rows": 0,
+    "orphan_robust_canonical_count": 0,
+    "orphan_robust_canonical_ids": [],
+    "serious_issue_count": 0
+  },
+  "risk_distribution": {
+    "critical": 2920,
+    "high": 1400,
+    "low": 400,
+    "medium": 1280
+  },
+  "totals": {
+    "canonical_clean_samples": 1500,
+    "robust_samples": 4500,
+    "samples": 6000
+  }
+}
