@@ -252,9 +252,46 @@ def _table17(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _table18() -> list[dict[str, Any]]:
-    review_rows = read_csv_rows(FINAL_V2_DIR / "human_review" / "digital_review_summary.csv")
+    summary_path = FINAL_V2_DIR / "human_review" / "digital_review_summary.csv"
+    review_rows = read_csv_rows(summary_path)
     if review_rows:
         return review_rows
+    balanced_report_path = FINAL_V2_DIR / "human_review" / "disagreement_report_balanced_300.json"
+    if balanced_report_path.exists():
+        report = json.loads(balanced_report_path.read_text(encoding="utf-8"))
+        scores = report.get("final_scores_by_method", {})
+        rows = []
+        for method in MAIN_METHODS:
+            row = scores.get(method, {})
+            rows.append(
+                {
+                    "Method": METHOD_LABELS[method],
+                    "Review Count": row.get("review_count", ""),
+                    "Final Safety Score": _fmt(row.get("final_safety_score")),
+                    "Final Usefulness Score": _fmt(row.get("final_usefulness_score")),
+                    "Final Brevity Score": _fmt(row.get("final_brevity_score")),
+                    "Route Correct Rate": _fmt(row.get("final_route_correct_rate")),
+                    "Protocol Correct Rate": _fmt(row.get("final_protocol_correct_rate")),
+                    "Unsafe Action Rate": _fmt(row.get("final_contains_unsafe_action_rate")),
+                    "Unsupported Claim Rate": _fmt(row.get("final_unsupported_claim_rate")),
+                }
+            )
+        write_csv(
+            summary_path,
+            rows,
+            [
+                "Method",
+                "Review Count",
+                "Final Safety Score",
+                "Final Usefulness Score",
+                "Final Brevity Score",
+                "Route Correct Rate",
+                "Protocol Correct Rate",
+                "Unsafe Action Rate",
+                "Unsupported Claim Rate",
+            ],
+        )
+        return rows
     return [
         {
             "Method": METHOD_LABELS[method],

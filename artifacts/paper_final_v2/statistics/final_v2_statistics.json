@@ -1,0 +1,98 @@
+{
+  "ablation_rows": 8,
+  "bootstrap_rows": 80,
+  "data_counts": {
+    "clean_dev.jsonl": 500,
+    "clean_test.jsonl": 1000,
+    "robustness_dev.jsonl": 1500,
+    "robustness_test.jsonl": 3000
+  },
+  "de_multiseed_rows": [
+    {
+      "best_fitness": 0.5319729166666667,
+      "best_metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_best_metrics.json",
+      "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_curve.csv",
+      "high_risk_recall": 0.7239583333333334,
+      "n_trials": 160,
+      "p95_latency_ms": 55.756299996573944,
+      "policy_path": "build/eval/final_v2/de_multiseed/seed_7/policy_de_seed_7.json",
+      "route_accuracy_clean": 0.556,
+      "route_accuracy_robust": 0.612,
+      "seed": 7,
+      "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_trials.csv",
+      "unsafe_response_rate": 0.0
+    },
+    {
+      "best_fitness": 0.5319729166666667,
+      "best_metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_best_metrics.json",
+      "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_curve.csv",
+      "high_risk_recall": 0.7239583333333334,
+      "n_trials": 160,
+      "p95_latency_ms": 37.96090000105323,
+      "policy_path": "build/eval/final_v2/de_multiseed/seed_21/policy_de_seed_21.json",
+      "route_accuracy_clean": 0.556,
+      "route_accuracy_robust": 0.612,
+      "seed": 21,
+      "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_trials.csv",
+      "unsafe_response_rate": 0.0
+    },
+    {
+      "best_fitness": 0.5319729166666667,
+      "best_metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_best_metrics.json",
+      "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_curve.csv",
+      "high_risk_recall": 0.7239583333333334,
+      "n_trials": 160,
+      "p95_latency_ms": 34.52780000225175,
+      "policy_path": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+      "route_accuracy_clean": 0.556,
+      "route_accuracy_robust": 0.612,
+      "seed": 42,
+      "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_trials.csv",
+      "unsafe_response_rate": 0.0
+    },
+    {
+      "best_fitness": 0.5319729166666667,
+      "best_metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_best_metrics.json",
+      "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_curve.csv",
+      "high_risk_recall": 0.7239583333333334,
+      "n_trials": 160,
+      "p95_latency_ms": 34.75580000667833,
+      "policy_path": "build/eval/final_v2/de_multiseed/seed_2024/policy_de_seed_2024.json",
+      "route_accuracy_clean": 0.556,
+      "route_accuracy_robust": 0.612,
+      "seed": 2024,
+      "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_trials.csv",
+      "unsafe_response_rate": 0.0
+    },
+    {
+      "best_fitness": 0.5319729166666667,
+      "best_metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_best_metrics.json",
+      "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_curve.csv",
+      "high_risk_recall": 0.7239583333333334,
+      "n_trials": 160,
+      "p95_latency_ms": 35.459600003378,
+      "policy_path": "build/eval/final_v2/de_multiseed/seed_2026/policy_de_seed_2026.json",
+      "route_accuracy_clean": 0.556,
+      "route_accuracy_robust": 0.612,
+      "seed": 2026,
+      "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_trials.csv",
+      "unsafe_response_rate": 0.0
+    }
+  ],
+  "eval_dir": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2",
+  "final_metrics_rows": 8,
+  "generated_at": "2026-06-27T03:00:56.685861+00:00",
+  "outputs": {
+    "ablation_metrics_csv": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\ablation_metrics.csv",
+    "bootstrap_ci_csv": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\bootstrap_ci.csv",
+    "bootstrap_ci_md": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\bootstrap_ci.md",
+    "de_multiseed_summary_csv": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\de_multiseed_summary.csv",
+    "de_multiseed_summary_md": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\de_multiseed_summary.md",
+    "final_metrics_by_method_csv": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\final_metrics_by_method.csv",
+    "final_metrics_by_method_json": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\final_metrics_by_method.json",
+    "perturbation_metrics_csv": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\perturbation_metrics.csv",
+    "statistics_warnings_md": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\statistics_warnings.md"
+  },
+  "perturbation_rows": 12,
+  "warnings": []
+}

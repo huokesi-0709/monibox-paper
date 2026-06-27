@@ -1,0 +1,17 @@
+{
+  "best_trial": {
+    "constraint_violation": 0.22604166666666659,
+    "error": "",
+    "eval_id": 1,
+    "fitness": 0.5319729166666667,
+    "high_risk_recall": 0.7239583333333334,
+    "p95_latency_ms": 37.96090000105323,
+    "route_accuracy_clean": 0.556,
+    "route_accuracy_robust": 0.612,
+    "unsafe_response_rate": 0.0,
+    "unsupported_claim_rate": 0.0,
+    "weights": "{\"w_quality\": 0.18131386591739082, \"w_redundancy\": 0.010983814930075938, \"w_risk\": 0.21397756441878457, \"w_sparse\": 0.11784270431342521, \"w_tag\": 0.13550534090299235, \"w_unsafe\": 0.16538323372771924, \"w_vec\": 0.3441170005057859}"
+  },
+  "created_at": "2026-06-26T15:55:42.086920+00:00",
+  "output_policy_path": "build/eval/final_v2/de_multiseed/seed_21/policy_de_seed_21.json"
+}

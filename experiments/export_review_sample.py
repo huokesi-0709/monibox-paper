@@ -409,15 +409,365 @@ def export_review_sample(
     }
 
 
+BALANCED_METHODS = ("vanilla-rag", "rag-guard", "hsc-rag-manual", "hsc-rag-de")
+BALANCED_PERTURBATIONS = ("clean", "filler_noise", "long_context", "repetition")
+
+
+def _read_data_v2_index() -> dict[str, dict[str, Any]]:
+    index: dict[str, dict[str, Any]] = {}
+    data_dir = PROJECT_ROOT / "benchmarks" / "data_v2"
+    for filename in (
+        "clean_dev.jsonl",
+        "robustness_dev.jsonl",
+        "clean_test.jsonl",
+        "robustness_test.jsonl",
+    ):
+        path = data_dir / filename
+        if not path.exists():
+            continue
+        with path.open("r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                if isinstance(row, dict) and row.get("id"):
+                    index[str(row["id"])] = row
+    return index
+
+
+def _load_predictions_balanced(eval_dir: Path) -> tuple[list[dict[str, Any]], list[str]]:
+    warnings: list[str] = []
+    metadata = _read_data_v2_index()
+    rows: list[dict[str, Any]] = []
+    paths = []
+    for suite in ("clean", "robust"):
+        paths.extend(sorted((eval_dir / suite).glob("*_predictions.jsonl")))
+    if not paths:
+        raise FileNotFoundError(f"no clean/robust predictions found under {eval_dir}")
+
+    for path in paths:
+        method_from_file = _method_from_path(path)
+        if method_from_file not in BALANCED_METHODS:
+            continue
+        with path.open("r", encoding="utf-8") as f:
+            for lineno, line in enumerate(f, start=1):
+                if not line.strip():
+                    continue
+                try:
+                    prediction = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    warnings.append(f"skip invalid JSONL {path}:line {lineno}: {exc}")
+                    continue
+                if not isinstance(prediction, dict):
+                    continue
+                case = dict(_case(prediction))
+                case_id = str(prediction.get("case_id") or case.get("id") or "")
+                if not case_id:
+                    warnings.append(f"skip prediction missing case_id {path}:line {lineno}")
+                    continue
+                if case_id in metadata:
+                    case.update(metadata[case_id])
+                method = _normalize_method(prediction.get("method")) or method_from_file
+                if method not in BALANCED_METHODS:
+                    method = method_from_file
+                item = {
+                    "case_id": case_id,
+                    "method": method,
+                    "query": case.get("query") or prediction.get("query") or "",
+                    "clean_query": case.get("clean_query") or "",
+                    "perturbation_type": case.get("perturbation_type") or "",
+                    "scenario_family": case.get("scenario_family") or "",
+                    "body_part": case.get("body_part") or "",
+                    "hazard_context": case.get("hazard_context") or "",
+                    "evidence_level": case.get("evidence_level") or "",
+                    "expected_route": case.get("expected_route") or "",
+                    "expected_protocol_id": case.get("expected_protocol_id") or "",
+                    "expected_primary_intent": case.get("expected_primary_intent") or "",
+                    "risk_level": case.get("risk_level") or "",
+                    "unsafe_actions": case.get("unsafe_actions") or [],
+                    "system_reply": prediction.get("reply") or "",
+                    "trace_summary": _trace_summary(prediction),
+                    "source_path": str(path),
+                    "source_line": lineno,
+                    "unsafe_query_hits": _unsafe_hits(case),
+                }
+                item["coverage_tags"] = _categories({"case": case, **prediction})
+                rows.append(item)
+    if not rows:
+        raise RuntimeError(f"no reviewable predictions loaded from {eval_dir}")
+    return rows, warnings
+
+
+def _balanced_targets(total: int, values: tuple[str, ...]) -> dict[str, int]:
+    base = total // len(values)
+    extra = total % len(values)
+    return {value: base + (1 if idx < extra else 0) for idx, value in enumerate(values)}
+
+
+def _select_balanced_rows(
+    rows: list[dict[str, Any]],
+    target_size: int,
+    balanced_perturbation: bool,
+    balanced_method: bool,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    if not balanced_perturbation and not balanced_method:
+        return _select_review_rows(rows, target_size)
+
+    method_targets = _balanced_targets(target_size, BALANCED_METHODS)
+    perturb_targets = _balanced_targets(target_size, BALANCED_PERTURBATIONS)
+    selected: list[dict[str, Any]] = []
+    selected_keys: set[tuple[str, str]] = set()
+    method_counts: Counter[str] = Counter()
+    perturb_counts: Counter[str] = Counter()
+    category_counts: Counter[str] = Counter()
+
+    def add(row: dict[str, Any]) -> bool:
+        key = (str(row.get("case_id") or ""), str(row.get("method") or ""))
+        method = str(row.get("method") or "")
+        perturbation = str(row.get("perturbation_type") or "")
+        if key in selected_keys:
+            return False
+        if balanced_method and method_counts[method] >= method_targets.get(method, 0):
+            return False
+        if balanced_perturbation and perturb_counts[perturbation] >= perturb_targets.get(perturbation, 0):
+            return False
+        selected.append(row)
+        selected_keys.add(key)
+        method_counts[method] += 1
+        perturb_counts[perturbation] += 1
+        for category in row.get("coverage_tags") or []:
+            category_counts[category] += 1
+        return True
+
+    def diverse_order(candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        buckets: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+        for row in sorted(candidates, key=_sort_key):
+            buckets[
+                (
+                    str(row.get("risk_level") or ""),
+                    str(row.get("scenario_family") or ""),
+                )
+            ].append(row)
+        bucket_keys = sorted(
+            buckets,
+            key=lambda key: (
+                {"critical": 0, "high": 1, "medium": 2, "low": 3}.get(key[0], 4),
+                key[1],
+            ),
+        )
+        ordered: list[dict[str, Any]] = []
+        while bucket_keys:
+            next_keys: list[tuple[str, str]] = []
+            for key in bucket_keys:
+                bucket = buckets[key]
+                if bucket:
+                    ordered.append(bucket.pop(0))
+                if bucket:
+                    next_keys.append(key)
+            bucket_keys = next_keys
+        return ordered
+
+    sorted_rows = sorted(
+        rows,
+        key=lambda row: (
+            str(row.get("perturbation_type") or ""),
+            str(row.get("method") or ""),
+            *_sort_key(row),
+        ),
+    )
+
+    if balanced_method and balanced_perturbation:
+        cell_order = [
+            (perturbation, method)
+            for perturbation in BALANCED_PERTURBATIONS
+            for method in BALANCED_METHODS
+        ]
+        cell_base = target_size // len(cell_order)
+        cell_extra = target_size % len(cell_order)
+        for cell_index, (perturbation, method) in enumerate(cell_order):
+            cell_target = cell_base + (1 if cell_index < cell_extra else 0)
+            candidates = [
+                row
+                for row in sorted_rows
+                if row.get("perturbation_type") == perturbation and row.get("method") == method
+            ]
+            for row in diverse_order(candidates):
+                if sum(
+                    1
+                    for selected_row in selected
+                    if selected_row.get("perturbation_type") == perturbation
+                    and selected_row.get("method") == method
+                ) >= cell_target:
+                    break
+                add(row)
+
+    while len(selected) < min(target_size, len(rows)):
+        candidates = [
+            row
+            for row in sorted_rows
+            if (str(row.get("case_id") or ""), str(row.get("method") or "")) not in selected_keys
+        ]
+        if not candidates:
+            break
+        candidates.sort(
+            key=lambda row: (
+                method_counts[str(row.get("method") or "")]
+                - method_targets.get(str(row.get("method") or ""), 0),
+                perturb_counts[str(row.get("perturbation_type") or "")]
+                - perturb_targets.get(str(row.get("perturbation_type") or ""), 0),
+                *_sort_key(row),
+            )
+        )
+        if not add(candidates[0]):
+            break
+
+    for idx, row in enumerate(selected, start=1):
+        row["review_id"] = f"R{idx:04d}"
+    return selected, dict(category_counts)
+
+
+def _write_markdown_balanced(path: Path, rows: list[dict[str, Any]], warnings: list[str]) -> None:
+    lines: list[str] = [
+        "# balanced_300 数字复核样本",
+        "",
+        "用途：数字复核 / 辅助误差分析，不是专家人工评估。",
+        "",
+        "角色建议：A=应急安全风险视角；B=NLP/系统评估视角；C=分歧裁决。",
+        "",
+        "标注字段建议：route_correct, protocol_correct, primary_risk_correct, contains_unsafe_action, unsupported_claim, overconfident, safety_score, usefulness_score, brevity_score, disagreement_type, notes。",
+        "",
+    ]
+    if warnings:
+        lines.extend(["## Warnings", ""])
+        lines.extend(f"- {warning}" for warning in warnings)
+        lines.append("")
+    for row in rows:
+        lines.append(f"## {row['review_id']} | {row['case_id']} | {row['method']}")
+        lines.append("")
+        for field in (
+            "perturbation_type",
+            "risk_level",
+            "scenario_family",
+            "expected_route",
+            "expected_protocol_id",
+            "expected_primary_intent",
+        ):
+            lines.append(f"- {field}: `{row.get(field)}`")
+        lines.append(f"- unsafe_actions: {', '.join(str(x) for x in row.get('unsafe_actions') or [])}")
+        lines.append("")
+        lines.extend(["**query**", "", "```text", str(row.get("query") or ""), "```", ""])
+        lines.extend(["**system_reply**", "", "```text", str(row.get("system_reply") or ""), "```", ""])
+        lines.extend(["**trace_summary**", "", "```json"])
+        lines.append(json.dumps(row.get("trace_summary") or {}, ensure_ascii=False, indent=2, sort_keys=True))
+        lines.extend(["```", "", "**标注模板**", "", "```json"])
+        lines.append(
+            json.dumps(
+                {
+                    "review_id": row["review_id"],
+                    "case_id": row["case_id"],
+                    "method": row["method"],
+                    "route_correct": None,
+                    "protocol_correct": None,
+                    "primary_risk_correct": None,
+                    "contains_unsafe_action": None,
+                    "unsupported_claim": None,
+                    "overconfident": None,
+                    "safety_score": None,
+                    "usefulness_score": None,
+                    "brevity_score": None,
+                    "disagreement_type": "",
+                    "notes": "",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        lines.extend(["```", ""])
+    path.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
+
+
+def _write_review_readme(out_path: Path) -> None:
+    readme = out_path / "README.md"
+    readme.write_text(
+        "\n".join(
+            [
+                "# final_v2 balanced digital review",
+                "",
+                "这是数字复核 / 辅助误差分析，不是专家人工评估。",
+                "",
+                "balanced_300 目标覆盖 clean、filler_noise、long_context、repetition 各 75 条，并覆盖 vanilla-rag、rag-guard、hsc-rag-manual、hsc-rag-de 各 75 条。",
+                "",
+                "该结果用于辅助误差分析，不替代全量 test 自动指标。",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+
+def export_review_sample(
+    eval_dir: str | Path = "build/eval/final_v2",
+    out_dir: str | Path = "build/eval/final_v2/human_review",
+    target_size: int = 300,
+    balanced_perturbation: bool = False,
+    balanced_method: bool = False,
+    output_prefix: str = "balanced_300",
+) -> dict[str, Any]:
+    eval_path = _resolve(eval_dir)
+    out_path = _resolve(out_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+
+    rows, warnings = _load_predictions_balanced(eval_path)
+    selected, category_counts = _select_balanced_rows(
+        rows,
+        target_size,
+        balanced_perturbation=balanced_perturbation,
+        balanced_method=balanced_method,
+    )
+
+    output_jsonl = out_path / f"review_sample_{output_prefix}.jsonl"
+    output_md = out_path / f"review_sample_{output_prefix}.md"
+    _write_jsonl(output_jsonl, selected)
+    _write_markdown_balanced(output_md, selected, warnings)
+    _write_review_readme(out_path)
+
+    return {
+        "eval_dir": str(eval_path),
+        "out_dir": str(out_path),
+        "total_prediction_rows": len(rows),
+        "sample_count": len(selected),
+        "category_counts": category_counts,
+        "perturbation_type_counts": dict(Counter(str(row.get("perturbation_type") or "") for row in selected)),
+        "method_counts": dict(Counter(str(row.get("method") or "") for row in selected)),
+        "risk_level_counts": dict(Counter(str(row.get("risk_level") or "") for row in selected)),
+        "outputs": {
+            "review_sample_jsonl": str(output_jsonl),
+            "review_sample_md": str(output_md),
+            "readme": str(out_path / "README.md"),
+        },
+        "warnings": warnings,
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Export test prediction samples for digital review.")
-    parser.add_argument("--eval-dir", default="build/eval/test")
-    parser.add_argument("--out-dir", default="build/eval/test/human_review")
-    parser.add_argument("--target-size", type=int, default=DEFAULT_TARGET_SIZE)
+    parser.add_argument("--eval-dir", default="build/eval/final_v2")
+    parser.add_argument("--out-dir", default="build/eval/final_v2/human_review")
+    parser.add_argument("--target-size", type=int, default=300)
+    parser.add_argument("--balanced-perturbation", action="store_true")
+    parser.add_argument("--balanced-method", action="store_true")
+    parser.add_argument("--output-prefix", default="balanced_300")
     args = parser.parse_args(argv)
 
     try:
-        report = export_review_sample(args.eval_dir, args.out_dir, args.target_size)
+        report = export_review_sample(
+            eval_dir=args.eval_dir,
+            out_dir=args.out_dir,
+            target_size=args.target_size,
+            balanced_perturbation=args.balanced_perturbation,
+            balanced_method=args.balanced_method,
+            output_prefix=args.output_prefix,
+        )
     except Exception as exc:
         print(f"[export_review_sample][ERROR] {exc}")
         return 1

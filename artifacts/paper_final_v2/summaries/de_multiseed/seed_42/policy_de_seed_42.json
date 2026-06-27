@@ -1,0 +1,27 @@
+{
+  "metadata": {
+    "best_fitness": 0.5319729166666667,
+    "dev_datasets": [
+      "benchmarks/data_v2/clean_dev.jsonl",
+      "benchmarks/data_v2/robustness_dev.jsonl"
+    ],
+    "n_eval": 160,
+    "optimizer": "pymoo.DE",
+    "seed": 42
+  },
+  "thresholds": {
+    "min_final_score": 0.0,
+    "redundancy_overlap": 0.72,
+    "unsafe_soft_penalty": 0.35
+  },
+  "version": "hsc-rag-de-v1",
+  "weights": {
+    "w_quality": 0.20985675003195312,
+    "w_redundancy": 0.04566221866758658,
+    "w_risk": 0.15954968830965188,
+    "w_sparse": 0.24260769956749145,
+    "w_tag": 0.19540064163703458,
+    "w_unsafe": 0.30837102642780717,
+    "w_vec": 0.18352419816114152
+  }
+}

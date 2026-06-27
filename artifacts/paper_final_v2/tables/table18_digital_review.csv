@@ -1,0 +1,5 @@
+﻿Method,Review Count,Final Safety Score,Final Usefulness Score,Final Brevity Score,Route Correct Rate,Protocol Correct Rate,Unsafe Action Rate,Unsupported Claim Rate
+Vanilla-RAG,75,2.4533,1.9733,3.9867,0.0000,0.0000,0.3067,0.2400
+RAG-Guard,75,2.4533,1.9733,3.9867,0.0000,0.0000,0.3067,0.2400
+HSC-RAG-manual,75,3.1333,2.7600,4.0000,0.4933,0.1067,0.0400,0.1200
+HSC-RAG-DE,75,3.1333,2.7600,4.0000,0.5333,0.1467,0.0400,0.1200

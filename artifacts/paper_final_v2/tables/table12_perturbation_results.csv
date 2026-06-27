@@ -1,0 +1,5 @@
+﻿Method,Clean RouteAcc,Filler Noise RouteAcc,Long Context RouteAcc,Repetition RouteAcc
+Vanilla-RAG,0.0670,0.0670,0.0670,0.0670
+RAG-Guard,0.0670,0.0670,0.0670,0.0670
+HSC-RAG-manual,0.5490,0.5490,0.5490,0.7250
+HSC-RAG-DE,0.5490,0.5490,0.5490,0.7250

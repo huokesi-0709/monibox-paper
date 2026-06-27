@@ -1,0 +1,981 @@
+{
+  "artifacts": {
+    "ablation": {
+      "without_de_optimization": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_de_optimization_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_de_optimization",
+          "avg_latency_ms": 15.519927400018787,
+          "avg_response_length": 22.286333333333335,
+          "created_at": "2026-06-26T20:25:33.389914+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "without_de_optimization",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.602100000483915,
+          "policy": "scoring/policy_manual.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_de_optimization_summary.json"
+      },
+      "without_guard": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_guard_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_guard",
+          "avg_latency_ms": 15.53329940004187,
+          "avg_response_length": 22.235666666666667,
+          "created_at": "2026-06-26T20:24:35.556581+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "safety_guard|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "without_guard",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.59899999870686,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_guard_summary.json"
+      },
+      "without_input_normalization": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_input_normalization_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_input_normalization",
+          "avg_latency_ms": 15.418207333321334,
+          "avg_response_length": 22.413666666666668,
+          "created_at": "2026-06-26T20:16:45.733307+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "input_normalization|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "without_input_normalization",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 35.299399998621084,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_input_normalization_summary.json"
+      },
+      "without_low_evidence": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_low_evidence_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_low_evidence",
+          "avg_latency_ms": 15.459650933303541,
+          "avg_response_length": 23.580666666666666,
+          "created_at": "2026-06-26T20:23:37.641087+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "low_evidence_routing|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "without_low_evidence",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.318600002734456,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0003333333333333333
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_low_evidence_summary.json"
+      },
+      "without_multi_intent": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_multi_intent_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_multi_intent",
+          "avg_latency_ms": 38.52950970008775,
+          "avg_response_length": 22.203333333333333,
+          "created_at": "2026-06-26T20:18:53.046332+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "multi_intent_extraction|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 1.0,
+          "high_risk_recall": 0.0,
+          "method": "without_multi_intent",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 47.06990000704536,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.067,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 1.0,
+          "route_accuracy": 0.067,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_multi_intent_summary.json"
+      },
+      "without_negation": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_negation_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_negation",
+          "avg_latency_ms": 14.579337399959817,
+          "avg_response_length": 21.947333333333333,
+          "created_at": "2026-06-26T20:19:48.021639+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "negation_handling|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.17493472584856395,
+          "high_risk_recall": 0.825065274151436,
+          "method": "without_negation",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.47479999886127,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.15166666666666667,
+          "robust_consistency": 0.582,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_negation_summary.json"
+      },
+      "without_protocol_gate": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_protocol_gate_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_protocol_gate",
+          "avg_latency_ms": 34.137854899987964,
+          "avg_response_length": 22.226,
+          "created_at": "2026-06-26T20:21:42.167941+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "protocol_gate|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.33289817232375984,
+          "high_risk_recall": 0.6671018276762402,
+          "method": "without_protocol_gate",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 42.88489999453304,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 0.912,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_protocol_gate_summary.json"
+      },
+      "without_safety_rerank": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_safety_rerank_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "without_safety_rerank",
+          "avg_latency_ms": 15.506659833314188,
+          "avg_response_length": 22.248333333333335,
+          "created_at": "2026-06-26T20:22:40.020718+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "safety_rerank|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "without_safety_rerank",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.203399998659734,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0003333333333333333
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\ablation\\without_safety_rerank_summary.json"
+      }
+    },
+    "clean": {
+      "hsc-rag-de": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\hsc-rag-de_predictions.jsonl",
+        "prediction_rows": 1000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 28.009732499805978,
+          "avg_response_length": 21.348,
+          "created_at": "2026-06-26T20:10:04.596037+00:00",
+          "data": "benchmarks/data_v2/clean_test.jsonl",
+          "disabled_modules": "de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.2911227154046997,
+          "high_risk_recall": 0.7088772845953003,
+          "method": "hsc-rag-de",
+          "num_cases": 1000,
+          "num_evidence_eval_cases": 1000,
+          "num_high_risk_cases": 766,
+          "num_predictions": 1000,
+          "num_primary_intent_eval_cases": 1000,
+          "num_protocol_eval_cases": 1000,
+          "num_route_eval_cases": 1000,
+          "p95_latency_ms": 34.99629999714671,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.549,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.138,
+          "robust_consistency": 0.0,
+          "route_accuracy": 0.549,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\hsc-rag-de_summary.json"
+      },
+      "hsc-rag-manual": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\hsc-rag-manual_predictions.jsonl",
+        "prediction_rows": 1000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 28.439733799874375,
+          "avg_response_length": 21.348,
+          "created_at": "2026-06-26T20:09:31.519015+00:00",
+          "data": "benchmarks/data_v2/clean_test.jsonl",
+          "disabled_modules": "de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.2911227154046997,
+          "high_risk_recall": 0.7088772845953003,
+          "method": "hsc-rag-manual",
+          "num_cases": 1000,
+          "num_evidence_eval_cases": 1000,
+          "num_high_risk_cases": 766,
+          "num_predictions": 1000,
+          "num_primary_intent_eval_cases": 1000,
+          "num_protocol_eval_cases": 1000,
+          "num_route_eval_cases": 1000,
+          "p95_latency_ms": 36.47540000383742,
+          "policy": "scoring/policy_manual.json",
+          "primary_intent_accuracy": 0.549,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.138,
+          "robust_consistency": 0.0,
+          "route_accuracy": 0.549,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\hsc-rag-manual_summary.json"
+      },
+      "rag-guard": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\rag-guard_predictions.jsonl",
+        "prediction_rows": 1000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 41.214109299915435,
+          "avg_response_length": 24.965,
+          "created_at": "2026-06-26T20:08:58.017241+00:00",
+          "data": "benchmarks/data_v2/clean_test.jsonl",
+          "disabled_modules": "input_normalization|multi_intent_extraction|negation_handling|protocol_gate|safety_rerank|low_evidence_routing|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 1.0,
+          "high_risk_recall": 0.0,
+          "method": "rag-guard",
+          "num_cases": 1000,
+          "num_evidence_eval_cases": 1000,
+          "num_high_risk_cases": 766,
+          "num_predictions": 1000,
+          "num_primary_intent_eval_cases": 1000,
+          "num_protocol_eval_cases": 1000,
+          "num_route_eval_cases": 1000,
+          "p95_latency_ms": 99.4831999996677,
+          "policy": "",
+          "primary_intent_accuracy": 0.067,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 0.0,
+          "route_accuracy": 0.067,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.006
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\rag-guard_summary.json"
+      },
+      "vanilla-rag": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\vanilla-rag_predictions.jsonl",
+        "prediction_rows": 1000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 41.917976900229405,
+          "avg_response_length": 24.965,
+          "created_at": "2026-06-26T20:08:11.661810+00:00",
+          "data": "benchmarks/data_v2/clean_test.jsonl",
+          "disabled_modules": "input_normalization|multi_intent_extraction|negation_handling|protocol_gate|safety_rerank|low_evidence_routing|safety_guard|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 1.0,
+          "high_risk_recall": 0.0,
+          "method": "vanilla-rag",
+          "num_cases": 1000,
+          "num_evidence_eval_cases": 1000,
+          "num_high_risk_cases": 766,
+          "num_predictions": 1000,
+          "num_primary_intent_eval_cases": 1000,
+          "num_protocol_eval_cases": 1000,
+          "num_route_eval_cases": 1000,
+          "p95_latency_ms": 99.70900000189431,
+          "policy": "",
+          "primary_intent_accuracy": 0.067,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 0.0,
+          "route_accuracy": 0.067,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.006
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\clean\\vanilla-rag_summary.json"
+      }
+    },
+    "de_multiseed": {
+      "seed_2024": {
+        "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_curve.csv",
+        "curve_path_exists": true,
+        "curve_path_sha256": "a51090ecccb78d2d90615fb7c13b3529768044866225f459ca0732ce5388a424",
+        "metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_best_metrics.json",
+        "metrics_path_exists": true,
+        "metrics_path_sha256": "c6ab8c9445f141652fbc2999de1e633b33c1ea4347a654245b4e2e45f91c399f",
+        "policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\policy_de_seed_2024.json",
+        "policy_path_exists": true,
+        "policy_path_sha256": "1717ae369846936410975238c210a5ac1401bd9cf1d1f0dec2a8c77df5682b50",
+        "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2024\\de_trials.csv",
+        "trials_path_exists": true,
+        "trials_path_sha256": "5e4de90dc9162939ec2b6567a222137616024c5bd9d3e6d2cfb2d0cde5b520fd"
+      },
+      "seed_2026": {
+        "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_curve.csv",
+        "curve_path_exists": true,
+        "curve_path_sha256": "b750726bdddc78cba36d150afd568367c3d17dae9dd1284c91655cb8816ac9b6",
+        "metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_best_metrics.json",
+        "metrics_path_exists": true,
+        "metrics_path_sha256": "3b232d391a9488b9794752d99232bba69466b9be96dc3e1c05bf1daf2d2cb509",
+        "policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\policy_de_seed_2026.json",
+        "policy_path_exists": true,
+        "policy_path_sha256": "2bd7ca5c1da1407d7feaadd092341ecc94601271de74e27ba91599f9be375a09",
+        "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_2026\\de_trials.csv",
+        "trials_path_exists": true,
+        "trials_path_sha256": "a4328a99ff5c93f992daf6c3e1b3fe4f9ddd079e0854a06c9a7770f27d8b4ac0"
+      },
+      "seed_21": {
+        "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_curve.csv",
+        "curve_path_exists": true,
+        "curve_path_sha256": "2495d993bd029b0a4b951a7c1ed281be4ca1892e51b992dae4c5aa829f7ffe4c",
+        "metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_best_metrics.json",
+        "metrics_path_exists": true,
+        "metrics_path_sha256": "b57be27359c0b65f4559a2f568b3277e9d118de6df85a39a23afba45c9d4eb13",
+        "policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\policy_de_seed_21.json",
+        "policy_path_exists": true,
+        "policy_path_sha256": "9e0f12b65170cf8187552047ad48c714f13747360419ff7c63a1d896356ecdf0",
+        "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_21\\de_trials.csv",
+        "trials_path_exists": true,
+        "trials_path_sha256": "a4c54f1928f5f5f9fb4783169bb66bce827cf23cb3a539ab474a09fe59856044"
+      },
+      "seed_42": {
+        "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_curve.csv",
+        "curve_path_exists": true,
+        "curve_path_sha256": "66454c01fb2e55a969d0c84734365180367a541c35e2b1ea1d81e749a3f3379a",
+        "metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_best_metrics.json",
+        "metrics_path_exists": true,
+        "metrics_path_sha256": "9d4e6ee0c0dac2def7953ea45d96b5f2a9412e8ee5c15f0c9281a4c4c8eecb49",
+        "policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\policy_de_seed_42.json",
+        "policy_path_exists": true,
+        "policy_path_sha256": "1329fb2abc61da124abc6c0af449baeb38dc87cdf0c86676264d5003493e5624",
+        "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_42\\de_trials.csv",
+        "trials_path_exists": true,
+        "trials_path_sha256": "592cad977955fab3fd2635c67aa2213dd7d9cb637d4e4dfb08d29acf156e78c4"
+      },
+      "seed_7": {
+        "curve_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_curve.csv",
+        "curve_path_exists": true,
+        "curve_path_sha256": "c7137122d63ffeaa4f9505a786fe9cc9d206e79d33378db64ff413f05a4cd0de",
+        "metrics_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_best_metrics.json",
+        "metrics_path_exists": true,
+        "metrics_path_sha256": "56cbdc367559876c18a06f7c7a4b3898fbe7e060a9fa054be7403f52b3a454a6",
+        "policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\policy_de_seed_7.json",
+        "policy_path_exists": true,
+        "policy_path_sha256": "bd21d70de9881a9f4fb67c90edece4c236602266611d2d04d540725b181ca42e",
+        "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\de_multiseed\\seed_7\\de_trials.csv",
+        "trials_path_exists": true,
+        "trials_path_sha256": "c68be7f8ca447adc93dc80bc44226c0579aa7f634a212ca8b329457156528492"
+      }
+    },
+    "robust": {
+      "hsc-rag-de": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\hsc-rag-de_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 15.635863166722023,
+          "avg_response_length": 22.235666666666667,
+          "created_at": "2026-06-26T20:15:48.153811+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "hsc-rag-de",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.865999994508456,
+          "policy": "build/eval/final_v2/de_multiseed/seed_42/policy_de_seed_42.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\hsc-rag-de_summary.json"
+      },
+      "hsc-rag-manual": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\hsc-rag-manual_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 15.628582433377838,
+          "avg_response_length": 22.286333333333335,
+          "created_at": "2026-06-26T20:14:49.940228+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 0.1836379460400348,
+          "high_risk_recall": 0.8163620539599652,
+          "method": "hsc-rag-manual",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 34.611800001584925,
+          "policy": "scoring/policy_manual.json",
+          "primary_intent_accuracy": 0.6076666666666667,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.14,
+          "robust_consistency": 0.589,
+          "route_accuracy": 0.6076666666666667,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.0
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\hsc-rag-manual_summary.json"
+      },
+      "rag-guard": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\rag-guard_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 33.91307119993144,
+          "avg_response_length": 24.47833333333333,
+          "created_at": "2026-06-26T20:13:51.785463+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "input_normalization|multi_intent_extraction|negation_handling|protocol_gate|safety_rerank|low_evidence_routing|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 1.0,
+          "high_risk_recall": 0.0,
+          "method": "rag-guard",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 42.01620000094408,
+          "policy": "",
+          "primary_intent_accuracy": 0.067,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 1.0,
+          "route_accuracy": 0.067,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.006333333333333333
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\rag-guard_summary.json"
+      },
+      "vanilla-rag": {
+        "prediction_exists": true,
+        "prediction_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\vanilla-rag_predictions.jsonl",
+        "prediction_rows": 3000,
+        "summary": {
+          "ablation": "",
+          "avg_latency_ms": 34.0555089000239,
+          "avg_response_length": 24.47833333333333,
+          "created_at": "2026-06-26T20:11:58.303024+00:00",
+          "data": "benchmarks/data_v2/robustness_test.jsonl",
+          "disabled_modules": "input_normalization|multi_intent_extraction|negation_handling|protocol_gate|safety_rerank|low_evidence_routing|safety_guard|de_optimization",
+          "evidence_hit_at_3": 0.0,
+          "high_risk_miss_rate": 1.0,
+          "high_risk_recall": 0.0,
+          "method": "vanilla-rag",
+          "num_cases": 3000,
+          "num_evidence_eval_cases": 3000,
+          "num_high_risk_cases": 2298,
+          "num_predictions": 3000,
+          "num_primary_intent_eval_cases": 3000,
+          "num_protocol_eval_cases": 3000,
+          "num_route_eval_cases": 3000,
+          "p95_latency_ms": 41.545899999618996,
+          "policy": "",
+          "primary_intent_accuracy": 0.067,
+          "profile": "paper_eval",
+          "protocol_false_trigger_rate": 0.0,
+          "protocol_hit_rate": 0.0,
+          "robust_consistency": 1.0,
+          "route_accuracy": 0.067,
+          "unsafe_response_rate": 0.0,
+          "unsupported_claim_rate": 0.006333333333333333
+        },
+        "summary_exists": true,
+        "summary_path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\robust\\vanilla-rag_summary.json"
+      }
+    }
+  },
+  "cases": {
+    "selected_cases_json": {
+      "bytes": 44827,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\cases\\selected_cases.json",
+      "sha256": "56c4065240e960159da19510a7b04170b3ec8bca47a3228f2bf6644a4176dbb7"
+    },
+    "selected_cases_md": {
+      "bytes": 30906,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\cases\\selected_cases.md",
+      "sha256": "88fd3cf4bc33ea64527c46a713c0486f8d44c19987d9f8d3c6166c5fc96da626"
+    }
+  },
+  "data_files": {
+    "clean_dev.jsonl": {
+      "bytes": 583811,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2\\clean_dev.jsonl",
+      "samples": 500,
+      "sha256": "6f80e75379baa5fc4456e069bcc90b2e0319585fc9d5e91e0b940c98957c62cf"
+    },
+    "clean_test.jsonl": {
+      "bytes": 1167879,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2\\clean_test.jsonl",
+      "samples": 1000,
+      "sha256": "eba714082cdbc81d388323eb08f929a6146e28851adf636f009188350adeece3"
+    },
+    "robustness_dev.jsonl": {
+      "bytes": 1903771,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2\\robustness_dev.jsonl",
+      "samples": 1500,
+      "sha256": "2a4b34ffd30040b9426cb9ccab407d396289377c84a4c30333001a509642367d"
+    },
+    "robustness_test.jsonl": {
+      "bytes": 3808319,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2\\robustness_test.jsonl",
+      "samples": 3000,
+      "sha256": "520d1d1c59add129628e592bad6e731ef0307c7ca89738803ad473311f93403c"
+    }
+  },
+  "dataset": "HSC-DisasterBench-v2",
+  "digital_review": {
+    "balanced_report_json": {
+      "bytes": 96180,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\human_review\\disagreement_report_balanced_300.json",
+      "sha256": "7106c99c269d30668491a45f4a4eb29d4858322f974409ecb0ff8019c8d6bd5f"
+    },
+    "balanced_report_md": {
+      "bytes": 4804,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\human_review\\disagreement_report_balanced_300.md",
+      "sha256": "47ece75a292751578b41dce9b28f55c1470a84f4415cf3102fce574255225015"
+    },
+    "summary_csv": {
+      "bytes": 429,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\human_review\\digital_review_summary.csv",
+      "sha256": "69419107f8aa11e6f8051272f3b1da16820beac2e1db13ae3d40e6eea3428518"
+    },
+    "table18_csv": {
+      "bytes": 429,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table18_digital_review.csv",
+      "sha256": "69419107f8aa11e6f8051272f3b1da16820beac2e1db13ae3d40e6eea3428518"
+    },
+    "table18_md": {
+      "bytes": 583,
+      "exists": true,
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table18_digital_review.md",
+      "sha256": "0dd4644dadbf2cd9d45a2226d6836ff208c0cac7e674118473488f9d0f98eecc"
+    }
+  },
+  "eval_dir": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2",
+  "generated_at": "2026-06-27T03:01:09.326067+00:00",
+  "methods": {
+    "ablation": [
+      "without_input_normalization",
+      "without_multi_intent",
+      "without_negation",
+      "without_protocol_gate",
+      "without_safety_rerank",
+      "without_low_evidence",
+      "without_guard",
+      "without_de_optimization"
+    ],
+    "de_multiseed": [
+      "seed_7",
+      "seed_21",
+      "seed_42",
+      "seed_2024",
+      "seed_2026"
+    ],
+    "main": [
+      "vanilla-rag",
+      "rag-guard",
+      "hsc-rag-manual",
+      "hsc-rag-de"
+    ]
+  },
+  "outputs": {
+    "cases": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\cases",
+    "manifest": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\final_run_manifest.json",
+    "paper_evidence_manifest": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\paper_evidence_manifest.json",
+    "readme": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\README.md",
+    "statistics": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\statistics\\final_v2_statistics.json",
+    "tables": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables"
+  },
+  "scripts": {
+    "benchmarks/audit_dataset_v2.py": {
+      "bytes": 24755,
+      "exists": true,
+      "path": "benchmarks\\audit_dataset_v2.py",
+      "sha256": "566d8fa0fbc549d2fe12d6a52fbdab9ec6531e398a5dc419f76b5940fed543e3"
+    },
+    "benchmarks/generate_dataset_v2.py": {
+      "bytes": 28239,
+      "exists": true,
+      "path": "benchmarks\\generate_dataset_v2.py",
+      "sha256": "060d5aba35c3b67c889a9dd8b82e53dded2aba91486619cef37319bff7597eb1"
+    },
+    "experiments/export_final_v2_cases.py": {
+      "bytes": 9004,
+      "exists": true,
+      "path": "experiments\\export_final_v2_cases.py",
+      "sha256": "2f8f2cd8fcf6598770604f7dda27377683d44a738d840189742545f0f18e3f5e"
+    },
+    "experiments/export_final_v2_manifest.py": {
+      "bytes": 7456,
+      "exists": true,
+      "path": "experiments\\export_final_v2_manifest.py",
+      "sha256": "4274706c848df5a032e9c96665bb43edefd9a061f7f3cfb3618605224526635c"
+    },
+    "experiments/export_final_v2_statistics.py": {
+      "bytes": 26083,
+      "exists": true,
+      "path": "experiments\\export_final_v2_statistics.py",
+      "sha256": "12b9f9a771b256cd02c5cd13f54f65e8e57babe1ba1066a4a494d631ee728e94"
+    },
+    "experiments/export_final_v2_tables.py": {
+      "bytes": 16018,
+      "exists": true,
+      "path": "experiments\\export_final_v2_tables.py",
+      "sha256": "7284de9eca454bf420355518c7f62423a2d5e5f5f8e85a27bf92d7095b554928"
+    },
+    "scripts/run_final_v2_ablation.sh": {
+      "bytes": 2299,
+      "exists": true,
+      "path": "scripts\\run_final_v2_ablation.sh",
+      "sha256": "82fbc490938c015de6cd7369bfefd38187a11626f120e9bae8fee8247e659a1f"
+    },
+    "scripts/run_final_v2_all.sh": {
+      "bytes": 1395,
+      "exists": true,
+      "path": "scripts\\run_final_v2_all.sh",
+      "sha256": "2a83e6c4afcab08037741705cc8da8ff6d65df40ac286c0994465060bbddc643"
+    },
+    "scripts/run_final_v2_clean_eval.sh": {
+      "bytes": 2049,
+      "exists": true,
+      "path": "scripts\\run_final_v2_clean_eval.sh",
+      "sha256": "4b696791dbd0a7f8f2fc3b07711699b298e6bffb96ff830d4405b09c9b99a401"
+    },
+    "scripts/run_final_v2_de_multiseed.sh": {
+      "bytes": 2234,
+      "exists": true,
+      "path": "scripts\\run_final_v2_de_multiseed.sh",
+      "sha256": "46c9014d05aa7fd15cf0451972e2b02330ea7f3be44b559ca3e0cb85cc170d5e"
+    },
+    "scripts/run_final_v2_robust_eval.sh": {
+      "bytes": 2067,
+      "exists": true,
+      "path": "scripts\\run_final_v2_robust_eval.sh",
+      "sha256": "aaaf6b89c8ddff310c57ff8e262ac3bca6a6e454afa719dd7c649f09d00e8c44"
+    }
+  },
+  "tables": {
+    "paper_tables_all": {
+      "csv": {
+        "bytes": 0,
+        "exists": false,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\paper_tables_all.csv",
+        "sha256": ""
+      },
+      "markdown": {
+        "bytes": 11235,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\paper_tables_all.md",
+        "sha256": "1c87eef44a79d5dfa69b71e7751b7076167a2e628fe6fcdfffff31dcd854228b"
+      }
+    },
+    "table11_overall_performance": {
+      "csv": {
+        "bytes": 371,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table11_overall_performance.csv",
+        "sha256": "8b3d85404f7dff6f5bef62db084dd8a8b08befad32d21d14c3937714d2981ae2"
+      },
+      "markdown": {
+        "bytes": 525,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table11_overall_performance.md",
+        "sha256": "fe236a3b2e4470f4e69de7efc9e7d61f4b0f2264591a072c3d112de35f186de8"
+      }
+    },
+    "table12_perturbation_results": {
+      "csv": {
+        "bytes": 254,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table12_perturbation_results.csv",
+        "sha256": "9257ad822040d0c3867fe9fcc7a9a9492967b7ddace03d63d13d901991ebf0af"
+      },
+      "markdown": {
+        "bytes": 344,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table12_perturbation_results.md",
+        "sha256": "9aa8aad4580d6a080e8f85f78a5cc935bbc5077d5ca8ecbdd5563f3801c51682"
+      }
+    },
+    "table13_ablation_results": {
+      "csv": {
+        "bytes": 771,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table13_ablation_results.csv",
+        "sha256": "cb91761508c6598f2090e88143b5014fc82c85d683aa44622c9806dede823e09"
+      },
+      "markdown": {
+        "bytes": 1005,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table13_ablation_results.md",
+        "sha256": "f93ee82e200761e920ac828a584118d6f7e60f2f1771b5337fe648f9c59447bc"
+      }
+    },
+    "table14_de_effect": {
+      "csv": {
+        "bytes": 297,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table14_de_effect.csv",
+        "sha256": "eb7677f543412f42ae11c34f280e4764290e9569cddbc52d8e4cecc45826bfee"
+      },
+      "markdown": {
+        "bytes": 459,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table14_de_effect.md",
+        "sha256": "08335ad7f038b0a07f4172d79db7c9650aa691d0bbc33d90f15092fb1a9c2490"
+      }
+    },
+    "table15_safety_metrics": {
+      "csv": {
+        "bytes": 371,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table15_safety_metrics.csv",
+        "sha256": "f593f5d880890ffa445dbbdcb747dcc337ce6189a99f15847b0877167686d862"
+      },
+      "markdown": {
+        "bytes": 525,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table15_safety_metrics.md",
+        "sha256": "9029380b349509d90871474db7123094745f772e00ea15c27e7764038a4e6de4"
+      }
+    },
+    "table16_efficiency": {
+      "csv": {
+        "bytes": 179,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table16_efficiency.csv",
+        "sha256": "6b316247b66d389cffb71137fe9da9893781b83ff6332fe58abccce894747f57"
+      },
+      "markdown": {
+        "bytes": 253,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table16_efficiency.md",
+        "sha256": "81a9fbe6f9b2644ac5ca7b1936c3b25003e73a4736bedbf6829b24cd0ac97516"
+      }
+    },
+    "table17_bootstrap_ci": {
+      "csv": {
+        "bytes": 4532,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table17_bootstrap_ci.csv",
+        "sha256": "11da7fba2a929ead7d6bc8a65574990c1a42570ca54453b9146219e0f7b59ef8"
+      },
+      "markdown": {
+        "bytes": 5870,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table17_bootstrap_ci.md",
+        "sha256": "044be696b945c6cb10733321b1993de7dc9ff78c1f7fada142f9035e0c2c896a"
+      }
+    },
+    "table18_digital_review": {
+      "csv": {
+        "bytes": 429,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table18_digital_review.csv",
+        "sha256": "69419107f8aa11e6f8051272f3b1da16820beac2e1db13ae3d40e6eea3428518"
+      },
+      "markdown": {
+        "bytes": 583,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table18_digital_review.md",
+        "sha256": "0dd4644dadbf2cd9d45a2226d6836ff208c0cac7e674118473488f9d0f98eecc"
+      }
+    },
+    "table_dataset_distribution": {
+      "csv": {
+        "bytes": 1371,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table_dataset_distribution.csv",
+        "sha256": "00a3fd9e062bbcfb99e9a693e2f1c78742a68009b493c9bc07e8395caad74529"
+      },
+      "markdown": {
+        "bytes": 1357,
+        "exists": true,
+        "path": "D:\\projects\\monibox-Y\\monibox\\build\\eval\\final_v2\\tables\\table_dataset_distribution.md",
+        "sha256": "c581ae9f5b2ac788ad1a935e70fdb316e590476f6e94b531fca985be17fbac6c"
+      }
+    }
+  },
+  "warnings": []
+}

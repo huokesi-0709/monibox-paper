@@ -1,9 +1,9 @@
 # final_v2 Evidence Package
 
-- Generated at: 2026-06-27T02:21:20.597843+00:00
+- Generated at: 2026-06-27T03:01:09.326067+00:00
 - Dataset: HSC-DisasterBench-v2
 - Eval dir: `D:\projects\monibox-Y\monibox\build\eval\final_v2`
-- Warnings: 1
+- Warnings: 0
 
 ## Key Files
 

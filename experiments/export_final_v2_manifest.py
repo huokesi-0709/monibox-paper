@@ -171,6 +171,8 @@ def export_manifest() -> dict[str, Any]:
         "cases": _case_records(),
         "digital_review": {
             "summary_csv": _file_record(FINAL_V2_DIR / "human_review" / "digital_review_summary.csv"),
+            "balanced_report_json": _file_record(FINAL_V2_DIR / "human_review" / "disagreement_report_balanced_300.json"),
+            "balanced_report_md": _file_record(FINAL_V2_DIR / "human_review" / "disagreement_report_balanced_300.md"),
             "table18_csv": _file_record(FINAL_V2_DIR / "tables" / "table18_digital_review.csv"),
             "table18_md": _file_record(FINAL_V2_DIR / "tables" / "table18_digital_review.md"),
         },
