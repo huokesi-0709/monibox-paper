@@ -77,6 +77,21 @@ def read_csv_rows(path: str | Path) -> list[dict[str, Any]]:
         return [dict(row) for row in csv.DictReader(f)]
 
 
+def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
+    resolved = resolve(path)
+    if not resolved.exists():
+        return []
+    rows: list[dict[str, Any]] = []
+    with resolved.open("r", encoding="utf-8") as f:
+        for line in f:
+            text = line.strip()
+            if text:
+                data = json.loads(text)
+                if isinstance(data, dict):
+                    rows.append(data)
+    return rows
+
+
 def write_json(path: str | Path, obj: dict[str, Any]) -> None:
     resolved = resolve(path)
     resolved.parent.mkdir(parents=True, exist_ok=True)
@@ -94,6 +109,19 @@ def write_csv(path: str | Path, rows: list[dict[str, Any]], fieldnames: list[str
         writer.writeheader()
         for row in rows:
             writer.writerow({field: row.get(field, "") for field in fieldnames})
+
+
+def write_markdown_table(path: str | Path, rows: list[dict[str, Any]], fieldnames: list[str]) -> None:
+    resolved = resolve(path)
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "| " + " | ".join(fieldnames) + " |",
+        "| " + " | ".join("---" for _ in fieldnames) + " |",
+    ]
+    for row in rows:
+        cells = [str(row.get(field, "")).replace("|", "\\|") for field in fieldnames]
+        lines.append("| " + " | ".join(cells) + " |")
+    resolved.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def prediction_summary_pair(directory: str, name: str) -> dict[str, str]:

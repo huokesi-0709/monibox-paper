@@ -60,7 +60,7 @@
       "suite": "robust"
     }
   ],
-  "generated_at": "2026-06-26T12:39:24.277655+00:00",
+  "generated_at": "2026-06-26T12:55:11.139822+00:00",
   "input_dir": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\data_v2",
   "passed": true,
   "perturbation_distribution": {
