@@ -1,0 +1,36 @@
+{
+  "label_status": {
+    "adjudicated": 14,
+    "consensus": 788
+  },
+  "num_cases": 802,
+  "perturbation_type": {
+    "clean_control": 142,
+    "multi_intent": 417,
+    "negation_conflict": 239,
+    "out_of_scope": 4
+  },
+  "primary_intent": {
+    "aftershock_or_collapse_hazard": 28,
+    "altered_consciousness_or_head_injury": 67,
+    "crush_injury": 25,
+    "dehydration_or_resource_deprivation": 31,
+    "hypothermia": 49,
+    "low_battery": 13,
+    "out_of_scope": 4,
+    "psychological_distress": 53,
+    "respiratory_distress": 152,
+    "severe_bleeding_or_shock": 121,
+    "trapped_or_entrapment": 133,
+    "trauma_or_fracture": 126
+  },
+  "risk_level": {
+    "critical": 152,
+    "high": 423,
+    "low": 20,
+    "medium": 207
+  },
+  "source_type": {
+    "template_generated": 802
+  }
+}

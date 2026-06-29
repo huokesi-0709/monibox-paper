@@ -1,0 +1,263 @@
+- template_id: clean_resp_001
+  pattern: "我{resp_term}"
+  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气, 憋得厉害]}
+  positive_risks: [respiratory_distress]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: respiratory_distress
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_respiratory_distress
+  notes: "呼吸困难 clean 对照。"
+
+- template_id: clean_resp_002
+  pattern: "{scene_term}，我{resp_term}"
+  slots: {scene_term: [灰尘很大, 空气很闷, 周围烟很多], resp_term: [喘不上气, 呼吸困难, 吸不上气]}
+  positive_risks: [respiratory_distress]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: respiratory_distress
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_respiratory_distress
+  notes: "带场景线索的呼吸 clean 对照。"
+
+- template_id: clean_bleeding_001
+  pattern: "我{bleeding_term}"
+  slots: {bleeding_term: [一直流血, 血止不住, 出了很多血, 伤口冒血]}
+  positive_risks: [severe_bleeding_or_shock]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: severe_bleeding_or_shock
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_bleeding_control
+  notes: "严重出血 clean 对照。"
+
+- template_id: clean_bleeding_002
+  pattern: "{body_part}{bleeding_term}"
+  slots: {body_part: [手上, 腿上, 胳膊上], bleeding_term: [一直流血, 出了很多血, 血止不住]}
+  positive_risks: [severe_bleeding_or_shock]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: severe_bleeding_or_shock
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_bleeding_control
+  notes: "带身体部位的出血 clean 对照。"
+
+- template_id: clean_trauma_001
+  pattern: "我{injury_term}"
+  slots: {injury_term: [腿很疼, 胳膊肿了, 脚扭了, 手腕疼]}
+  positive_risks: [trauma_or_fracture]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: trauma_or_fracture
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_trauma_or_fracture
+  notes: "普通创伤 clean 对照，疼痛需人工筛选语境。"
+
+- template_id: clean_trauma_002
+  pattern: "{body_part}被{injury_cause}，现在{injury_term}"
+  slots: {body_part: [腿, 胳膊, 手, 脚], injury_cause: [砸到, 扭到, 撞到], injury_term: [很疼, 肿了, 动起来疼]}
+  positive_risks: [trauma_or_fracture]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: trauma_or_fracture
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_trauma_or_fracture
+  notes: "带受伤机制的创伤 clean 对照。"
+
+- template_id: clean_crush_001
+  pattern: "我{crush_term}"
+  slots: {crush_term: [腿被压住了, 手被重物压着, 胳膊被卡住了]}
+  positive_risks: [crush_injury]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: crush_injury
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_crush_injury
+  notes: "挤压伤 clean 对照；中文依据待最终确认。"
+
+- template_id: clean_crush_002
+  pattern: "重物压着我的{body_part}，已经有一会儿了"
+  slots: {body_part: [腿, 手, 胳膊, 脚]}
+  positive_risks: [crush_injury]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: crush_injury
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_crush_injury
+  notes: "强调身体部位受压，不等同普通受困。"
+
+- template_id: clean_head_001
+  pattern: "我{head_term}"
+  slots: {head_term: [头晕想吐, 撞到头了, 眼前发黑, 意识有点不清楚]}
+  positive_risks: [altered_consciousness_or_head_injury]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: altered_consciousness_or_head_injury
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_head_or_consciousness
+  notes: "头伤/意识异常 clean 对照。"
+
+- template_id: clean_head_002
+  pattern: "头被{hit_term}，现在{head_term}"
+  slots: {hit_term: [砸到, 撞到, 碰到], head_term: [很晕, 想吐, 记不清刚才]}
+  positive_risks: [altered_consciousness_or_head_injury]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: altered_consciousness_or_head_injury
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_head_or_consciousness
+  notes: "带头部受伤机制的 clean 对照。"
+
+- template_id: clean_hypothermia_001
+  pattern: "我{cold_term}"
+  slots: {cold_term: [很冷, 冷得发抖, 衣服湿透了, 快冻僵了]}
+  positive_risks: [hypothermia]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: hypothermia
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_hypothermia
+  notes: "失温 clean 对照。"
+
+- template_id: clean_hypothermia_002
+  pattern: "这里{env_term}，我{cold_term}"
+  slots: {env_term: [很冷, 有冷风, 地上都是水], cold_term: [一直发抖, 浑身很冷, 衣服湿透]}
+  positive_risks: [hypothermia]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: hypothermia
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_hypothermia
+  notes: "带环境线索的失温 clean 对照。"
+
+- template_id: clean_panic_001
+  pattern: "我现在很{panic_term}"
+  slots: {panic_term: [害怕, 慌, 想哭, 脑子很乱]}
+  positive_risks: [psychological_distress]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: psychological_distress
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_psychological_support
+  notes: "心理压力 clean 对照。"
+
+- template_id: clean_panic_002
+  pattern: "我{panic_term}，不知道该怎么办"
+  slots: {panic_term: [很害怕, 很慌, 快崩溃了, 想哭]}
+  positive_risks: [psychological_distress]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: psychological_distress
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_psychological_support
+  notes: "带求助表达的心理压力 clean 对照。"
+
+- template_id: clean_trapped_001
+  pattern: "我{trapped_term}"
+  slots: {trapped_term: [被困住了, 出不去, 卡在里面, 门打不开]}
+  positive_risks: [trapped_or_entrapment]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: trapped_or_entrapment
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_trapped_or_entrapment
+  notes: "受困 clean 对照；中文依据待最终确认。"
+
+- template_id: clean_trapped_002
+  pattern: "我在{place_term}里{trapped_term}"
+  slots: {place_term: [废墟, 房间, 楼梯间, 车里], trapped_term: [出不去, 被困着, 卡住了]}
+  positive_risks: [trapped_or_entrapment]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: trapped_or_entrapment
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_trapped_or_entrapment
+  notes: "带地点线索的受困 clean 对照。"
+
+- template_id: clean_aftershock_001
+  pattern: "{scene_term}"
+  slots: {scene_term: [又有余震, 墙还在裂, 上面在掉东西, 楼好像要塌]}
+  positive_risks: [aftershock_or_collapse_hazard]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: aftershock_or_collapse_hazard
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_aftershock_or_collapse_hazard
+  notes: "余震/坍塌 clean 对照；中文依据待最终确认。"
+
+- template_id: clean_aftershock_002
+  pattern: "刚停下来又{scene_term}"
+  slots: {scene_term: [开始晃了, 有东西掉下来, 听到墙在裂]}
+  positive_risks: [aftershock_or_collapse_hazard]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: aftershock_or_collapse_hazard
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_aftershock_or_collapse_hazard
+  notes: "当前环境危险 clean 对照。"
+
+- template_id: clean_dehydration_001
+  pattern: "我{resource_term}"
+  slots: {resource_term: [被困很久很渴, 没水, 没吃的, 嘴很干没水]}
+  positive_risks: [dehydration_or_resource_deprivation]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: dehydration_or_resource_deprivation
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_dehydration_or_resource_deprivation
+  notes: "资源匮乏 clean 对照，避免仅凭单独'很渴'脱离灾害受困语境；中文依据待最终确认。"
+
+- template_id: clean_dehydration_002
+  pattern: "我被困很久了，{resource_term}"
+  slots: {resource_term: [没有水, 没有食物, 很渴, 没力气]}
+  positive_risks: [dehydration_or_resource_deprivation]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: dehydration_or_resource_deprivation
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_dehydration_or_resource_deprivation
+  notes: "长时间受困语境下的资源匮乏 clean 对照。"
+
+- template_id: clean_low_battery_001
+  pattern: "手机{battery_term}"
+  slots: {battery_term: [快没电了, 电量很低, 快关机了, 只剩百分之五]}
+  positive_risks: []
+  negated_risks: []
+  operational_constraints: [low_battery]
+  primary_intent: low_battery
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: null
+  notes: "operational-only clean 对照，不计入主医学/环境路由评测。"
+
+- template_id: clean_out_of_scope_001
+  pattern: "你能帮我{task_term}吗"
+  slots: {task_term: [写诗, 做股票分析, 玩游戏, 写作业答案]}
+  positive_risks: [out_of_scope]
+  negated_risks: []
+  operational_constraints: []
+  primary_intent: out_of_scope
+  secondary_intents: []
+  should_not_trigger: []
+  expected_route: route_out_of_scope
+  notes: "域外 clean 对照。"

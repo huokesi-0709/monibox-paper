@@ -1,0 +1,307 @@
+{
+  "dev_ratio": 0.4,
+  "input": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\gold\\rair_gold_all.jsonl",
+  "leakage_rule": "all cases with the same canonical_id stay in one split",
+  "seed": 20260630,
+  "splits": {
+    "dev": {
+      "canonical_ids": [
+        "case_clean_aftershock_002",
+        "case_clean_bleeding_001",
+        "case_clean_crush_001",
+        "case_clean_head_002",
+        "case_clean_hypothermia_002",
+        "case_clean_low_battery_001",
+        "case_clean_out_of_scope_001",
+        "case_clean_resp_002",
+        "case_clean_trauma_002",
+        "case_multi_aftershock_injury_003",
+        "case_multi_aftershock_trapped_001",
+        "case_multi_bleeding_panic_002",
+        "case_multi_crush_resp_001",
+        "case_multi_crush_resp_003",
+        "case_multi_crush_resp_004",
+        "case_multi_dehydration_panic_004",
+        "case_multi_head_bleeding_001",
+        "case_multi_head_trapped_004",
+        "case_multi_hypothermia_battery_003",
+        "case_multi_hypothermia_trapped_002",
+        "case_multi_hypothermia_trapped_003",
+        "case_multi_hypothermia_trapped_004",
+        "case_multi_resp_battery_004",
+        "case_multi_resp_bleeding_001",
+        "case_multi_resp_hypothermia_003",
+        "case_neg_bleeding_panic_005",
+        "case_neg_bleeding_trapped_004",
+        "case_neg_crush_aftershock_005",
+        "case_neg_crush_trapped_001",
+        "case_neg_dehydration_pain_003",
+        "case_neg_dehydration_trapped_001",
+        "case_neg_head_injury_pain_001",
+        "case_neg_hypothermia_pain_001",
+        "case_neg_hypothermia_trapped_003",
+        "case_neg_respiratory_bleeding_004"
+      ],
+      "label_distribution": {
+        "label_status": {
+          "adjudicated": 3,
+          "consensus": 319
+        },
+        "perturbation_type": {
+          "clean_control": 77,
+          "multi_intent": 154,
+          "negation_conflict": 87,
+          "out_of_scope": 4
+        },
+        "primary_intent": {
+          "aftershock_or_collapse_hazard": 15,
+          "altered_consciousness_or_head_injury": 18,
+          "crush_injury": 3,
+          "dehydration_or_resource_deprivation": 6,
+          "hypothermia": 18,
+          "low_battery": 4,
+          "out_of_scope": 4,
+          "psychological_distress": 12,
+          "respiratory_distress": 79,
+          "severe_bleeding_or_shock": 31,
+          "trapped_or_entrapment": 60,
+          "trauma_or_fracture": 72
+        },
+        "risk_level": {
+          "critical": 79,
+          "high": 145,
+          "low": 11,
+          "medium": 87
+        },
+        "source_type": {
+          "template_generated": 322
+        }
+      },
+      "num_canonical_ids": 35,
+      "num_cases": 322
+    },
+    "test": {
+      "canonical_ids": [
+        "case_clean_aftershock_001",
+        "case_clean_bleeding_002",
+        "case_clean_crush_002",
+        "case_clean_dehydration_001",
+        "case_clean_dehydration_002",
+        "case_clean_head_001",
+        "case_clean_hypothermia_001",
+        "case_clean_panic_001",
+        "case_clean_panic_002",
+        "case_clean_resp_001",
+        "case_clean_trapped_001",
+        "case_clean_trapped_002",
+        "case_clean_trauma_001",
+        "case_multi_aftershock_resp_004",
+        "case_multi_aftershock_trapped_002",
+        "case_multi_bleeding_battery_001",
+        "case_multi_bleeding_panic_001",
+        "case_multi_bleeding_panic_003",
+        "case_multi_bleeding_panic_004",
+        "case_multi_boundary_risk_001",
+        "case_multi_boundary_risk_002",
+        "case_multi_crush_battery_002",
+        "case_multi_crush_resp_002",
+        "case_multi_dehydration_battery_001",
+        "case_multi_dehydration_hypothermia_003",
+        "case_multi_dehydration_trapped_002",
+        "case_multi_head_battery_003",
+        "case_multi_head_bleeding_002",
+        "case_multi_head_bleeding_003",
+        "case_multi_head_bleeding_004",
+        "case_multi_head_panic_001",
+        "case_multi_head_panic_002",
+        "case_multi_hypothermia_trapped_001",
+        "case_multi_injury_aftershock_003",
+        "case_multi_injury_dehydration_004",
+        "case_multi_injury_panic_001",
+        "case_multi_injury_trapped_002",
+        "case_multi_panic_battery_004",
+        "case_multi_resp_battery_001",
+        "case_multi_resp_battery_002",
+        "case_multi_resp_battery_003",
+        "case_multi_resp_head_002",
+        "case_multi_resp_trapped_004",
+        "case_multi_trapped_battery_005",
+        "case_neg_bleeding_head_003",
+        "case_neg_bleeding_pain_001",
+        "case_neg_bleeding_wound_002",
+        "case_neg_crush_bleeding_003",
+        "case_neg_crush_head_004",
+        "case_neg_crush_pain_002",
+        "case_neg_dehydration_battery_002",
+        "case_neg_dehydration_hypothermia_004",
+        "case_neg_dehydration_panic_005",
+        "case_neg_head_injury_bleeding_002",
+        "case_neg_head_injury_crush_005",
+        "case_neg_head_injury_panic_003",
+        "case_neg_head_injury_trapped_004",
+        "case_neg_hypothermia_bleeding_002",
+        "case_neg_hypothermia_dehydration_005",
+        "case_neg_hypothermia_panic_004",
+        "case_neg_respiratory_hypothermia_005",
+        "case_neg_respiratory_panic_001",
+        "case_neg_respiratory_trapped_003"
+      ],
+      "label_distribution": {
+        "label_status": {
+          "adjudicated": 11,
+          "consensus": 469
+        },
+        "perturbation_type": {
+          "clean_control": 65,
+          "multi_intent": 263,
+          "negation_conflict": 152
+        },
+        "primary_intent": {
+          "aftershock_or_collapse_hazard": 13,
+          "altered_consciousness_or_head_injury": 49,
+          "crush_injury": 22,
+          "dehydration_or_resource_deprivation": 25,
+          "hypothermia": 31,
+          "low_battery": 9,
+          "psychological_distress": 41,
+          "respiratory_distress": 73,
+          "severe_bleeding_or_shock": 90,
+          "trapped_or_entrapment": 73,
+          "trauma_or_fracture": 54
+        },
+        "risk_level": {
+          "critical": 73,
+          "high": 278,
+          "low": 9,
+          "medium": 120
+        },
+        "source_type": {
+          "template_generated": 480
+        }
+      },
+      "num_canonical_ids": 63,
+      "num_cases": 480
+    },
+    "test_multi_intent": {
+      "canonical_ids": [
+        "case_multi_aftershock_resp_004",
+        "case_multi_aftershock_trapped_002",
+        "case_multi_bleeding_battery_001",
+        "case_multi_bleeding_panic_001",
+        "case_multi_bleeding_panic_003",
+        "case_multi_bleeding_panic_004",
+        "case_multi_boundary_risk_001",
+        "case_multi_boundary_risk_002",
+        "case_multi_crush_battery_002",
+        "case_multi_crush_resp_002",
+        "case_multi_dehydration_battery_001",
+        "case_multi_dehydration_hypothermia_003",
+        "case_multi_dehydration_trapped_002",
+        "case_multi_head_battery_003",
+        "case_multi_head_bleeding_002",
+        "case_multi_head_bleeding_003",
+        "case_multi_head_bleeding_004",
+        "case_multi_head_panic_001",
+        "case_multi_head_panic_002",
+        "case_multi_hypothermia_trapped_001",
+        "case_multi_injury_aftershock_003",
+        "case_multi_injury_dehydration_004",
+        "case_multi_injury_panic_001",
+        "case_multi_injury_trapped_002",
+        "case_multi_panic_battery_004",
+        "case_multi_resp_battery_001",
+        "case_multi_resp_battery_002",
+        "case_multi_resp_battery_003",
+        "case_multi_resp_head_002",
+        "case_multi_resp_trapped_004",
+        "case_multi_trapped_battery_005"
+      ],
+      "label_distribution": {
+        "label_status": {
+          "adjudicated": 8,
+          "consensus": 255
+        },
+        "perturbation_type": {
+          "multi_intent": 263
+        },
+        "primary_intent": {
+          "aftershock_or_collapse_hazard": 9,
+          "altered_consciousness_or_head_injury": 27,
+          "crush_injury": 9,
+          "dehydration_or_resource_deprivation": 8,
+          "hypothermia": 9,
+          "psychological_distress": 9,
+          "respiratory_distress": 69,
+          "severe_bleeding_or_shock": 60,
+          "trapped_or_entrapment": 45,
+          "trauma_or_fracture": 18
+        },
+        "risk_level": {
+          "critical": 69,
+          "high": 159,
+          "medium": 35
+        },
+        "source_type": {
+          "template_generated": 263
+        }
+      },
+      "num_canonical_ids": 31,
+      "num_cases": 263
+    },
+    "test_negation": {
+      "canonical_ids": [
+        "case_neg_bleeding_head_003",
+        "case_neg_bleeding_pain_001",
+        "case_neg_bleeding_wound_002",
+        "case_neg_crush_bleeding_003",
+        "case_neg_crush_head_004",
+        "case_neg_crush_pain_002",
+        "case_neg_dehydration_battery_002",
+        "case_neg_dehydration_hypothermia_004",
+        "case_neg_dehydration_panic_005",
+        "case_neg_head_injury_bleeding_002",
+        "case_neg_head_injury_crush_005",
+        "case_neg_head_injury_panic_003",
+        "case_neg_head_injury_trapped_004",
+        "case_neg_hypothermia_bleeding_002",
+        "case_neg_hypothermia_dehydration_005",
+        "case_neg_hypothermia_panic_004",
+        "case_neg_respiratory_hypothermia_005",
+        "case_neg_respiratory_panic_001",
+        "case_neg_respiratory_trapped_003"
+      ],
+      "label_distribution": {
+        "label_status": {
+          "adjudicated": 3,
+          "consensus": 149
+        },
+        "perturbation_type": {
+          "negation_conflict": 152
+        },
+        "primary_intent": {
+          "altered_consciousness_or_head_injury": 18,
+          "crush_injury": 9,
+          "dehydration_or_resource_deprivation": 9,
+          "hypothermia": 18,
+          "low_battery": 9,
+          "psychological_distress": 24,
+          "severe_bleeding_or_shock": 21,
+          "trapped_or_entrapment": 12,
+          "trauma_or_fracture": 32
+        },
+        "risk_level": {
+          "high": 78,
+          "low": 9,
+          "medium": 65
+        },
+        "source_type": {
+          "template_generated": 152
+        }
+      },
+      "num_canonical_ids": 19,
+      "num_cases": 152
+    }
+  },
+  "test_ratio": 0.6,
+  "usage_note": "DE and any parameter tuning may use dev only; test files are held out."
+}

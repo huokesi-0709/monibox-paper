@@ -1,0 +1,2 @@
+"""RAIR-RAG benchmark package."""
+

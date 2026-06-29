@@ -1,0 +1,78 @@
+- source_id: WHO_BEC_2018
+  title: "WHO-ICRC Basic Emergency Care: approach to the acutely ill and injured"
+  organization: "WHO / ICRC"
+  year: 2018
+  url: "https://www.who.int/publications/i/item/9789241513081"
+  download_url: "https://iris.who.int/server/api/core/bitstreams/63432b9f-8808-44c5-9692-cea717c0cbda/content"
+  local_path: "benchmarks/rair_rag/sources/raw/WHO_BEC_2018.pdf"
+  used_for:
+    - respiratory_distress
+    - severe_bleeding_or_shock
+    - trauma_or_fracture
+    - crush_injury
+    - altered_consciousness_or_head_injury
+    - hypothermia
+  notes: "用于风险识别依据，不将专业医疗操作直接转写为普通受困者指令。"
+
+- source_id: WHO_PFA_2011
+  title: "Psychological first aid: Guide for field workers"
+  organization: "WHO"
+  year: 2011
+  url: "https://www.who.int/publications/i/item/9789241548205"
+  download_url: "https://iris.who.int/server/api/core/bitstreams/e7e129fb-b306-496d-84a5-67bb70abc130/content"
+  local_path: "benchmarks/rair_rag/sources/raw/WHO_PFA_2011.pdf"
+  used_for:
+    - psychological_distress
+  notes: "用于稳定化与支持性互动依据，不用于心理诊断或治疗输出。"
+
+- source_id: MEM_CHINA
+  title: "中国应急管理部应急科普与自然灾害材料"
+  organization: "中华人民共和国应急管理部"
+  year: null
+  url: "https://www.mem.gov.cn/"
+  download_url: null
+  local_path: "benchmarks/rair_rag/sources/raw/MEM_CHINA/"
+  used_for:
+    - trapped_or_entrapment
+    - aftershock_or_collapse_hazard
+    - dehydration_or_resource_deprivation
+  notes: "待人工检索确认具体材料。优先使用应急管理部或其转载的官方科普文章。"
+
+- source_id: CEA_CHINA
+  title: "中国地震局防震减灾与地震自救科普材料"
+  organization: "中国地震局"
+  year: null
+  url: "http://www.cea.gov.cn/"
+  download_url: null
+  local_path: "benchmarks/rair_rag/sources/raw/CEA_CHINA/"
+  used_for:
+    - trapped_or_entrapment
+    - aftershock_or_collapse_hazard
+  notes: "待人工检索确认具体材料。可补充地方地震局、地震科普馆等官方来源并记录来源层级。"
+
+- source_id: CNEB_CHINA
+  title: "国家应急广播灾害现场公众应急科普材料"
+  organization: "国家应急广播"
+  year: null
+  url: "https://www.cneb.gov.cn/"
+  download_url: null
+  local_path: "benchmarks/rair_rag/sources/raw/CNEB_CHINA/"
+  used_for:
+    - trapped_or_entrapment
+    - aftershock_or_collapse_hazard
+    - psychological_distress
+  notes: "待人工检索确认具体材料。主要作为 reference_reply 与 safety_note 的公众语言风格参考。"
+
+- source_id: REDCROSS_CHINA
+  title: "中国红十字会公众急救与自救互救材料"
+  organization: "中国红十字会"
+  year: null
+  url: "https://www.redcross.org.cn/"
+  download_url: null
+  local_path: "benchmarks/rair_rag/sources/raw/REDCROSS_CHINA/"
+  used_for:
+    - severe_bleeding_or_shock
+    - trauma_or_fracture
+    - psychological_distress
+  notes: "待人工检索确认具体材料。用于界定普通人可执行动作边界，不输出专业医疗操作。"
+

@@ -1,0 +1,172 @@
+{
+  "all_disagreement_ids": [
+    "multi_0229",
+    "multi_0230",
+    "multi_0231",
+    "multi_0247",
+    "multi_0248",
+    "multi_0249",
+    "multi_0256",
+    "multi_0257",
+    "multi_0258",
+    "multi_0373",
+    "multi_0376",
+    "multi_0379",
+    "neg_0162",
+    "neg_0163",
+    "neg_0164"
+  ],
+  "missing_from_annotator_a": [],
+  "missing_from_annotator_b": [],
+  "multi_label": {
+    "negated_risks": {
+      "disagreement_ids": [],
+      "exact_match": 1.0,
+      "false_negative_labels": 0,
+      "false_positive_labels": 0,
+      "micro_f1": 1.0,
+      "micro_precision": 1.0,
+      "micro_recall": 1.0,
+      "num_cases": 817,
+      "num_disagreements": 0,
+      "true_positive_labels": 248
+    },
+    "operational_constraints": {
+      "disagreement_ids": [],
+      "exact_match": 1.0,
+      "false_negative_labels": 0,
+      "false_positive_labels": 0,
+      "micro_f1": 1.0,
+      "micro_precision": 1.0,
+      "micro_recall": 1.0,
+      "num_cases": 817,
+      "num_disagreements": 0,
+      "true_positive_labels": 130
+    },
+    "secondary_intents": {
+      "disagreement_ids": [
+        "multi_0247",
+        "multi_0248",
+        "multi_0249",
+        "multi_0373",
+        "multi_0376",
+        "multi_0379"
+      ],
+      "exact_match": 0.99265605875153,
+      "false_negative_labels": 6,
+      "false_positive_labels": 0,
+      "micro_f1": 0.989795918367347,
+      "micro_precision": 1.0,
+      "micro_recall": 0.9797979797979798,
+      "num_cases": 817,
+      "num_disagreements": 6,
+      "true_positive_labels": 291
+    },
+    "should_not_trigger": {
+      "disagreement_ids": [],
+      "exact_match": 1.0,
+      "false_negative_labels": 0,
+      "false_positive_labels": 0,
+      "micro_f1": 1.0,
+      "micro_precision": 1.0,
+      "micro_recall": 1.0,
+      "num_cases": 817,
+      "num_disagreements": 0,
+      "true_positive_labels": 248
+    }
+  },
+  "num_common_cases": 817,
+  "num_disagreement_cases": 15,
+  "single_label": {
+    "human_accept": {
+      "annotator_a_distribution": {
+        "needs_adjudication": 5,
+        "rewrite": 9,
+        "yes": 803
+      },
+      "annotator_b_distribution": {
+        "needs_adjudication": 14,
+        "rewrite": 9,
+        "yes": 794
+      },
+      "cohen_kappa": 0.7528901734104047,
+      "disagreement_ids": [
+        "multi_0229",
+        "multi_0230",
+        "multi_0231",
+        "multi_0256",
+        "multi_0257",
+        "multi_0258",
+        "neg_0162",
+        "neg_0163",
+        "neg_0164"
+      ],
+      "macro_f1": 0.8402267409287151,
+      "num_cases": 817,
+      "num_disagreements": 9,
+      "observed_agreement": 0.988984088127295
+    },
+    "perturbation_types": {
+      "annotator_a_distribution": {
+        "": 817
+      },
+      "annotator_b_distribution": {
+        "": 817
+      },
+      "cohen_kappa": 1.0,
+      "disagreement_ids": [],
+      "macro_f1": 1.0,
+      "num_cases": 817,
+      "num_disagreements": 0,
+      "observed_agreement": 1.0
+    },
+    "primary_intent": {
+      "annotator_a_distribution": {
+        "aftershock_or_collapse_hazard": 28,
+        "altered_consciousness_or_head_injury": 67,
+        "crush_injury": 25,
+        "dehydration_or_resource_deprivation": 35,
+        "hypothermia": 49,
+        "low_battery": 13,
+        "needs_adjudication": 2,
+        "out_of_scope": 4,
+        "psychological_distress": 50,
+        "respiratory_distress": 155,
+        "severe_bleeding_or_shock": 121,
+        "trapped_or_entrapment": 133,
+        "trauma_or_fracture": 135
+      },
+      "annotator_b_distribution": {
+        "aftershock_or_collapse_hazard": 28,
+        "altered_consciousness_or_head_injury": 67,
+        "crush_injury": 25,
+        "dehydration_or_resource_deprivation": 26,
+        "hypothermia": 49,
+        "low_battery": 13,
+        "needs_adjudication": 11,
+        "out_of_scope": 4,
+        "psychological_distress": 50,
+        "respiratory_distress": 155,
+        "severe_bleeding_or_shock": 121,
+        "trapped_or_entrapment": 133,
+        "trauma_or_fracture": 135
+      },
+      "cohen_kappa": 0.9873440815982294,
+      "disagreement_ids": [
+        "multi_0229",
+        "multi_0230",
+        "multi_0231",
+        "multi_0256",
+        "multi_0257",
+        "multi_0258",
+        "neg_0162",
+        "neg_0163",
+        "neg_0164"
+      ],
+      "macro_f1": 0.935396255698904,
+      "num_cases": 817,
+      "num_disagreements": 9,
+      "observed_agreement": 0.988984088127295
+    }
+  }
+}

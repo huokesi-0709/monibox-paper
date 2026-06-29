@@ -8,6 +8,12 @@ MoniBox / HSC-RAG-DE 是论文《面向灾害受困场景的鲁棒启发式安�
 
 本仓库主实验以 `profiles/paper_eval.yaml` 为准；API、frontend、voice、hardware 只用于 demo、联调和原型验证。论文结果以 `build/eval/` 下的离线实验产物为准。HSC-RAG-DE 当前更准确地说是“离线约束式应急回复生成方法”，不是依赖远端 LLM 的开放式聊天系统。
 
+## RAIR-RAG Scope Notice
+
+当前论文修订方向进一步聚焦于面向离线灾害应急 RAG 的风险感知输入路由。核心问题不是底层向量检索优化，而是 RAG 检索前的风险上下文构建：在协议门控和检索发生前，从用户输入中消解否定冲突、识别多意图输入，并生成更可靠的风险语义上下文。
+
+本修订把 `negation_conflict` 和 `multi_intent` 作为主研究对象。否定冲突用于降低被明确否定风险造成的协议误触发，多意图输入用于降低高风险意图漏检。Differential Evolution 仅作为离线 routing parameter calibration 工具，不是主要性能来源，也不改变 test split 的独立评估边界。
+
 ## Paper Reproduction Quickstart
 
 论文实验默认使用 `profiles/paper_eval.yaml`，该 profile 关闭远端 LLM、关闭 rewrite、关闭语音/硬件输出，并将 trace 写入 `build/eval/`，用于离线、确定性、可复现实验。

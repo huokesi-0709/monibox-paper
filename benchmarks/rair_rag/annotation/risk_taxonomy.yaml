@@ -1,0 +1,294 @@
+risk_labels:
+  respiratory_distress:
+    category: medical_life_threatening
+    priority: 1.00
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Airway and breathing risk recognition"
+    positive_triggers:
+      - "喘不上气"
+      - "喘不过气"
+      - "呼吸困难"
+      - "吸不上气"
+      - "窒息"
+      - "缺氧"
+      - "憋得厉害"
+      - "胸闷"
+    negatable: true
+    default_route: route_respiratory_distress
+    notes: "路由优先级最高或并列最高。WHO BEC 仅作为气道/呼吸风险识别依据，不把专业医疗操作直接转成普通受困者指令。'胸闷'存在争议，需结合喘不上气、缺氧、被压、烟尘、持续加重等上下文。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理。"
+      - "典型否定：不是喘不上气、没有呼吸困难、没有窒息感。被明确否定后不应触发 route_respiratory_distress。"
+      - "若与心理恐慌共现，呼吸困难通常作为 primary_intent，心理压力作为 secondary_intent。"
+
+  severe_bleeding_or_shock:
+    category: medical_life_threatening
+    priority: 0.95
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Circulation, external bleeding, and shock risk recognition"
+    positive_triggers:
+      - "流血"
+      - "出血"
+      - "血止不住"
+      - "很多血"
+      - "喷血"
+      - "冒血"
+      - "休克"
+      - "脸色发白"
+      - "发冷出汗"
+    negatable: true
+    default_route: route_bleeding_control
+    notes: "高于普通创伤。WHO BEC 仅支持严重出血/休克风险识别；不要把专业止血、输液、抗休克等医疗操作转成普通受困者指令。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理。"
+      - "典型否定：没流血、没有出血、血已经止住。被明确否定后不应触发 route_bleeding_control。"
+      - "自相矛盾样本如'没流血但血止不住'需人工仲裁，不自动判定。"
+
+  trauma_or_fracture:
+    category: medical_non_life_threatening
+    priority: 0.78
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Trauma and fracture risk recognition"
+    positive_triggers:
+      - "受伤"
+      - "骨折"
+      - "断了"
+      - "扭伤"
+      - "肿了"
+      - "变形"
+      - "砸到"
+      - "麻了"
+      - "动不了"
+      - "疼"
+      - "痛"
+    negatable: true
+    default_route: route_trauma_or_fracture
+    notes: "'疼'和'痛'很宽，不能单独作为高危医学风险；需结合身体部位、受伤机制、砸到、变形、肿胀、麻木、无法活动等上下文。若出现严重出血、头伤、意识改变或挤压伤，应让更高优先级标签主导。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理，作为普通创伤/骨折路由。"
+      - "典型否定：没受伤、不疼、没骨折、还能动。被明确否定后不应触发 route_trauma_or_fracture。"
+      - "边界：单纯'好痛'信息不足，可作为弱触发或待上下文确认。"
+
+  crush_injury:
+    category: medical_life_threatening
+    priority: 0.92
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Crush injury risk recognition"
+      - source_id: CEA_CHINA
+        section: "待人工检索确认具体材料"
+    positive_triggers:
+      - "被压"
+      - "压住"
+      - "重物压着"
+      - "挤压"
+      - "埋住"
+      - "卡住"
+      - "腿被压"
+      - "手被压"
+    negatable: true
+    default_route: route_crush_injury
+    notes: "可同时包含医学挤压伤风险和受困环境风险。若表达重点是身体部位被重物长时间压迫，crush_injury 优先；若重点是无法离开但无肢体受压，trapped_or_entrapment 优先。"
+    review_status: pending_source_confirmation
+    review_notes:
+      - "保留 keep；category 合理。中文依据需待人工检索确认具体材料。"
+      - "典型否定：没被压、没有压住、只是被困没有压到身体。被明确否定后不应触发 route_crush_injury。"
+      - "不要输出专业医疗处置；WHO BEC 仅用于识别挤压伤高风险上下文。"
+
+  altered_consciousness_or_head_injury:
+    category: medical_life_threatening
+    priority: 0.90
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Altered mental status and head injury risk recognition"
+    positive_triggers:
+      - "头晕"
+      - "意识不清"
+      - "昏迷"
+      - "快晕了"
+      - "眼前发黑"
+      - "撞到头"
+      - "头被砸"
+      - "想吐"
+      - "记不清"
+    negatable: true
+    default_route: route_head_or_consciousness
+    notes: "头部外伤、意识改变、昏迷倾向优先级高于普通疼痛。'想吐'单独出现较宽，需结合头部撞击、意识异常、严重眩晕等上下文。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理。"
+      - "典型否定：没头晕、没撞到头、意识清楚、没晕。被明确否定后不应触发 route_head_or_consciousness。"
+      - "若与普通创伤共现，应以本标签作为更高优先级医学风险。"
+
+  hypothermia:
+    category: medical_life_threatening
+    priority: 0.82
+    guideline_basis:
+      - source_id: WHO_BEC_2018
+        section: "Exposure and hypothermia risk recognition"
+    positive_triggers:
+      - "好冷"
+      - "很冷"
+      - "发冷"
+      - "失温"
+      - "哆嗦"
+      - "湿透"
+      - "体温低"
+      - "冻僵"
+    negatable: true
+    default_route: route_hypothermia
+    notes: "寒冷、潮湿、长时间受困共同出现时应提高风险。WHO BEC 仅作为暴露/失温风险识别依据，不输出专业复温医疗操作。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理。"
+      - "典型否定：不冷、没有发冷、没湿、没有失温。被明确否定后不应触发 route_hypothermia。"
+      - "边界：普通天气冷但无受困、湿冷或身体症状时不宜强触发。"
+
+  psychological_distress:
+    category: medical_non_life_threatening
+    priority: 0.45
+    guideline_basis:
+      - source_id: WHO_PFA_2011
+        section: "Psychological first aid principles"
+    positive_triggers:
+      - "害怕"
+      - "恐慌"
+      - "慌"
+      - "崩溃"
+      - "想哭"
+      - "发抖"
+      - "脑子很乱"
+      - "撑不住"
+    negatable: true
+    default_route: route_psychological_support
+    notes: "WHO PFA 仅用于心理压力下的稳定化和支持性互动，不用于心理诊断或治疗。单独出现时可作为主意图；与呼吸困难、出血、头伤等共现时通常作为 secondary_intent。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 合理。"
+      - "典型否定：不害怕、没有恐慌、情绪还稳定。被明确否定后不应触发 route_psychological_support。"
+      - "'怕'、'慌'不能覆盖或降低更高优先级医学/环境风险。"
+
+  trapped_or_entrapment:
+    category: environmental_hazard
+    priority: 0.88
+    guideline_basis:
+      - source_id: CEA_CHINA
+        section: "待人工检索确认具体材料"
+      - source_id: MEM_CHINA
+        section: "待人工检索确认具体材料"
+    positive_triggers:
+      - "被困"
+      - "困住"
+      - "埋住"
+      - "卡住"
+      - "动不了"
+      - "废墟里"
+      - "出不去"
+      - "门打不开"
+    negatable: true
+    default_route: route_trapped_or_entrapment
+    notes: "环境风险。若同时存在呼吸困难、严重出血、头伤等医学风险，保留受困上下文但不覆盖更高优先级医学标签。'埋住/卡住/动不了'可能与 crush_injury 混淆，需看是否有身体部位受压。"
+    review_status: pending_source_confirmation
+    review_notes:
+      - "保留 keep；category 合理。中文依据需待人工检索确认具体材料。"
+      - "典型否定：没被困、可以出去、没有卡住。被明确否定后不应触发 route_trapped_or_entrapment。"
+      - "边界：'动不了'可能来自骨折、压迫、恐慌或空间受困，需结合上下文仲裁。"
+
+  aftershock_or_collapse_hazard:
+    category: environmental_hazard
+    priority: 0.84
+    guideline_basis:
+      - source_id: CEA_CHINA
+        section: "待人工检索确认具体材料"
+      - source_id: MEM_CHINA
+        section: "待人工检索确认具体材料"
+    positive_triggers:
+      - "余震"
+      - "又震"
+      - "还在晃"
+      - "快塌了"
+      - "倒塌"
+      - "墙在裂"
+      - "掉东西"
+      - "楼要塌"
+    negatable: true
+    default_route: route_aftershock_or_collapse_hazard
+    notes: "用于识别余震、二次坍塌、落物等环境危险上下文。该标签不新增外部疏散协议，仅用于 RAG 检索前路由和风险排序。"
+    review_status: pending_source_confirmation
+    review_notes:
+      - "保留 keep；category 合理。中文依据需待人工检索确认具体材料。"
+      - "典型否定：没有余震、不晃了、没有坍塌危险、墙没裂。被明确否定后不应触发 route_aftershock_or_collapse_hazard。"
+      - "边界：回忆'刚才有余震'不等于当前仍有坍塌危险，需看时态和现场描述。"
+
+  dehydration_or_resource_deprivation:
+    category: environmental_hazard
+    priority: 0.55
+    guideline_basis:
+      - source_id: MEM_CHINA
+        section: "待人工检索确认具体材料"
+      - source_id: CNEB_CHINA
+        section: "待人工检索确认具体材料"
+    positive_triggers:
+      - "很渴"
+      - "没水"
+      - "缺水"
+      - "嘴干"
+      - "没吃的"
+      - "没力气"
+      - "被困很久"
+      - "没有食物"
+    negatable: true
+    default_route: route_dehydration_or_resource_deprivation
+    notes: "通常低于立即危及生命的医学风险，但在长时间受困、缺水、无食物或体力下降场景中应保留为风险上下文。"
+    review_status: pending_source_confirmation
+    review_notes:
+      - "保留 keep；category 合理。中文依据需待人工检索确认具体材料。"
+      - "典型否定：不渴、有水、有食物、没有被困很久。被明确否定后不应触发 route_dehydration_or_resource_deprivation。"
+      - "边界：普通口渴但无灾害受困上下文时不宜高权重触发。"
+
+  low_battery:
+    category: operational_constraint
+    priority: 0.20
+    guideline_basis: []
+    positive_triggers:
+      - "手机没电"
+      - "快没电"
+      - "电量低"
+      - "快关机"
+      - "只剩百分之五"
+      - "没信号又没电"
+    negatable: false
+    default_route: null
+    notes: "运行约束，不是医学风险。可影响回复长度、交互轮次和行动优先级，但不能高于任何医学或环境风险。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 必须为 operational_constraint。"
+      - "negatable 保持 false；不要因'不是没电'这类表达触发复杂否定协议。"
+      - "与高危风险共现时作为约束上下文，不作为 primary medical intent。"
+
+  out_of_scope:
+    category: safety_boundary
+    priority: 0.05
+    guideline_basis: []
+    positive_triggers:
+      - "写诗"
+      - "做饭"
+      - "股票"
+      - "游戏攻略"
+      - "八卦"
+      - "作业答案"
+      - "闲聊"
+    negatable: false
+    default_route: route_out_of_scope
+    notes: "安全边界路线，不是医学风险，也不参与医学风险排序。仅当输入明显脱离灾害应急 RAG 场景时使用。"
+    review_status: confirmed
+    review_notes:
+      - "保留 keep；category 必须为 safety_boundary。"
+      - "negatable 保持 false。"
+      - "若 out_of_scope 内容与真实应急风险共现，应优先保留应急风险上下文，不让边界标签覆盖高风险标签。"
