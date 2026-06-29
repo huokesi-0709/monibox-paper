@@ -1,0 +1,24 @@
+seed: 42
+n_eval: 120
+pop_size: 24
+variant: "DE/rand/1/bin"
+CR: 0.7
+dither: "vector"
+jitter: false
+verbose: false
+
+data_path: "benchmarks/rair_rag/data/dev/rair_dev.jsonl"
+template_policy_path: "scoring/routing_policy_manual.yaml"
+output_policy_path: "scoring/routing_policy_de.yaml"
+best_policy_path: "build/rair_eval/de_best_policy.yaml"
+trials_path: "build/rair_eval/de_trials.jsonl"
+summary_path: "build/rair_eval/de_summary.json"
+work_dir: "build/rair_eval/de_routing"
+
+bounds:
+  negation_window: [2, 12]
+  negation_penalty: [0.10, 0.90]
+  confidence_threshold: [0.05, 0.65]
+  high_risk_boost: [0.00, 0.25]
+  operational_constraint_weight: [0.05, 0.50]
+  intent_base_weight: [0.02, 1.20]

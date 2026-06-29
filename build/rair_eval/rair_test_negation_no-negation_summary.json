@@ -1,0 +1,30 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_negation.jsonl",
+  "method": "no-negation",
+  "metrics": {
+    "ConstraintF1": 1.0,
+    "HRR": 0.6923076923076923,
+    "NegRiskExact": 0.0,
+    "NegRiskF1": 0.0,
+    "PFTR": 0.48026315789473684,
+    "PrimaryIntentAcc": 0.4407894736842105,
+    "RouteAcc": 0.4407894736842105,
+    "SecondaryIntentF1": 0.0,
+    "by_perturbation_type": {
+      "negation_conflict": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.6923076923076923,
+        "NegRiskExact": 0.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.48026315789473684,
+        "PrimaryIntentAcc": 0.4407894736842105,
+        "RouteAcc": 0.4407894736842105,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 152
+      }
+    },
+    "num_cases": 152
+  },
+  "num_cases": 152,
+  "policy": null
+}

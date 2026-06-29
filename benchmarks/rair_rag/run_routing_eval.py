@@ -69,6 +69,20 @@ def run_routing_eval(
     out_path: Path,
     summary_path: Path,
 ) -> dict[str, Any]:
+    summary = evaluate_routing_cases(
+        data_path=data_path,
+        method=method,
+        policy_path=policy_path,
+    )
+    write_jsonl(out_path, summary["predictions"])
+    summary_for_file = {key: value for key, value in summary.items() if key != "predictions"}
+    write_json(summary_path, summary_for_file)
+    return summary_for_file
+
+
+def evaluate_routing_cases(
+    *, data_path: Path, method: str, policy_path: Path | None
+) -> dict[str, Any]:
     if method not in SUPPORTED_METHODS:
         allowed = ", ".join(SUPPORTED_METHODS)
         raise ValueError(f"unsupported method {method}; choose one of {allowed}")
@@ -79,16 +93,14 @@ def run_routing_eval(
         predict_case(case=case, method=method, policy=policy) for case in cases
     ]
     metrics = compute_routing_metrics(cases, predictions)
-    summary = {
+    return {
         "data": str(data_path),
         "method": method,
         "policy": str(policy_path) if policy_path else None,
         "num_cases": len(cases),
         "metrics": metrics,
+        "predictions": predictions,
     }
-    write_jsonl(out_path, predictions)
-    write_json(summary_path, summary)
-    return summary
 
 
 def load_policy_for_method(

@@ -1,0 +1,30 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_multi_intent.jsonl",
+  "method": "single-intent",
+  "metrics": {
+    "ConstraintF1": 0.7301587301587301,
+    "HRR": 0.7456140350877193,
+    "NegRiskExact": 0.9885931558935361,
+    "NegRiskF1": 0.0,
+    "PFTR": 0.0,
+    "PrimaryIntentAcc": 0.6197718631178707,
+    "RouteAcc": 0.6197718631178707,
+    "SecondaryIntentF1": 0.0,
+    "by_perturbation_type": {
+      "multi_intent": {
+        "ConstraintF1": 0.7301587301587301,
+        "HRR": 0.7456140350877193,
+        "NegRiskExact": 0.9885931558935361,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.6197718631178707,
+        "RouteAcc": 0.6197718631178707,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 263
+      }
+    },
+    "num_cases": 263
+  },
+  "num_cases": 263,
+  "policy": null
+}

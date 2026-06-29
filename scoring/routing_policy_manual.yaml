@@ -1,0 +1,19 @@
+version: "manual-routing-v1"
+negation_window: 6
+negation_penalty: 0.45
+confidence_threshold: 0.25
+high_risk_boost: 0.05
+operational_constraint_weight: 0.20
+intent_base_weights:
+  respiratory_distress: 1.00
+  severe_bleeding_or_shock: 0.95
+  crush_injury: 0.92
+  altered_consciousness_or_head_injury: 0.90
+  trapped_or_entrapment: 0.88
+  aftershock_or_collapse_hazard: 0.84
+  hypothermia: 0.82
+  trauma_or_fracture: 0.78
+  dehydration_or_resource_deprivation: 0.55
+  psychological_distress: 0.45
+  low_battery: 0.20
+  out_of_scope: 0.05

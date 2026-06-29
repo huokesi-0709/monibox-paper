@@ -1,0 +1,30 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_negation.jsonl",
+  "method": "risk-router",
+  "metrics": {
+    "ConstraintF1": 1.0,
+    "HRR": 0.8846153846153846,
+    "NegRiskExact": 0.5723684210526315,
+    "NegRiskF1": 0.7238805970149255,
+    "PFTR": 0.02631578947368421,
+    "PrimaryIntentAcc": 0.881578947368421,
+    "RouteAcc": 0.881578947368421,
+    "SecondaryIntentF1": 0.0,
+    "by_perturbation_type": {
+      "negation_conflict": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.8846153846153846,
+        "NegRiskExact": 0.5723684210526315,
+        "NegRiskF1": 0.7238805970149255,
+        "PFTR": 0.02631578947368421,
+        "PrimaryIntentAcc": 0.881578947368421,
+        "RouteAcc": 0.881578947368421,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 152
+      }
+    },
+    "num_cases": 152
+  },
+  "num_cases": 152,
+  "policy": "scoring\\routing_policy_manual.yaml"
+}

@@ -1,0 +1,63 @@
+{
+  "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\dev\\rair_dev.jsonl",
+  "method": "risk-router-de",
+  "metrics": {
+    "ConstraintF1": 0.8732394366197184,
+    "HRR": 0.5491071428571429,
+    "NegRiskExact": 0.8571428571428571,
+    "NegRiskF1": 0.6527777777777778,
+    "PFTR": 0.009316770186335404,
+    "PrimaryIntentAcc": 0.37888198757763975,
+    "RouteAcc": 0.37888198757763975,
+    "SecondaryIntentF1": 0.09448818897637794,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.3783783783783784,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.23376623376623376,
+        "RouteAcc": 0.23376623376623376,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 77
+      },
+      "multi_intent": {
+        "ConstraintF1": 0.8571428571428571,
+        "HRR": 0.7034482758620689,
+        "NegRiskExact": 0.961038961038961,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.6038961038961039,
+        "RouteAcc": 0.6038961038961039,
+        "SecondaryIntentF1": 0.09448818897637794,
+        "num_cases": 154
+      },
+      "negation_conflict": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.16666666666666666,
+        "NegRiskExact": 0.5402298850574713,
+        "NegRiskF1": 0.6811594202898551,
+        "PFTR": 0.034482758620689655,
+        "PrimaryIntentAcc": 0.08045977011494253,
+        "RouteAcc": 0.08045977011494253,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 87
+      },
+      "out_of_scope": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.0,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 1.0,
+        "RouteAcc": 1.0,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 4
+      }
+    },
+    "num_cases": 322
+  },
+  "num_cases": 322,
+  "policy": "D:\\projects\\monibox-Y\\monibox\\build\\rair_eval\\de_routing\\candidates\\routing_policy_eval_0006.yaml"
+}

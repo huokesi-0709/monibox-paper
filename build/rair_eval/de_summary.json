@@ -1,0 +1,133 @@
+{
+  "best_policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\rair_eval\\de_best_policy.yaml",
+  "best_trial": {
+    "candidate_policy_path": "D:\\projects\\monibox-Y\\monibox\\build\\rair_eval\\de_routing\\candidates\\routing_policy_eval_0000.yaml",
+    "constraint_hrr": 0.041964285714285676,
+    "constraint_pftr": -0.0375776397515528,
+    "eval_id": 0,
+    "feasible": false,
+    "fitness": 0.702395,
+    "metrics": {
+      "ConstraintF1": 1.0,
+      "HRR": 0.8080357142857143,
+      "NegRiskExact": 0.8850931677018633,
+      "NegRiskF1": 0.7179487179487178,
+      "PFTR": 0.012422360248447204,
+      "PrimaryIntentAcc": 0.8167701863354038,
+      "RouteAcc": 0.8167701863354038,
+      "SecondaryIntentF1": 0.6952789699570816,
+      "by_perturbation_type": {
+        "clean_control": {
+          "ConstraintF1": 1.0,
+          "HRR": 0.6486486486486487,
+          "NegRiskExact": 1.0,
+          "NegRiskF1": 0.0,
+          "PFTR": 0.0,
+          "PrimaryIntentAcc": 0.8311688311688312,
+          "RouteAcc": 0.8311688311688312,
+          "SecondaryIntentF1": 0.0,
+          "num_cases": 77
+        },
+        "multi_intent": {
+          "ConstraintF1": 1.0,
+          "HRR": 0.8896551724137931,
+          "NegRiskExact": 0.961038961038961,
+          "NegRiskF1": 0.0,
+          "PFTR": 0.0,
+          "PrimaryIntentAcc": 0.8181818181818182,
+          "RouteAcc": 0.8181818181818182,
+          "SecondaryIntentF1": 0.7264573991031391,
+          "num_cases": 154
+        },
+        "negation_conflict": {
+          "ConstraintF1": 0.0,
+          "HRR": 0.6666666666666666,
+          "NegRiskExact": 0.6436781609195402,
+          "NegRiskF1": 0.7466666666666666,
+          "PFTR": 0.04597701149425287,
+          "PrimaryIntentAcc": 0.7931034482758621,
+          "RouteAcc": 0.7931034482758621,
+          "SecondaryIntentF1": 0.0,
+          "num_cases": 87
+        },
+        "out_of_scope": {
+          "ConstraintF1": 0.0,
+          "HRR": 0.0,
+          "NegRiskExact": 1.0,
+          "NegRiskF1": 0.0,
+          "PFTR": 0.0,
+          "PrimaryIntentAcc": 1.0,
+          "RouteAcc": 1.0,
+          "SecondaryIntentF1": 0.0,
+          "num_cases": 4
+        }
+      },
+      "num_cases": 322
+    },
+    "policy": {
+      "boundary_terms": [
+        "但是",
+        "不过",
+        "然后",
+        "还有",
+        "并且",
+        "而且",
+        "同时",
+        "另外",
+        "还",
+        "又",
+        "也",
+        "，",
+        ",",
+        "。",
+        ".",
+        "；",
+        ";",
+        "、",
+        "？",
+        "?",
+        "！",
+        "!"
+      ],
+      "confidence_threshold": 0.25,
+      "confidence_thresholds": {},
+      "high_risk_boost": 0.05,
+      "intent_base_weights": {
+        "aftershock_or_collapse_hazard": 0.84,
+        "altered_consciousness_or_head_injury": 0.9,
+        "crush_injury": 0.92,
+        "dehydration_or_resource_deprivation": 0.55,
+        "hypothermia": 0.82,
+        "low_battery": 0.2,
+        "out_of_scope": 0.05,
+        "psychological_distress": 0.45,
+        "respiratory_distress": 1.0,
+        "severe_bleeding_or_shock": 0.95,
+        "trapped_or_entrapment": 0.88,
+        "trauma_or_fracture": 0.78
+      },
+      "negation_penalty": 0.45,
+      "negation_window": 6,
+      "negation_words": [
+        "没有",
+        "没",
+        "不是",
+        "未",
+        "无",
+        "不"
+      ],
+      "operational_constraint_weight": 0.2
+    },
+    "source": "manual-baseline"
+  },
+  "constraints": {
+    "HRR_min": 0.85,
+    "PFTR_max": 0.05
+  },
+  "data_path": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\dev\\rair_dev.jsonl",
+  "feasible_trial_found": false,
+  "num_trials": 121,
+  "objective": "0.35*RouteAcc + 0.30*HRR + 0.15*NegRiskF1 + 0.10*SecondaryIntentF1 - 0.25*PFTR",
+  "output_policy_path": "D:\\projects\\monibox-Y\\monibox\\scoring\\routing_policy_de.yaml",
+  "trials_path": "D:\\projects\\monibox-Y\\monibox\\build\\rair_eval\\de_trials.jsonl"
+}

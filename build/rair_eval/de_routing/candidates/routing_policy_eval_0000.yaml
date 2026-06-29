@@ -1,0 +1,19 @@
+version: "manual-baseline-0000"
+negation_window: 6
+negation_penalty: 0.4500
+confidence_threshold: 0.2500
+high_risk_boost: 0.0500
+operational_constraint_weight: 0.2000
+intent_base_weights:
+  respiratory_distress: 1.0000
+  severe_bleeding_or_shock: 0.9500
+  crush_injury: 0.9200
+  altered_consciousness_or_head_injury: 0.9000
+  trapped_or_entrapment: 0.8800
+  aftershock_or_collapse_hazard: 0.8400
+  hypothermia: 0.8200
+  trauma_or_fracture: 0.7800
+  dehydration_or_resource_deprivation: 0.5500
+  psychological_distress: 0.4500
+  low_battery: 0.2000
+  out_of_scope: 0.0500

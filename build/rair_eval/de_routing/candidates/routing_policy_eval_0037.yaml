@@ -1,0 +1,19 @@
+version: "de-candidate-0037"
+negation_window: 11
+negation_penalty: 0.5853
+confidence_threshold: 0.0939
+high_risk_boost: 0.1681
+operational_constraint_weight: 0.2867
+intent_base_weights:
+  respiratory_distress: 0.8797
+  severe_bleeding_or_shock: 0.5187
+  crush_injury: 0.3395
+  altered_consciousness_or_head_injury: 0.4162
+  trapped_or_entrapment: 1.0600
+  aftershock_or_collapse_hazard: 0.1345
+  hypothermia: 0.2676
+  trauma_or_fracture: 0.8157
+  dehydration_or_resource_deprivation: 0.5743
+  psychological_distress: 0.2945
+  low_battery: 0.0737
+  out_of_scope: 0.7073

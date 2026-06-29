@@ -1,0 +1,63 @@
+{
+  "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\dev\\rair_dev.jsonl",
+  "method": "risk-router-de",
+  "metrics": {
+    "ConstraintF1": 1.0,
+    "HRR": 0.7589285714285714,
+    "NegRiskExact": 0.8571428571428571,
+    "NegRiskF1": 0.6527777777777778,
+    "PFTR": 0.059006211180124224,
+    "PrimaryIntentAcc": 0.7142857142857143,
+    "RouteAcc": 0.7142857142857143,
+    "SecondaryIntentF1": 0.47346938775510206,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.6486486486486487,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.8311688311688312,
+        "RouteAcc": 0.8311688311688312,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 77
+      },
+      "multi_intent": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.8206896551724138,
+        "NegRiskExact": 0.961038961038961,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.6688311688311688,
+        "RouteAcc": 0.6688311688311688,
+        "SecondaryIntentF1": 0.5201793721973095,
+        "num_cases": 154
+      },
+      "negation_conflict": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.6428571428571429,
+        "NegRiskExact": 0.5402298850574713,
+        "NegRiskF1": 0.6811594202898551,
+        "PFTR": 0.21839080459770116,
+        "PrimaryIntentAcc": 0.6781609195402298,
+        "RouteAcc": 0.6781609195402298,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 87
+      },
+      "out_of_scope": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.0,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 1.0,
+        "RouteAcc": 1.0,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 4
+      }
+    },
+    "num_cases": 322
+  },
+  "num_cases": 322,
+  "policy": "D:\\projects\\monibox-Y\\monibox\\build\\rair_eval\\de_routing\\candidates\\routing_policy_eval_0088.yaml"
+}
