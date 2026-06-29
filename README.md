@@ -1,18 +1,38 @@
 # MoniBox
 
-MoniBox / HSC-RAG-DE 是论文《面向灾害受困场景的鲁棒启发式安全约束离线 RAG 应急回复生成方法》的复现实验仓库。
+MoniBox 当前论文修订主线已经收束为 **RAIR-RAG**：面向离线灾害应急 RAG 的风险感知输入路由与检索前风险上下文构建。仓库仍保留早期 **HSC-RAG-DE** 代码和实验脚本，用于历史复现、对照和兼容，但它不再是当前论文的主贡献表述。
 
-本仓库的论文主线是 **HSC-RAG**：在离线知识库、协议优先、安全约束和低随机性的设置下复现应急回复生成实验。`pymoo` Differential Evolution 仅用于离线权重优化；MoniBox API 与 React frontend 仅用于原型/demo 验证，不参与论文主实验。
+当前主实验围绕 `benchmarks/rair_rag/` 展开：构建权威指南依据驱动的风险路由基准集，重点评估 `negation_conflict` 和 `multi_intent` 两类安全关键输入扰动。`pymoo` Differential Evolution 仅用于离线校准 `RoutingPolicy` 参数，不优化底层 RAG 检索算法，也不是主要性能来源。
 
 ## Paper Scope Notice
 
-本仓库主实验以 `profiles/paper_eval.yaml` 为准；API、frontend、voice、hardware 只用于 demo、联调和原型验证。论文结果以 `build/eval/` 下的离线实验产物为准。HSC-RAG-DE 当前更准确地说是“离线约束式应急回复生成方法”，不是依赖远端 LLM 的开放式聊天系统。
+旧版 HSC-RAG-DE 实验以 `profiles/paper_eval.yaml` 为准；API、frontend、voice、hardware 只用于 demo、联调和原型验证。旧版结果以 `build/eval/` 下的离线实验产物为准。HSC-RAG-DE 当前更准确地说是“离线约束式应急回复生成方法”的历史基线，不再作为 RAIR-RAG 修订稿的核心主线。
 
 ## RAIR-RAG Scope Notice
 
 当前论文修订方向进一步聚焦于面向离线灾害应急 RAG 的风险感知输入路由。核心问题不是底层向量检索优化，而是 RAG 检索前的风险上下文构建：在协议门控和检索发生前，从用户输入中消解否定冲突、识别多意图输入，并生成更可靠的风险语义上下文。
 
 本修订把 `negation_conflict` 和 `multi_intent` 作为主研究对象。否定冲突用于降低被明确否定风险造成的协议误触发，多意图输入用于降低高风险意图漏检。Differential Evolution 仅作为离线 routing parameter calibration 工具，不是主要性能来源，也不改变 test split 的独立评估边界。
+
+RAIR-RAG 数据与实验入口：
+
+```text
+benchmarks/rair_rag/data/gold/rair_gold_all.jsonl
+benchmarks/rair_rag/data/dev/rair_dev.jsonl
+benchmarks/rair_rag/data/test/rair_test.jsonl
+benchmarks/rair_rag/data/test/rair_test_negation.jsonl
+benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
+```
+
+```bash
+# RAIR-RAG test experiments
+bash scripts/run_rair_eval.sh
+
+# RAIR-RAG DE calibration on dev split only
+uv run python -m experiments.de_routing_optimize
+```
+
+RAIR-RAG 最终实验产物位于 `build/rair_eval/`。建议上传 summary、predictions、`de_trials.jsonl`、`de_summary.json` 和 `de_best_policy.yaml`，但不要上传 `build/rair_eval/de_routing/` 里的 DE 中间候选预测文件。
 
 ## Paper Reproduction Quickstart
 
