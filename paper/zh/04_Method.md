@@ -2,60 +2,62 @@
 
 ## 4.1 Problem Definition
 
-给定用户输入 \(q\)、本地知识库 chunk 集合 \(C\)、协议集合 \(P\) 和安全约束集合 \(S\)，目标是在离线环境下生成回复 \(y\)。回复应满足：优先处理最高风险意图；引用或依赖足够证据；避免危险操作、医学诊断和救援保证；在证据不足时进行澄清或保守分流。
+给定用户输入 \(q\)，RAIR-RAG 的目标不是直接生成开放式答案，而是先预测一组可审计的路由变量：主风险路由、次级意图、否定风险、安全约束和边界标签。系统随后根据这些变量决定是否进入高风险回复、低风险回复、澄清或域外处理路径。
 
-## 4.2 HSC-RAG Overall Framework
-
-HSC-RAG 由六个阶段组成：输入归一化、风险感知多意图抽取、协议优先风险门控、候选证据检索、安全约束重排、输出安全护栏。每轮交互生成统一 trace，用于 route accuracy、protocol confidence、evidence score、guard reason 和 latency 分析。
-
-## 4.3 Input Normalization
-
-输入归一化处理空输入、全角/半角空格、中文标点、ASR 精确纠错、口语噪声和重复词压缩。所有替换都记录为 correction，避免不可解释改写。示例包括“留血→流血”“穿不上气→喘不上气”“旧我→救我”。
-
-## 4.4 Risk-Aware Multi-Intent Extraction
-
-系统将长输入切分为 clauses，并识别 respiratory distress、severe bleeding、trapped/crush、head/consciousness、hypothermia、dehydration、panic、low battery 等意图。primary intent 按风险优先级选择；否定窗口内的风险词进入 negated risks，不作为主风险。
-
-## 4.5 Protocol-Prioritized Risk Gate
-
-协议门控计算每个候选协议的置信度：
+本文评估的核心函数可写为：
 
 \[
-Conf(p|q)=0.35K+0.20R+0.15B+0.15S+0.10T+0.05Pr-0.30N
+f(q) \rightarrow (r, I_s, N, C)
 \]
 
-其中 \(K\) 为关键词命中，\(R\) 为风险词命中，\(B\) 为身体部位匹配，\(S\) 为场景匹配，\(T\) 为 routed tag 匹配，\(Pr\) 为协议优先级归一化，\(N\) 为否定冲突。该分数用于 trace 和路由分析。
+其中 \(r\) 是主路由，\(I_s\) 是次级意图集合，\(N\) 是否定风险集合，\(C\) 是约束集合。评测关注这些结构化输出是否与 gold annotation 一致。
 
-## 4.6 Safety-Constrained Reranking
+## 4.2 RAIR-RAG Pipeline
 
-候选 chunk 的重排分数为：
+RAIR-RAG 包含五个阶段：输入规范化、风险触发识别、否定窗口处理、多意图聚合、约束与路由决策。每个阶段都输出可检查字段，便于在预测 JSONL 中追踪错误来源。
 
-\[
-Score(c|q)=w_{vec}SimVec(q,c)+w_{sparse}SimSparse(q,c)+w_{quality}Quality(c)+w_{tag}TagMatch(q,c)+w_{risk}RiskMatch(q,c)-w_{unsafe}Unsafe(c)-w_{redundancy}Redundancy(c)
-\]
+输入规范化只做保守处理，例如统一标点、空白和常见噪声，不把否定表达改写成肯定风险，也不推断用户没有说出的医学事实。
 
-若底层检索返回 distance，系统使用 \(SimVec=1/(1+distance)\)，避免把距离误当正向相似度。
+风险触发识别使用风险 taxonomy 中的标签、触发词和边界条件识别候选风险。该步骤是工程启发式分类，不是医学诊断，也不是真实救援优先级判定。
 
-## 4.7 Evidence Sufficiency
+## 4.3 Negation Handling
 
-证据充分度用于判断是否直接回复或进入低证据分流。当前实现可由 top chunk 分数、协议置信度、route 一致性和 low-evidence threshold 组合得到。形式上可写为：
+否定处理用于识别“没有流血”“不是被困”“没有喘不上气”等表达。若风险触发词出现在否定窗口内，系统应把它记录为 `negated_risks`，而不是作为主风险路由依据。
 
-\[
-Evidence(q)=\alpha TopScore+\beta ProtocolConf+\gamma RouteAgreement
-\]
+该设计直接对应 NegRiskF1 与 PFTR。`no-negation` 消融关闭这一能力，用来衡量否定理解对误触发率的影响。
 
-当 \(Evidence(q)<\tau\) 时，系统应澄清、请求更多信息或给出保守安全提示。
+## 4.4 Multi-Intent Handling
 
-## 4.8 Output Safety Guard
+多意图处理用于从同一输入中保留主风险与次级意图。例如“我被困了，腿也在流血，手机快没电”应同时体现被困、出血和低电量信息。RAIR-RAG 使用风险优先级选择主路由，同时保留其余有效意图用于 SecondaryIntentF1 评估。
 
-输出护栏检查危险医疗操作、药物剂量、注射输液、准确诊断、保证获救和救援到达承诺。护栏不负责替代完整医疗判断，而是在最终文本层降低明显 unsafe response。
+`single-intent` 消融只保留单一意图，用来衡量多意图聚合对复杂输入的贡献。
 
-## 4.9 Differential Evolution Objective
+## 4.5 Constraints and Boundary Labels
 
-DE 在 dev 数据上离线优化 HSC-RAG 权重，目标函数为：
+约束字段记录系统在回复或路由时必须遵守的边界，例如不能提供药物剂量、不能承诺救援到达、不能给出确定医学诊断，以及域外输入应进入边界处理。ConstraintF1 衡量这些约束是否被正确识别。
 
-\[
-Fitness=0.20RA_c+0.20RA_r+0.15EH@5+0.20SC+0.10RC+0.10CA+0.05AC-0.25HRM-0.20UR-0.15UC-0.05LP
-\]
+## 4.6 Benchmark Construction
 
-其中 clean/robust route accuracy、evidence hit、安全合规、鲁棒一致性、澄清适当性和动作正确性为正项，高风险漏检、unsafe response、unsupported claim 和 latency penalty 为负项。DE 只使用 dev 集，不使用 test 集。
+RAIR-RAG-Bench 的当前主文件是 `benchmarks/rair_rag/data/gold/rair_gold_all.jsonl`。数据由候选样本、仲裁表和 taxonomy 生成；dev/test 与否定、多意图子集由脚本重新切分。当前数据集应表述为指南启发、人工复核的合成基准。
+
+权威证据链尚未完整填充。`guideline_refs` 当前主要是从风险 taxonomy 映射到的标签级依据；`reference_reply` 为空，不能作为逐例参考回复使用。
+
+## 4.7 Policies and Baselines
+
+本文比较五类方法：
+
+| 方法 | 说明 |
+| --- | --- |
+| `keyword-baseline` | 基于关键词触发的弱 baseline。 |
+| `no-negation` | 关闭否定处理的消融。 |
+| `single-intent` | 关闭多意图保留的消融。 |
+| `risk-router-manual` | 手工设定的完整风险路由策略。 |
+| `risk-router-de` | 在 dev 集上使用 Differential Evolution 搜索得到的策略。 |
+
+DE 只用于策略校准，不在 test 集上调参。当前 `risk-router-de` 与 `risk-router-manual` 指标相同，且 `de_summary.json` 显示没有找到更优可行 trial。
+
+## 4.8 Evaluation Metrics
+
+主指标包括 RouteAcc、HRR、PFTR、NegRiskF1、SecondaryIntentF1 和 ConstraintF1。主表来自 `build/rair_eval/rair_test_*_summary.json`；否定子集来自 `rair_test_negation_*`；多意图子集来自 `rair_test_multi_intent_*`。
+
+历史 HSC-DisasterBench-v2 的 clean/robust 结果不参与这些表格计算，只能作为历史实验背景。

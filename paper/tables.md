@@ -1,87 +1,66 @@
 # 论文表格清单
 
-本文件列出阶段 11 导出的论文表格。所有表格均来自 `build/eval` 下已有实验产物，不应手写或编造数值。当前 clean/robust 数据仍为 dev/smoke，表格结果不能直接写成最终 SCI test set 结论。
+当前表格清单对应 RAIR-RAG-Bench。不要从 `artifacts/paper_final_v2/`、`build/eval/final_v2/` 或 HSC-DisasterBench-v2 复制主表数字。
 
-## Table 1: main_results
+## Table 1: RAIR-RAG-Bench Dataset Summary
 
-路径：`build/eval/main_results.csv`
+来源：
 
-来源：阶段 11 从 clean evaluation summary 导出。
+```text
+benchmarks/rair_rag/data/gold/label_distribution.json
+benchmarks/rair_rag/data/split_manifest.json
+benchmarks/rair_rag/data/README.md
+```
 
-主要字段：`method`、`route_accuracy`、`evidence_hit_at_5`、`high_risk_recall`、`unsafe_response_rate`、`unsupported_claim_rate`、`avg_latency_ms`、`p95_latency_ms` 以及 count 字段。
+应报告总样本数、dev/test split、perturbation type、primary_intent、risk_level、source_type，以及 guideline evidence scope。
 
-论文位置：第 5 节实验结果，clean evaluation 主结果。
+## Table 2: Main Test Results
 
-分母说明：需要报告 `num_cases`、`num_predictions`、`num_evidence_eval_cases`、`num_high_risk_cases`、`num_protocol_eval_cases`。其中 `num_evidence_eval_cases` 对解释 evidence 指标尤其重要。
+来源：
 
-边界：仅作为 dev/smoke 结果。
+```text
+build/rair_eval/rair_test_keyword-baseline_summary.json
+build/rair_eval/rair_test_no-negation_summary.json
+build/rair_eval/rair_test_single-intent_summary.json
+build/rair_eval/rair_test_risk-router-manual_summary.json
+build/rair_eval/rair_test_risk-router-de_summary.json
+```
 
-## Table 2: robustness_results
+主要字段：RouteAcc、HRR、PFTR、NegRiskF1、SecondaryIntentF1、ConstraintF1。
 
-路径：`build/eval/robustness_results.csv`
+## Table 3: Negation Conflict Subset
 
-来源：阶段 11 从 robust evaluation summary 导出。
+来源：
 
-主要字段：`method`、`robust_route_accuracy`、`primary_intent_accuracy`、`protocol_false_trigger_rate`、`robust_consistency`、`unsafe_response_rate` 以及 count 字段。
+```text
+build/rair_eval/rair_test_negation_*_summary.json
+```
 
-论文位置：第 5 节实验结果，robust evaluation。
+重点字段：RouteAcc、PFTR、NegRiskExact、NegRiskF1。该表用于证明否定消解降低协议误触发。
 
-分母说明：需要报告 `num_cases`、`num_predictions`、`num_evidence_eval_cases`、`num_high_risk_cases`、`num_protocol_eval_cases`。
+## Table 4: Multi-Intent Subset
 
-边界：robust 数据来自 dev/smoke 扰动，不等同真实灾害现场 test set。
+来源：
 
-## Table 3: ablation_results
+```text
+build/rair_eval/rair_test_multi_intent_*_summary.json
+```
 
-路径：`build/eval/ablation_results.csv`
+重点字段：RouteAcc、HRR、SecondaryIntentF1、ConstraintF1。该表用于证明风险优先级路由和 secondary intents 保留价值。
 
-来源：阶段 11 从 ablation summary 导出。
+## Table 5: DE Calibration
 
-主要字段：`ablation`、`disabled_modules`、`route_accuracy`、`robust_route_accuracy`、`high_risk_recall`、`unsafe_response_rate`、`num_cases`、`num_predictions`、`num_high_risk_cases`。
+来源：
 
-论文位置：第 5 节实验结果，模块消融分析。
+```text
+build/rair_eval/de_summary.json
+build/rair_eval/de_trials.jsonl
+scoring/routing_policy_manual.yaml
+scoring/routing_policy_de.yaml
+```
 
-分母说明：至少报告 `num_cases`、`num_predictions` 和 `num_high_risk_cases`。
+当前结论应如实报告：DE 框架已接入，但当前运行未找到优于 manual baseline 的可行策略，因此不能把 DE 写成主要性能提升来源。
 
-边界：消融结果用于解释模块贡献，不应被解读为真实部署性能保证。
+## Legacy Tables
 
-## Table 4: de_effect_results
-
-路径：`build/eval/de_effect_results.csv`
-
-来源：阶段 11 从 `build/eval/de_best_metrics.json` 导出。
-
-主要字段：`policy`、`fitness`、`clean_route_accuracy`、`robust_route_accuracy`、`high_risk_miss_rate`、`unsafe_response_rate`。
-
-论文位置：第 5 节实验结果，DE 权重搜索效果。
-
-分母说明：需要结合 DE 使用的数据集说明，DE 只使用 dev 数据，不使用 final test set。
-
-边界：DE 优化的是 HSC-RAG scoring coefficients，不是训练模型参数或医学规则。
-
-## Table 5: latency_memory_results
-
-路径：`build/eval/latency_memory_results.csv`
-
-来源：阶段 11 从所有 summary 中提取 latency 相关字段。
-
-主要字段：`method`、`suite`、`avg_latency_ms`、`p95_latency_ms`、`num_cases`。
-
-论文位置：第 5 节或第 6 节，工程开销与离线部署讨论。
-
-分母说明：需要报告 `num_cases`。
-
-边界：当前表只有 CSV 输出；如需 Markdown，可由阶段 11 脚本后续扩展。
-
-## Table 6: trace_audit_results
-
-路径：`build/eval/trace_audit_results.csv`
-
-来源：阶段 11 从 `*_predictions.jsonl` 的 `prediction["trace"]` 派生。
-
-主要字段：`method`、`suite`、`num_predictions`、`num_with_trace`、`num_low_evidence`、`low_evidence_rate`、`num_protocol_decisions`、`avg_protocol_confidence`、`num_guarded`、`num_with_top_chunks`、`num_with_score_breakdown`。
-
-论文位置：第 5 节 trace audit 或第 6 节错误分析。
-
-分母说明：需要报告 `num_predictions` 和 `num_with_trace`。
-
-边界：trace audit 是实验解释工具，不是用户隐私日志，不用于长期保存真实敏感输入。
+`artifacts/paper_final_v2/tables/` 中的表格属于 HSC-RAG-DE / HSC-DisasterBench-v2 历史归档。它们只能用于附录背景或方法演进说明，不进入当前 RAIR-RAG 主表。

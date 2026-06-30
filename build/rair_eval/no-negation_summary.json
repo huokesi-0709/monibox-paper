@@ -1,0 +1,52 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "method": "no-negation",
+  "metrics": {
+    "ConstraintF1": 0.9828571428571428,
+    "HRR": 0.8319088319088319,
+    "NegRiskExact": 0.6833333333333333,
+    "NegRiskF1": 0.0,
+    "PFTR": 0.15833333333333333,
+    "PrimaryIntentAcc": 0.7145833333333333,
+    "RouteAcc": 0.7145833333333333,
+    "SecondaryIntentF1": 0.542528735632184,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.8222222222222222,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.7692307692307693,
+        "RouteAcc": 0.7692307692307693,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 65
+      },
+      "multi_intent": {
+        "ConstraintF1": 0.980891719745223,
+        "HRR": 0.881578947368421,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.8593155893536122,
+        "RouteAcc": 0.8593155893536122,
+        "SecondaryIntentF1": 0.7637540453074434,
+        "num_cases": 263
+      },
+      "negation_conflict": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.6923076923076923,
+        "NegRiskExact": 0.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.5,
+        "PrimaryIntentAcc": 0.4407894736842105,
+        "RouteAcc": 0.4407894736842105,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 152
+      }
+    },
+    "num_cases": 480
+  },
+  "num_cases": 480,
+  "policy": null
+}

@@ -7,6 +7,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from benchmarks.rair_rag.routing_schema import RoutingCase
 from benchmarks.rair_rag.scripts.generate_candidates import (
     RISK_LEVEL_BY_INTENT,
@@ -26,6 +28,9 @@ DEFAULT_ANN_B = ROUND_DIR / "round1_annotator_B.csv"
 DEFAULT_METRICS = REPORT_DIR / "agreement_metrics.json"
 DEFAULT_OUT = DATA_DIR / "gold" / "rair_gold_all.jsonl"
 DEFAULT_DISTRIBUTION = DATA_DIR / "gold" / "label_distribution.json"
+DEFAULT_TAXONOMY = (
+    PROJECT_ROOT / "benchmarks" / "rair_rag" / "annotation" / "risk_taxonomy.yaml"
+)
 
 ANNOTATION_COMPARISON_FIELDS = {
     "human_accept": "human_accept",
@@ -49,6 +54,7 @@ def main() -> None:
     parser.add_argument("--ann-a", type=Path, default=DEFAULT_ANN_A)
     parser.add_argument("--ann-b", type=Path, default=DEFAULT_ANN_B)
     parser.add_argument("--metrics", type=Path, default=DEFAULT_METRICS)
+    parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--distribution", type=Path, default=DEFAULT_DISTRIBUTION)
     parser.add_argument("--overwrite", action="store_true")
@@ -60,6 +66,7 @@ def main() -> None:
         ann_a_path=args.ann_a,
         ann_b_path=args.ann_b,
         metrics_path=args.metrics,
+        taxonomy_path=args.taxonomy,
         out_path=args.out,
         distribution_path=args.distribution,
         overwrite=args.overwrite,
@@ -74,6 +81,7 @@ def build_gold_jsonl(
     ann_a_path: Path,
     ann_b_path: Path,
     metrics_path: Path,
+    taxonomy_path: Path,
     out_path: Path,
     distribution_path: Path,
     overwrite: bool,
@@ -81,6 +89,7 @@ def build_gold_jsonl(
     ensure_outputs_available([out_path, distribution_path], overwrite=overwrite)
 
     candidates = read_jsonl_indexed(candidates_path)
+    taxonomy = read_taxonomy(taxonomy_path)
     ann_a_rows = read_csv_indexed(ann_a_path)
     ann_b_rows = read_csv_indexed(ann_b_path)
     adjudication_rows = read_csv_indexed(adjudication_path)
@@ -106,6 +115,7 @@ def build_gold_jsonl(
                 item_id=item_id,
                 candidate=candidates[item_id],
                 annotation=ann_a,
+                taxonomy=taxonomy,
             )
         )
 
@@ -129,6 +139,7 @@ def build_gold_jsonl(
                 candidate=candidates[item_id],
                 adjudication=row,
                 adjudication_path=adjudication_path,
+                taxonomy=taxonomy,
             )
         )
 
@@ -198,6 +209,14 @@ def read_disagreement_ids(path: Path) -> list[str]:
     return [clean(str(item_id)) for item_id in ids if clean(str(item_id))]
 
 
+def read_taxonomy(path: Path) -> dict[str, dict[str, Any]]:
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    labels = data.get("risk_labels")
+    if not isinstance(labels, dict):
+        raise ValueError(f"{path}: missing risk_labels mapping")
+    return labels
+
+
 def require_consensus(
     item_id: str, ann_a: dict[str, str], ann_b: dict[str, str]
 ) -> None:
@@ -210,7 +229,11 @@ def require_consensus(
 
 
 def case_from_consensus(
-    *, item_id: str, candidate: dict[str, Any], annotation: dict[str, str]
+    *,
+    item_id: str,
+    candidate: dict[str, Any],
+    annotation: dict[str, str],
+    taxonomy: dict[str, dict[str, Any]],
 ) -> RoutingCase:
     primary_intent = require_value(
         annotation.get("annotator_primary_intent"),
@@ -240,6 +263,7 @@ def case_from_consensus(
         risk_level=clean(candidate.get("risk_level"))
         or RISK_LEVEL_BY_INTENT.get(primary_intent, "medium"),
         label_status="consensus",
+        taxonomy=taxonomy,
     )
 
 
@@ -249,6 +273,7 @@ def case_from_adjudication(
     candidate: dict[str, Any],
     adjudication: dict[str, str],
     adjudication_path: Path,
+    taxonomy: dict[str, dict[str, Any]],
 ) -> RoutingCase:
     primary_intent = require_value(
         adjudication.get("final_primary_intent"),
@@ -285,6 +310,7 @@ def case_from_adjudication(
         safety_note=clean(adjudication.get("final_notes"))
         or clean(adjudication.get("adjudicator_notes"))
         or None,
+        taxonomy=taxonomy,
     )
 
 
@@ -303,6 +329,7 @@ def build_case(
     expected_protocol_id: str | None,
     risk_level: str,
     label_status: str,
+    taxonomy: dict[str, dict[str, Any]],
     safety_note: str | None = None,
 ) -> RoutingCase:
     positive_risks = positive_risks_for(
@@ -317,6 +344,24 @@ def build_case(
             "id": item_id,
             "raw_input": raw_input,
             "canonical_input": canonical_input or raw_input,
+            "source_type": "template_generated_human_reviewed",
+            "guideline_refs": guideline_refs_for_case(
+                taxonomy=taxonomy,
+                primary_intent=primary_intent,
+                positive_risks=positive_risks,
+                secondary_intents=secondary_intents,
+                negated_risks=negated_risks,
+                operational_constraints=operational_constraints,
+            ),
+            "risk_mentions": risk_mentions_for_case(
+                taxonomy=taxonomy,
+                text=canonical_input or raw_input,
+                primary_intent=primary_intent,
+                positive_risks=positive_risks,
+                secondary_intents=secondary_intents,
+                negated_risks=negated_risks,
+                operational_constraints=operational_constraints,
+            ),
             "positive_risks": positive_risks,
             "negated_risks": negated_risks,
             "primary_intent": primary_intent,
@@ -337,6 +382,105 @@ def build_case(
         }
     )
     return RoutingCase.from_dict(data)
+
+
+def guideline_refs_for_case(
+    *,
+    taxonomy: dict[str, dict[str, Any]],
+    primary_intent: str,
+    positive_risks: list[str],
+    secondary_intents: list[str],
+    negated_risks: list[str],
+    operational_constraints: list[str],
+) -> list[dict[str, str]]:
+    refs: list[dict[str, str]] = []
+    seen: set[tuple[str, str, str]] = set()
+    for label in evidence_labels(
+        primary_intent=primary_intent,
+        positive_risks=positive_risks,
+        secondary_intents=secondary_intents,
+        negated_risks=negated_risks,
+        operational_constraints=operational_constraints,
+    ):
+        config = taxonomy.get(label) or {}
+        review_status = clean(config.get("review_status")) or "unspecified"
+        for basis in config.get("guideline_basis") or []:
+            if not isinstance(basis, dict):
+                continue
+            source_id = clean(basis.get("source_id"))
+            section = clean(basis.get("section"))
+            if not source_id:
+                continue
+            key = (label, source_id, section)
+            if key in seen:
+                continue
+            seen.add(key)
+            refs.append(
+                {
+                    "risk_label": label,
+                    "source_id": source_id,
+                    "section": section,
+                    "review_status": review_status,
+                }
+            )
+    return refs
+
+
+def risk_mentions_for_case(
+    *,
+    taxonomy: dict[str, dict[str, Any]],
+    text: str,
+    primary_intent: str,
+    positive_risks: list[str],
+    secondary_intents: list[str],
+    negated_risks: list[str],
+    operational_constraints: list[str],
+) -> list[str]:
+    mentions: list[str] = []
+    for label in evidence_labels(
+        primary_intent=primary_intent,
+        positive_risks=positive_risks,
+        secondary_intents=secondary_intents,
+        negated_risks=negated_risks,
+        operational_constraints=operational_constraints,
+    ):
+        triggers = taxonomy.get(label, {}).get("positive_triggers") or []
+        matched = [
+            str(trigger)
+            for trigger in triggers
+            if trigger and str(trigger) in text
+        ]
+        if matched:
+            for trigger in matched:
+                item = f"{label}:{trigger}"
+                if item not in mentions:
+                    mentions.append(item)
+        else:
+            item = f"inferred:{label}"
+            if item not in mentions:
+                mentions.append(item)
+    return mentions
+
+
+def evidence_labels(
+    *,
+    primary_intent: str,
+    positive_risks: list[str],
+    secondary_intents: list[str],
+    negated_risks: list[str],
+    operational_constraints: list[str],
+) -> list[str]:
+    labels: list[str] = []
+    for label in [
+        primary_intent,
+        *positive_risks,
+        *secondary_intents,
+        *negated_risks,
+        *operational_constraints,
+    ]:
+        if label and label not in labels:
+            labels.append(label)
+    return labels
 
 
 def positive_risks_for(

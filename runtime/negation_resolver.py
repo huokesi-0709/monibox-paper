@@ -6,6 +6,16 @@ from typing import Any
 from runtime.intent_extractor import NEGATION_BOUNDARIES, NEGATION_WORDS
 
 
+TRAPPED_AFFIRMING_RIGHT_CONTEXTS = (
+    "出不去",
+    "出不来",
+    "出不来了",
+    "走不了",
+    "打不开",
+    "门打不开",
+)
+
+
 @dataclass(frozen=True)
 class NegationConfig:
     negation_window: int = 6
@@ -81,6 +91,8 @@ class NegationResolver:
     def _is_negated(self, text: str, start: int, end: int) -> bool:
         left = self._left_window(text, start)
         right = self._right_window(text, end)
+        if any(phrase in right for phrase in TRAPPED_AFFIRMING_RIGHT_CONTEXTS):
+            return False
         return any(word in left for word in self.config.negation_words) or any(
             word in right for word in self.config.negation_words
         )

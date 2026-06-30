@@ -1,77 +1,75 @@
 # 复现实验说明
 
-本文件说明论文工程链路的推荐复现实验命令。所有命令应在仓库根目录执行。
+当前复现说明对应 RAIR-RAG-Bench。旧版 `profiles/paper_eval.yaml`、`build/eval/` 和 `artifacts/paper_final_v2/` 属于 HSC-RAG-DE 历史实验线，不作为当前论文主结果来源。
 
-## Profile
+## 数据与边界
 
-论文实验使用：
+主数据：
 
-```bash
-profiles/paper_eval.yaml
+```text
+benchmarks/rair_rag/data/gold/rair_gold_all.jsonl
+benchmarks/rair_rag/data/dev/rair_dev.jsonl
+benchmarks/rair_rag/data/test/rair_test.jsonl
+benchmarks/rair_rag/data/test/rair_test_negation.jsonl
+benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
 ```
 
-该 profile 默认关闭远端 LLM、TTS、硬件、rewrite 等 demo 路径，并开启 paper trace。普通 API、frontend、voice、hardware 代码不作为当前论文主实验结果来源。
+`dev` 仅用于开发、阈值选择和 DE calibration；`test`、`test_negation`、`test_multi_intent` 用于最终报告。
 
 ## 推荐命令
 
-生成 robust dev 数据：
+在支持 bash 的环境中：
 
 ```bash
-bash scripts/generate_robustness.sh
+bash scripts/run_rair_eval.sh
+uv run python -m experiments.de_routing_optimize
 ```
 
-运行 clean evaluation：
+Windows 环境如无 bash，可直接运行：
 
 ```bash
-bash scripts/run_clean_eval.sh
+uv run python -m benchmarks.rair_rag.run_routing_eval \
+  --data benchmarks/rair_rag/data/test/rair_test.jsonl \
+  --method risk-router \
+  --policy scoring/routing_policy_manual.yaml \
+  --out build/rair_eval/rair_test_risk-router-manual_predictions.jsonl \
+  --summary build/rair_eval/rair_test_risk-router-manual_summary.json
 ```
 
-运行 robust evaluation：
-
-```bash
-bash scripts/run_robust_eval.sh
-```
-
-运行 DE 离线权重优化：
-
-```bash
-bash scripts/run_de_optimize.sh
-```
-
-运行 ablation evaluation：
-
-```bash
-bash scripts/run_ablation.sh
-```
-
-导出论文表格：
-
-```bash
-bash scripts/export_tables.sh
-```
+其他方法和子集使用同一 entry point，替换 `--data`、`--method`、`--policy`、`--out` 和 `--summary` 即可。
 
 ## 输出目录
 
 主要输出目录：
 
-```bash
-build/eval
+```text
+build/rair_eval/
 ```
 
-Markdown 表格目录：
+主要文件：
 
-```bash
-build/eval/tables
+```text
+build/rair_eval/rair_test_*_summary.json
+build/rair_eval/rair_test_negation_*_summary.json
+build/rair_eval/rair_test_multi_intent_*_summary.json
+build/rair_eval/de_summary.json
+build/rair_eval/de_trials.jsonl
 ```
-
-阶段 11 导出的 CSV 包括 `main_results.csv`、`robustness_results.csv`、`ablation_results.csv`、`de_effect_results.csv`、`latency_memory_results.csv` 和 `trace_audit_results.csv`。
-
-## 数据与调参边界
-
-DE 只使用 dev 数据，包括 clean_dev 和 robustness_dev。final test set 不得用于 DE 调参、search space 调整或 fitness 设计。
-
-当前 clean_dev / robustness_dev 仍为 dev/smoke 数据，不等同最终 SCI test set。论文中文稿中的结果应引用阶段 11 导出的表格，不得手写或编造数值。
 
 ## 安全边界
 
-本仓库复现实验评估的是离线约束式应急回复生成链路，不提供医学诊断，不替代专业救援，也不保证救援结果。真实灾害环境仍需要独立硬件、现场、安全和伦理验证。
+RAIR-RAG 评估的是检索前风险上下文构建和输入路由，不评估医疗诊断能力，不替代专业救援或急救人员。数据集应表述为 guideline-informed, human-reviewed synthetic benchmark with label-level guideline references and explicit pending-source markers。
+
+## Legacy HSC 复现
+
+旧 HSC-RAG-DE 命令仍可用于历史复现：
+
+```bash
+bash scripts/run_clean_eval.sh
+bash scripts/run_robust_eval.sh
+bash scripts/run_de_optimize.sh
+bash scripts/run_ablation.sh
+bash scripts/export_tables.sh
+```
+
+这些命令产出的 `build/eval/` 和 `artifacts/paper_final_v2/` 不应混入当前 RAIR-RAG 主结果。

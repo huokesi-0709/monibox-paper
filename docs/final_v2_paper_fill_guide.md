@@ -1,5 +1,8 @@
 # final_v2 论文第 4 章回填指南
 
+> Legacy notice: this guide is only for the old HSC-RAG-DE / HSC-DisasterBench-v2 paper line. It must not be used to fill the current RAIR-RAG paper main result tables. Current RAIR-RAG tables should be derived from `benchmarks/rair_rag/` and `build/rair_eval/`.
+
+
 本指南用于约束 HSC-RAG 论文第 4 章的结果回填。所有主实验数字只能来自 `build/eval/final_v2/`，数据集说明来自 `benchmarks/data_v2/`，不要手工改写或混入 dev 调参结果。
 
 ## 1. 回填总原则

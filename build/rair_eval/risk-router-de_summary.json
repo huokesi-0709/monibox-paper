@@ -1,0 +1,52 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "method": "risk-router-de",
+  "metrics": {
+    "ConstraintF1": 0.9828571428571428,
+    "HRR": 0.8717948717948718,
+    "NegRiskExact": 0.8604166666666667,
+    "NegRiskF1": 0.7246376811594202,
+    "PFTR": 0.008333333333333333,
+    "PrimaryIntentAcc": 0.8583333333333333,
+    "RouteAcc": 0.8583333333333333,
+    "SecondaryIntentF1": 0.7055214723926381,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 0.0,
+        "HRR": 0.8,
+        "NegRiskExact": 0.9692307692307692,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.7538461538461538,
+        "RouteAcc": 0.7538461538461538,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 65
+      },
+      "multi_intent": {
+        "ConstraintF1": 0.980891719745223,
+        "HRR": 0.881578947368421,
+        "NegRiskExact": 0.9885931558935361,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.8593155893536122,
+        "RouteAcc": 0.8593155893536122,
+        "SecondaryIntentF1": 0.7516339869281046,
+        "num_cases": 263
+      },
+      "negation_conflict": {
+        "ConstraintF1": 1.0,
+        "HRR": 0.8846153846153846,
+        "NegRiskExact": 0.5921052631578947,
+        "NegRiskF1": 0.7380073800738007,
+        "PFTR": 0.02631578947368421,
+        "PrimaryIntentAcc": 0.9013157894736842,
+        "RouteAcc": 0.9013157894736842,
+        "SecondaryIntentF1": 0.0,
+        "num_cases": 152
+      }
+    },
+    "num_cases": 480
+  },
+  "num_cases": 480,
+  "policy": "scoring\\routing_policy_de.yaml"
+}

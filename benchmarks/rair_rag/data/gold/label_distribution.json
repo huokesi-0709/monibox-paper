@@ -14,23 +14,23 @@
     "aftershock_or_collapse_hazard": 28,
     "altered_consciousness_or_head_injury": 67,
     "crush_injury": 25,
-    "dehydration_or_resource_deprivation": 31,
+    "dehydration_or_resource_deprivation": 26,
     "hypothermia": 49,
     "low_battery": 13,
     "out_of_scope": 4,
     "psychological_distress": 53,
     "respiratory_distress": 152,
     "severe_bleeding_or_shock": 121,
-    "trapped_or_entrapment": 133,
+    "trapped_or_entrapment": 138,
     "trauma_or_fracture": 126
   },
   "risk_level": {
     "critical": 152,
-    "high": 423,
+    "high": 428,
     "low": 20,
-    "medium": 207
+    "medium": 202
   },
   "source_type": {
-    "template_generated": 802
+    "template_generated_human_reviewed": 802
   }
 }

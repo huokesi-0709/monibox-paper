@@ -68,6 +68,10 @@ TAG_BY_INTENT = {
     "out_of_scope": ["out_of_scope"],
 }
 
+TRAPPED_RESOURCE_PRIMARY_TERMS = (
+    "被困很久",
+)
+
 TEMPLATE_FILES = (
     "negation_templates.yaml",
     "multi_intent_templates.yaml",
@@ -106,7 +110,7 @@ def generate_candidates(template_dir: Path) -> list[dict[str, Any]]:
                     variant_index=variant_index,
                     perturbation_types=perturbation_types,
                 )
-                candidates.append(candidate)
+                candidates.append(apply_label_overrides(candidate))
     return candidates
 
 
@@ -229,6 +233,33 @@ def build_candidate(
         "label_status": "candidate",
         "needs_human_review": True,
     }
+
+
+def apply_label_overrides(candidate: dict[str, Any]) -> dict[str, Any]:
+    raw_input = str(candidate.get("raw_input") or "")
+    if (
+        candidate.get("template_id") in {"clean_dehydration_001", "clean_dehydration_002"}
+        and any(term in raw_input for term in TRAPPED_RESOURCE_PRIMARY_TERMS)
+    ):
+        candidate = dict(candidate)
+        candidate["positive_risks"] = [
+            "trapped_or_entrapment",
+            "dehydration_or_resource_deprivation",
+        ]
+        candidate["primary_intent"] = "trapped_or_entrapment"
+        candidate["secondary_intents"] = ["dehydration_or_resource_deprivation"]
+        candidate["expected_route"] = "route_trapped_or_entrapment"
+        candidate["expected_protocol_id"] = PROTOCOL_BY_ROUTE[
+            "route_trapped_or_entrapment"
+        ]
+        candidate["risk_level"] = RISK_LEVEL_BY_INTENT["trapped_or_entrapment"]
+        candidate["expected_tags"] = expected_tags(
+            primary_intent=candidate["primary_intent"],
+            positive_risks=list(candidate["positive_risks"]),
+            secondary_intents=list(candidate["secondary_intents"]),
+            operational_constraints=list(candidate["operational_constraints"]),
+        )
+    return candidate
 
 
 def id_prefix_for(template_file: str, template: dict[str, Any]) -> str:

@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import re
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,7 @@ DEFAULT_TEST = DATA_DIR / "test" / "rair_test.jsonl"
 DEFAULT_TEST_NEGATION = DATA_DIR / "test" / "rair_test_negation.jsonl"
 DEFAULT_TEST_MULTI = DATA_DIR / "test" / "rair_test_multi_intent.jsonl"
 DEFAULT_MANIFEST = DATA_DIR / "split_manifest.json"
+TEXT_LEAKAGE_FIELDS = ("raw_input", "canonical_input")
 
 
 def main() -> None:
@@ -73,7 +75,7 @@ def split_dev_test(
     if not cases:
         raise ValueError(f"{input_path}: no cases found")
 
-    groups = group_by_canonical_id(cases)
+    groups = group_by_leakage_keys(cases)
     dev_group_ids, test_group_ids = choose_dev_groups(
         groups=groups,
         dev_ratio=dev_ratio,
@@ -83,6 +85,7 @@ def split_dev_test(
     dev_cases = flatten_groups(groups, dev_group_ids)
     test_cases = flatten_groups(groups, test_group_ids)
     verify_no_canonical_leakage(dev_cases, test_cases)
+    verify_no_text_leakage(dev_cases, test_cases)
 
     test_negation_cases = filter_by_perturbation(test_cases, "negation_conflict")
     test_multi_cases = filter_by_perturbation(test_cases, "multi_intent")
@@ -132,11 +135,53 @@ def ensure_outputs_available(paths: list[Path], *, overwrite: bool) -> None:
         raise FileExistsError(f"output already exists; pass --overwrite: {joined}")
 
 
-def group_by_canonical_id(cases: list[RoutingCase]) -> dict[str, list[RoutingCase]]:
-    groups: dict[str, list[RoutingCase]] = defaultdict(list)
-    for case in cases:
-        groups[case.canonical_id].append(case)
-    return dict(groups)
+def group_by_leakage_keys(cases: list[RoutingCase]) -> dict[str, list[RoutingCase]]:
+    """Group cases by connected canonical/text keys to avoid split leakage."""
+    parent = list(range(len(cases)))
+    key_owner: dict[tuple[str, str], int] = {}
+
+    def find(index: int) -> int:
+        while parent[index] != index:
+            parent[index] = parent[parent[index]]
+            index = parent[index]
+        return index
+
+    def union(left: int, right: int) -> None:
+        left_root = find(left)
+        right_root = find(right)
+        if left_root != right_root:
+            parent[right_root] = left_root
+
+    for index, case in enumerate(cases):
+        for key in leakage_keys(case):
+            owner = key_owner.get(key)
+            if owner is None:
+                key_owner[key] = index
+            else:
+                union(index, owner)
+
+    by_root: dict[int, list[RoutingCase]] = defaultdict(list)
+    for index, case in enumerate(cases):
+        by_root[find(index)].append(case)
+
+    groups: dict[str, list[RoutingCase]] = {}
+    for items in by_root.values():
+        canonical_ids = sorted({case.canonical_id for case in items})
+        groups["|".join(canonical_ids)] = items
+    return groups
+
+
+def leakage_keys(case: RoutingCase) -> list[tuple[str, str]]:
+    keys = [("canonical_id", case.canonical_id.strip())]
+    for field_name in TEXT_LEAKAGE_FIELDS:
+        value = normalized_text_key(getattr(case, field_name))
+        if value:
+            keys.append((field_name, value))
+    return keys
+
+
+def normalized_text_key(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip().casefold()
 
 
 def choose_dev_groups(
@@ -186,6 +231,26 @@ def verify_no_canonical_leakage(
         raise ValueError(f"canonical_id leakage between dev/test: {sample}")
 
 
+def verify_no_text_leakage(
+    dev_cases: list[RoutingCase], test_cases: list[RoutingCase]
+) -> None:
+    for field_name in TEXT_LEAKAGE_FIELDS:
+        dev_texts = {
+            normalized_text_key(getattr(case, field_name))
+            for case in dev_cases
+            if normalized_text_key(getattr(case, field_name))
+        }
+        test_texts = {
+            normalized_text_key(getattr(case, field_name))
+            for case in test_cases
+            if normalized_text_key(getattr(case, field_name))
+        }
+        leaked = sorted(dev_texts & test_texts)
+        if leaked:
+            sample = ", ".join(repr(item) for item in leaked[:5])
+            raise ValueError(f"{field_name} leakage between dev/test: {sample}")
+
+
 def filter_by_perturbation(
     cases: list[RoutingCase], perturbation_type: str
 ) -> list[RoutingCase]:
@@ -212,7 +277,10 @@ def build_manifest(
         "seed": seed,
         "dev_ratio": dev_ratio,
         "test_ratio": test_ratio,
-        "leakage_rule": "all cases with the same canonical_id stay in one split",
+        "leakage_rule": (
+            "all cases connected by canonical_id, normalized raw_input, or "
+            "normalized canonical_input stay in one split"
+        ),
         "usage_note": "DE and any parameter tuning may use dev only; test files are held out.",
         "splits": {
             "dev": split_summary(dev_cases, dev_group_ids),
@@ -226,6 +294,7 @@ def build_manifest(
                 sorted({case.canonical_id for case in test_multi_cases}),
             ),
         },
+        "gold_duplicate_text_groups": duplicate_text_summary(dev_cases + test_cases),
     }
 
 
@@ -245,6 +314,7 @@ def split_summary(
             "source_type": count_values(case.source_type for case in cases),
             "label_status": count_values(case.label_status for case in cases),
         },
+        "duplicate_text_groups": duplicate_text_summary(cases),
     }
 
 
@@ -257,6 +327,26 @@ def count_list_values(values: Any) -> dict[str, int]:
     for items in values:
         counter.update(items)
     return dict(sorted(counter.items()))
+
+
+def duplicate_text_summary(cases: list[RoutingCase]) -> dict[str, Any]:
+    summary: dict[str, Any] = {}
+    for field_name in TEXT_LEAKAGE_FIELDS:
+        groups: dict[str, list[str]] = defaultdict(list)
+        for case in cases:
+            key = normalized_text_key(getattr(case, field_name))
+            if key:
+                groups[key].append(case.id)
+        duplicates = {text: ids for text, ids in groups.items() if len(ids) > 1}
+        summary[field_name] = {
+            "num_duplicate_groups": len(duplicates),
+            "num_duplicate_cases": sum(len(ids) for ids in duplicates.values()),
+            "examples": [
+                {"text": text, "case_ids": ids[:8]}
+                for text, ids in sorted(duplicates.items())[:5]
+            ],
+        }
+    return summary
 
 
 def write_jsonl(path: Path, cases: list[RoutingCase]) -> None:

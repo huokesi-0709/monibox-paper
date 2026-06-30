@@ -800,14 +800,14 @@ clean_0127,yes,aftershock_or_collapse_hazard,,,,,可接受，标签清楚；含p
 clean_0128,yes,aftershock_or_collapse_hazard,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
 clean_0129,yes,aftershock_or_collapse_hazard,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
 clean_0130,yes,aftershock_or_collapse_hazard,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
-clean_0131,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
+clean_0131,yes,trapped_or_entrapment,dehydration_or_resource_deprivation,,,,"accept; clean trapped-resource case uses trapped primary with resource deprivation secondary, aligned with multi-intent codebook"
 clean_0132,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
 clean_0133,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
 clean_0134,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
-clean_0135,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
-clean_0136,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
-clean_0137,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
-clean_0138,yes,dehydration_or_resource_deprivation,,,,,可接受，标签清楚；含pending_source_confirmation标签，gold前需确认来源
+clean_0135,yes,trapped_or_entrapment,dehydration_or_resource_deprivation,,,,"accept; clean trapped-resource case uses trapped primary with resource deprivation secondary, aligned with multi-intent codebook"
+clean_0136,yes,trapped_or_entrapment,dehydration_or_resource_deprivation,,,,"accept; clean trapped-resource case uses trapped primary with resource deprivation secondary, aligned with multi-intent codebook"
+clean_0137,yes,trapped_or_entrapment,dehydration_or_resource_deprivation,,,,"accept; clean trapped-resource case uses trapped primary with resource deprivation secondary, aligned with multi-intent codebook"
+clean_0138,yes,trapped_or_entrapment,dehydration_or_resource_deprivation,,,,"accept; clean trapped-resource case uses trapped primary with resource deprivation secondary, aligned with multi-intent codebook"
 clean_0139,yes,low_battery,,,low_battery,,可接受，标签清楚
 clean_0140,yes,low_battery,,,low_battery,,可接受，标签清楚
 clean_0141,yes,low_battery,,,low_battery,,可接受，标签清楚

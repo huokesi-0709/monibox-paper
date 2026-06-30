@@ -1,19 +1,19 @@
 version: "de-candidate-0054"
 negation_window: 5
-negation_penalty: 0.3687
-confidence_threshold: 0.4046
-high_risk_boost: 0.1622
+negation_penalty: 0.4833
+confidence_threshold: 0.2371
+high_risk_boost: 0.0440
 operational_constraint_weight: 0.4167
 intent_base_weights:
   respiratory_distress: 0.5735
-  severe_bleeding_or_shock: 0.5673
-  crush_injury: 1.1504
-  altered_consciousness_or_head_injury: 1.0679
+  severe_bleeding_or_shock: 0.4334
+  crush_injury: 0.8404
+  altered_consciousness_or_head_injury: 1.1117
   trapped_or_entrapment: 0.5473
-  aftershock_or_collapse_hazard: 0.8948
-  hypothermia: 0.7845
-  trauma_or_fracture: 0.0298
-  dehydration_or_resource_deprivation: 0.1299
+  aftershock_or_collapse_hazard: 1.0421
+  hypothermia: 0.8052
+  trauma_or_fracture: 1.1489
+  dehydration_or_resource_deprivation: 0.4862
   psychological_distress: 1.0223
   low_battery: 0.5801
-  out_of_scope: 0.4128
+  out_of_scope: 0.6897

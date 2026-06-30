@@ -3,22 +3,22 @@
   "method": "single-intent",
   "metrics": {
     "ConstraintF1": 1.0,
-    "HRR": 0.8846153846153846,
-    "NegRiskExact": 0.5723684210526315,
-    "NegRiskF1": 0.7238805970149255,
+    "HRR": 0.9230769230769231,
+    "NegRiskExact": 0.6052631578947368,
+    "NegRiskF1": 0.7518248175182481,
     "PFTR": 0.006578947368421052,
-    "PrimaryIntentAcc": 0.8947368421052632,
-    "RouteAcc": 0.8947368421052632,
+    "PrimaryIntentAcc": 0.9539473684210527,
+    "RouteAcc": 0.9539473684210527,
     "SecondaryIntentF1": 0.0,
     "by_perturbation_type": {
       "negation_conflict": {
         "ConstraintF1": 1.0,
-        "HRR": 0.8846153846153846,
-        "NegRiskExact": 0.5723684210526315,
-        "NegRiskF1": 0.7238805970149255,
+        "HRR": 0.9230769230769231,
+        "NegRiskExact": 0.6052631578947368,
+        "NegRiskF1": 0.7518248175182481,
         "PFTR": 0.006578947368421052,
-        "PrimaryIntentAcc": 0.8947368421052632,
-        "RouteAcc": 0.8947368421052632,
+        "PrimaryIntentAcc": 0.9539473684210527,
+        "RouteAcc": 0.9539473684210527,
         "SecondaryIntentF1": 0.0,
         "num_cases": 152
       }

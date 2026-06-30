@@ -1,7 +1,19 @@
 {
   "dev_ratio": 0.4,
+  "gold_duplicate_text_groups": {
+    "canonical_input": {
+      "examples": [],
+      "num_duplicate_cases": 0,
+      "num_duplicate_groups": 0
+    },
+    "raw_input": {
+      "examples": [],
+      "num_duplicate_cases": 0,
+      "num_duplicate_groups": 0
+    }
+  },
   "input": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\gold\\rair_gold_all.jsonl",
-  "leakage_rule": "all cases with the same canonical_id stay in one split",
+  "leakage_rule": "all cases connected by canonical_id, normalized raw_input, or normalized canonical_input stay in one split",
   "seed": 20260630,
   "splits": {
     "dev": {
@@ -42,6 +54,18 @@
         "case_neg_hypothermia_trapped_003",
         "case_neg_respiratory_bleeding_004"
       ],
+      "duplicate_text_groups": {
+        "canonical_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        },
+        "raw_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        }
+      },
       "label_distribution": {
         "label_status": {
           "adjudicated": 3,
@@ -74,7 +98,7 @@
           "medium": 87
         },
         "source_type": {
-          "template_generated": 322
+          "template_generated_human_reviewed": 322
         }
       },
       "num_canonical_ids": 35,
@@ -146,6 +170,18 @@
         "case_neg_respiratory_panic_001",
         "case_neg_respiratory_trapped_003"
       ],
+      "duplicate_text_groups": {
+        "canonical_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        },
+        "raw_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        }
+      },
       "label_distribution": {
         "label_status": {
           "adjudicated": 11,
@@ -160,23 +196,23 @@
           "aftershock_or_collapse_hazard": 13,
           "altered_consciousness_or_head_injury": 49,
           "crush_injury": 22,
-          "dehydration_or_resource_deprivation": 25,
+          "dehydration_or_resource_deprivation": 20,
           "hypothermia": 31,
           "low_battery": 9,
           "psychological_distress": 41,
           "respiratory_distress": 73,
           "severe_bleeding_or_shock": 90,
-          "trapped_or_entrapment": 73,
+          "trapped_or_entrapment": 78,
           "trauma_or_fracture": 54
         },
         "risk_level": {
           "critical": 73,
-          "high": 278,
+          "high": 283,
           "low": 9,
-          "medium": 120
+          "medium": 115
         },
         "source_type": {
-          "template_generated": 480
+          "template_generated_human_reviewed": 480
         }
       },
       "num_canonical_ids": 63,
@@ -216,6 +252,18 @@
         "case_multi_resp_trapped_004",
         "case_multi_trapped_battery_005"
       ],
+      "duplicate_text_groups": {
+        "canonical_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        },
+        "raw_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        }
+      },
       "label_distribution": {
         "label_status": {
           "adjudicated": 8,
@@ -242,7 +290,7 @@
           "medium": 35
         },
         "source_type": {
-          "template_generated": 263
+          "template_generated_human_reviewed": 263
         }
       },
       "num_canonical_ids": 31,
@@ -270,6 +318,18 @@
         "case_neg_respiratory_panic_001",
         "case_neg_respiratory_trapped_003"
       ],
+      "duplicate_text_groups": {
+        "canonical_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        },
+        "raw_input": {
+          "examples": [],
+          "num_duplicate_cases": 0,
+          "num_duplicate_groups": 0
+        }
+      },
       "label_distribution": {
         "label_status": {
           "adjudicated": 3,
@@ -295,7 +355,7 @@
           "medium": 65
         },
         "source_type": {
-          "template_generated": 152
+          "template_generated_human_reviewed": 152
         }
       },
       "num_canonical_ids": 19,

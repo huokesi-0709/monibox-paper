@@ -1,18 +1,48 @@
 # Paper 工作目录
 
-论文题目：**面向灾害受困场景的鲁棒启发式安全约束离线 RAG 应急回复生成方法**
+当前论文主线：**RAIR-RAG: Risk-Aware Input Routing for Offline RAG-Based Disaster Emergency Response**。
 
-本目录用于存放中文论文工作稿、图表清单、表格清单和复现实验说明。当前内容是仓库内论文工程写作材料，不是最终投稿版，也不代表已经完成最终 SCI 实验。
+本目录用于存放当前 RAIR-RAG 论文草稿、图表清单、表格清单和复现实验说明。当前主线不是旧版 HSC-RAG-DE / HSC-DisasterBench-v2，而是 `benchmarks/rair_rag/` 下的 RAIR-RAG-Bench。
 
-实验结果应来自 `build/eval/` 及阶段 11 导出的表格，包括 `main_results.csv`、`robustness_results.csv`、`ablation_results.csv`、`de_effect_results.csv`、`latency_memory_results.csv` 和 `trace_audit_results.csv`。不要在论文稿中手写或编造实验数值。
+## 当前主线
 
-当前 `benchmarks/data/clean_dev.jsonl` 与 `benchmarks/data/robustness_dev.jsonl` 仍属于 dev/smoke 数据，用于验证复现实验链路、指标计算和方法对比流程，不等同最终 SCI test set。
+论文应围绕以下问题展开：
 
-简写说明：`clean_dev / robustness_dev` 均指当前开发与 smoke 评估数据，不代表最终测试集。
+- 否定冲突：用户明确否定某个风险时，系统是否能避免协议误触发。
+- 多意图输入：同一输入包含多个风险或运行约束时，系统是否能按安全优先级选择主路由并保留次要风险。
+- 风险感知输入路由：在 RAG 检索和协议门控前，构建更可靠的风险上下文。
+- 路由参数校准：DE 仅作为 dev split 上的离线校准工具，不是主要性能来源。
+
+## 当前数据与结果来源
+
+主数据集与 split：
+
+```text
+benchmarks/rair_rag/data/gold/rair_gold_all.jsonl
+benchmarks/rair_rag/data/dev/rair_dev.jsonl
+benchmarks/rair_rag/data/test/rair_test.jsonl
+benchmarks/rair_rag/data/test/rair_test_negation.jsonl
+benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
+```
+
+主实验产物：
+
+```text
+build/rair_eval/
+```
+
+当前论文表格和结果描述应优先引用 `build/rair_eval/rair_test_*_summary.json`、`build/rair_eval/rair_test_negation_*_summary.json`、`build/rair_eval/rair_test_multi_intent_*_summary.json`。
+
+## Legacy HSC 归档
+
+`artifacts/paper_final_v2/` 和 `build/eval/final_v2/` 属于旧版 HSC-RAG-DE / HSC-DisasterBench-v2 实验归档。它们可以用于历史背景、方法演进或附录说明，但不要作为当前 RAIR-RAG 论文的主实验表格、主结论或当前 benchmark 结果来源。
 
 推荐阅读顺序：
 
-1. `reproducibility.md`
-2. `tables.md`
-3. `figures.md`
-4. `manuscript_zh.md`
+1. `zh/01_论文定位与贡献.md`
+2. `zh/04_Method.md`
+3. `zh/05_Experimental_Setup.md`
+4. `zh/06_Results.md`
+5. `reproducibility.md`
+6. `tables.md`
+7. `figures.md`

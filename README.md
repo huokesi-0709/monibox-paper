@@ -34,35 +34,51 @@ uv run python -m experiments.de_routing_optimize
 
 RAIR-RAG 最终实验产物位于 `build/rair_eval/`。建议上传 summary、predictions、`de_trials.jsonl`、`de_summary.json` 和 `de_best_policy.yaml`，但不要上传 `build/rair_eval/de_routing/` 里的 DE 中间候选预测文件。
 
-## Paper Reproduction Quickstart
+## RAIR-RAG Paper Reproduction Quickstart
 
-论文实验默认使用 `profiles/paper_eval.yaml`，该 profile 关闭远端 LLM、关闭 rewrite、关闭语音/硬件输出，并将 trace 写入 `build/eval/`，用于离线、确定性、可复现实验。
+当前论文主线默认使用 `benchmarks/rair_rag/` 数据集与 `build/rair_eval/` 实验产物。论文主表、分扰动表、否定冲突分析、多意图分析和 routing policy 校准结果都应来自 RAIR-RAG-Bench，而不是旧的 `artifacts/paper_final_v2/` 或 `build/eval/final_v2/`。
 
 ```bash
-# clean eval
+# RAIR-RAG test, negation subset, and multi-intent subset
+bash scripts/run_rair_eval.sh
+
+# RAIR-RAG DE calibration on dev split only
+uv run python -m experiments.de_routing_optimize
+```
+
+在 Windows 环境没有 bash 时，可以直接调用 Python entry point：
+
+```bash
+uv run python -m benchmarks.rair_rag.run_routing_eval \
+  --data benchmarks/rair_rag/data/test/rair_test.jsonl \
+  --method risk-router \
+  --policy scoring/routing_policy_manual.yaml \
+  --out build/rair_eval/rair_test_risk-router-manual_predictions.jsonl \
+  --summary build/rair_eval/rair_test_risk-router-manual_summary.json
+```
+
+API 服务和 `frontend/` 控制台只用于演示、联调和原型验证；当前 RAIR-RAG 论文中的核心实验结果应以 `benchmarks/rair_rag/`、`scoring/routing_policy_*.yaml` 和 `build/rair_eval/` 下的离线产物为准。
+
+### Legacy HSC-RAG-DE Reproduction
+
+旧版 HSC-RAG-DE 实验仍可用于历史复现、方法背景或附录对照，但不要作为当前 RAIR-RAG 论文的主表或主结论来源。旧实验入口包括：
+
+```bash
 bash scripts/run_clean_eval.sh
-
-# robust eval
 bash scripts/run_robust_eval.sh
-
-# Differential Evolution weight optimization
 bash scripts/run_de_optimize.sh
-
-# ablation
 bash scripts/run_ablation.sh
-
-# export tables
 bash scripts/export_tables.sh
 ```
 
-等价的 Python entry points：
+等价的旧 Python entry points：
 
 ```bash
 monibox-eval --profile-file profiles/paper_eval.yaml --suite clean --output-dir build/eval/clean
 monibox-de --config experiments/configs/de_hsc_rag.yaml
 ```
 
-API 服务和 `frontend/` 控制台只用于演示、联调和原型验证；论文中的 clean/robust/DE/ablation 结果应以 `profiles/paper_eval.yaml` 和 `build/eval/` 下的离线实验产物为准。
+`artifacts/paper_final_v2/` 与 `build/eval/final_v2/` 对应 HSC-DisasterBench-v2 / HSC-RAG-DE 历史归档，只能作为 legacy evidence 引用。
 
 MoniBox 是一个面向灾害受困场景的离线运行系统。当前仓库重点不是"功能尽量多"，而是先稳定一条可验证主链：
 
