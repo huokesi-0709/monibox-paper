@@ -74,5 +74,5 @@
     "num_cases": 120
   },
   "num_cases": 120,
-  "policy": null
+  "policy": "scoring\\routing_policy_manual.yaml"
 }

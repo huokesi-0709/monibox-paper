@@ -1,10 +1,10 @@
 # RAIR-RAG-Bench
 
-RAIR-RAG-Bench is designed for evaluating pre-retrieval risk context construction in safety-critical RAG. It focuses on whether a system can identify positive risks, negated risks, primary intent, secondary intents, operational constraints, suppressed protocols, and predicted routes before retrieval and generation.
+RAIR-RAG-Bench 用于评估 safety-critical RAG 中的检索前风险上下文构建。它关注系统能否在检索和生成之前识别并组织 `risk_candidates`、正向风险、被否定风险、主意图、次级意图、操作约束、抑制协议和预测路由。
 
-当前基准集用于离线灾害应急援助场景，不声称覆盖医疗、法律、金融等全部 safety-critical domains。它不是最终回答生成数据集，而是检验“检索前风险语义结构是否被正确构建”的基准集。
+该数据集不是最终回答生成数据集，也不评价自然语言回复质量。当前验证场景限定为离线灾害应急辅助，不声称覆盖医疗、法律、金融等全部 safety-critical domains。
 
-## Data Files
+## 数据文件
 
 ```text
 data/gold/rair_gold_all.jsonl
@@ -15,7 +15,13 @@ data/test/rair_test_multi_intent.jsonl
 data/test/rair_test_multi_intent_negation.jsonl
 ```
 
-## Core Fields
+## 标注状态
+
+主测试集 `rair_test.jsonl` 中的样本使用 `label_status=consensus` 和 `source_type=template_generated_human_reviewed`，表示模板辅助构造后经过人工复核。
+
+复合扰动扩展集 `rair_test_multi_intent_negation.jsonl` 使用 `label_status=template_composed_pending_review` 和 `source_type=template_composed_multi_intent_negation`。该子集用于压力测试“多意图 + 否定冲突”的复合场景；除非后续完成独立人工复核，否则论文中应描述为“模板组合构造的复合扰动扩展集”，不应称为全量人工 consensus 标注。
+
+## 核心字段
 
 | Field | Meaning | Role in RAIR |
 |---|---|---|
@@ -32,7 +38,9 @@ data/test/rair_test_multi_intent_negation.jsonl
 | `expected_protocol_id` | 标准协议 ID | 协议级评估 |
 | `should_not_trigger` | 不应触发协议 | 兼容旧字段 |
 | `risk_level` | 风险等级 | `HRR` 分析 |
-| `guideline_refs` | 权威资料引用 | 数据来源说明 |
+| `guideline_refs` | 资料引用 | 数据来源说明 |
+| `label_status` | 标注状态 | 区分 consensus 与扩展构造集 |
+| `source_type` | 样本来源 | 描述模板生成、人工复核或组合构造 |
 
 ## evidence_type
 
@@ -54,7 +62,7 @@ data/test/rair_test_multi_intent_negation.jsonl
 | `disaster_scene_context` | 来自灾害场景线索 |
 | `manual_boundary_case` | 人工构造边界样本 |
 
-## Perturbation Types
+## 扰动类型
 
 | perturbation_type | Meaning |
 |---|---|
@@ -65,7 +73,7 @@ data/test/rair_test_multi_intent_negation.jsonl
 | `out_of_scope` | 越界或无关输入 |
 | `mixed_out_of_scope` | 灾害场景中夹杂无关请求 |
 
-## Evaluation Metrics
+## 评价指标
 
 - `RouteAcc`：预测路由是否与标准路由一致。
 - `HRR`：高风险召回率。
@@ -77,13 +85,30 @@ data/test/rair_test_multi_intent_negation.jsonl
 - `RiskCandidateF1`：风险候选抽取 F1。
 - `EvidenceTypeAcc`：证据类型识别准确率。
 
-## Reproducibility
+## 复现
+
+Linux/macOS 或 Git Bash：
 
 ```bash
 bash scripts/run_rair_eval.sh
-python experiments/export_rair_tables.py
+python -m experiments.export_rair_tables
 ```
 
-## Scope Note
+Windows PowerShell：
 
-RAIR-RAG-Bench 聚焦于安全关键 RAG 的检索前风险上下文构建，不直接评估最终自然语言回答质量。它强调的是：系统是否能在检索前正确构建风险语义结构，而不是是否生成了一段看起来合理的回答。
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_rair_eval.ps1
+python -m experiments.export_rair_tables
+```
+
+运行时延可通过以下命令重新测量：
+
+```bash
+uv run python -m benchmarks.rair_rag.scripts.build_runtime_latency_summary
+```
+
+时延结果是运行环境相关的辅助分析，不作为主准确率实验指标。
+
+## 范围说明
+
+RAIR-RAG-Bench 聚焦安全关键 RAG 的检索前风险上下文构建。RAG 检索和生成是 RAIR `risk_context` 的下游消费者，不是该基准优化或直接评价的组件。

@@ -21,7 +21,7 @@ def test_export_rair_tables_generates_named_tables(tmp_path: Path) -> None:
     eval_dir = tmp_path / "rair_eval"
     out_dir = eval_dir / "tables"
     _write_json(
-        eval_dir / "rair_test_summary.json",
+        eval_dir / "rair_test_risk-router_summary.json",
         {
             "data": "benchmarks/rair_rag/data/test/rair_test.jsonl",
             "method": "risk-router",

@@ -38,6 +38,7 @@ run_dataset() {
   local data_path="$2"
 
   run_eval "$dataset_name" "$data_path" "keyword-baseline" "keyword-baseline"
+  run_eval "$dataset_name" "$data_path" "bert-multilabel" "bert-multilabel"
   run_eval "$dataset_name" "$data_path" "no-negation" "no-negation"
   run_eval "$dataset_name" "$data_path" "single-intent" "single-intent"
   run_eval "$dataset_name" "$data_path" "risk-router" "risk-router" "$MANUAL_POLICY"
@@ -46,5 +47,6 @@ run_dataset() {
 run_dataset "rair_test" "benchmarks/rair_rag/data/test/rair_test.jsonl"
 run_dataset "rair_test_negation" "benchmarks/rair_rag/data/test/rair_test_negation.jsonl"
 run_dataset "rair_test_multi_intent" "benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl"
+run_dataset "rair_test_multi_intent_negation" "benchmarks/rair_rag/data/test/rair_test_multi_intent_negation.jsonl"
 
 echo "[rair-eval] done: $OUT_DIR"

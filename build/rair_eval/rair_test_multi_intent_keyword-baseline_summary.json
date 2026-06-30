@@ -3,23 +3,29 @@
   "method": "keyword-baseline",
   "metrics": {
     "ConstraintF1": 0.13953488372093023,
+    "EvidenceTypeAcc": 0.0,
     "HRR": 0.7894736842105263,
     "NegRiskExact": 1.0,
     "NegRiskF1": 0.0,
     "PFTR": 0.0,
     "PrimaryIntentAcc": 0.6920152091254753,
+    "RiskCandidateF1": 0.0,
     "RouteAcc": 0.6920152091254753,
     "SecondaryIntentF1": 0.0,
+    "SuppressedProtocolF1": 0.0,
     "by_perturbation_type": {
       "multi_intent": {
         "ConstraintF1": 0.13953488372093023,
+        "EvidenceTypeAcc": 0.0,
         "HRR": 0.7894736842105263,
         "NegRiskExact": 1.0,
         "NegRiskF1": 0.0,
         "PFTR": 0.0,
         "PrimaryIntentAcc": 0.6920152091254753,
+        "RiskCandidateF1": 0.0,
         "RouteAcc": 0.6920152091254753,
         "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.0,
         "num_cases": 263
       }
     },

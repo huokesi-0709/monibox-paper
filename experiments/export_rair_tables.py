@@ -21,15 +21,32 @@ METHOD_DISPLAY_NAMES = {
 
 MAIN_METHODS = [
     "keyword-baseline",
-    "no-negation",
-    "single-intent",
-    "risk-router",
     "bert-multilabel",
     "llm-zero-shot",
     "llm-few-shot",
+    "no-negation",
+    "single-intent",
+    "risk-router",
 ]
 
 METHOD_ORDER = {method: index for index, method in enumerate(MAIN_METHODS)}
+
+MAIN_SUMMARY_BY_METHOD = {
+    method: f"rair_test_{method}_summary.json" for method in MAIN_METHODS
+}
+
+CANONICAL_DATASETS = [
+    "rair_test",
+    "rair_test_negation",
+    "rair_test_multi_intent",
+    "rair_test_multi_intent_negation",
+]
+
+CANONICAL_SUMMARY_NAMES = {
+    f"{dataset}_{method}_summary.json"
+    for dataset in CANONICAL_DATASETS
+    for method in MAIN_METHODS
+}
 
 MAIN_FIELDS = [
     "Method",
@@ -127,6 +144,8 @@ def _table_row(summary: dict[str, Any]) -> dict[str, Any]:
         "RiskCandidateF1": _metric(summary, "RiskCandidateF1"),
         "_num_cases": summary.get("num_cases", _metric(summary, "num_cases", "")),
         "_summary": summary,
+        "_summary_name": summary.get("_summary_name", ""),
+        "_summary_path": summary.get("_summary_path", ""),
     }
 
 
@@ -144,27 +163,38 @@ def _suite_from_data(data: str) -> str:
 
 
 def _select_main_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    selected = [row for row in rows if row["_method"] in MAIN_METHODS]
-    deduped: dict[str, dict[str, Any]] = {}
-    for row in selected:
-        method = row["_method"]
-        current = deduped.get(method)
-        if current is None:
-            deduped[method] = row
+    selected: list[dict[str, Any]] = []
+    for method in MAIN_METHODS:
+        method_rows = [row for row in rows if row["_method"] == method]
+        if not method_rows:
             continue
-        if int(row.get("_num_cases") or 0) > int(current.get("_num_cases") or 0):
-            deduped[method] = row
-    return sorted(
-        deduped.values(),
-        key=lambda row: (
-            METHOD_ORDER.get(str(row["_method"]), 999),
-            str(row["_method"]),
-        ),
-    )
+        preferred_name = MAIN_SUMMARY_BY_METHOD.get(method)
+        preferred_rows = [
+            row for row in method_rows if row.get("_summary_name") == preferred_name
+        ]
+        if preferred_rows:
+            selected.append(preferred_rows[0])
+            continue
+        selected.append(
+            max(
+                method_rows,
+                key=lambda row: (
+                    int(row.get("_num_cases") or 0),
+                    "manual" not in str(row.get("_summary_name") or ""),
+                    "v2" not in str(row.get("_summary_name") or ""),
+                ),
+            )
+        )
+    return selected
 
 
 def _select_ablation_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    selected = [row for row in rows if row["_method"] in {"no-negation", "single-intent"}]
+    selected = [
+        row
+        for row in rows
+        if row["_method"] in {"no-negation", "single-intent"}
+        and row.get("_summary_name") in MAIN_SUMMARY_BY_METHOD.values()
+    ]
     return sorted(
         selected,
         key=lambda row: (
@@ -326,15 +356,23 @@ def export_rair_tables(
 
     for path in summary_paths:
         try:
-            summaries.append(_read_json(path))
+            summary = _read_json(path)
+            summary["_summary_name"] = path.name
+            summary["_summary_path"] = str(path)
+            summaries.append(summary)
         except Exception as exc:
             warnings.append(f"skip unreadable summary {path}: {exc}")
 
     rows = [_table_row(summary) for summary in summaries if summary]
     main_rows = _select_main_rows(rows)
-    perturbation_rows = _build_perturbation_rows(summaries)
+    canonical_summaries = [
+        summary
+        for summary in summaries
+        if summary.get("_summary_name") in CANONICAL_SUMMARY_NAMES
+    ]
+    perturbation_rows = _build_perturbation_rows(canonical_summaries)
     ablation_rows = _select_ablation_rows(rows)
-    error_rows = _build_error_analysis_rows(summaries)
+    error_rows = _build_error_analysis_rows(canonical_summaries)
 
     outputs = {}
     main_csv = out_path / "main_results.csv"

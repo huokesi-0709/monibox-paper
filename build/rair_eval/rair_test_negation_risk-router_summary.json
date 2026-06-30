@@ -1,29 +1,29 @@
 {
   "data": "benchmarks\\rair_rag\\data\\test\\rair_test_negation.jsonl",
-  "method": "single-intent",
+  "method": "risk-router",
   "metrics": {
     "ConstraintF1": 1.0,
     "EvidenceTypeAcc": 0.0,
-    "HRR": 0.8717948717948718,
+    "HRR": 0.9230769230769231,
     "NegRiskExact": 0.6052631578947368,
     "NegRiskF1": 0.7518248175182481,
-    "PFTR": 0.0,
-    "PrimaryIntentAcc": 0.9342105263157895,
+    "PFTR": 0.019736842105263157,
+    "PrimaryIntentAcc": 0.9407894736842105,
     "RiskCandidateF1": 0.0,
-    "RouteAcc": 0.875,
+    "RouteAcc": 0.881578947368421,
     "SecondaryIntentF1": 0.0,
     "SuppressedProtocolF1": 0.7518248175182481,
     "by_perturbation_type": {
       "negation_conflict": {
         "ConstraintF1": 1.0,
         "EvidenceTypeAcc": 0.0,
-        "HRR": 0.8717948717948718,
+        "HRR": 0.9230769230769231,
         "NegRiskExact": 0.6052631578947368,
         "NegRiskF1": 0.7518248175182481,
-        "PFTR": 0.0,
-        "PrimaryIntentAcc": 0.9342105263157895,
+        "PFTR": 0.019736842105263157,
+        "PrimaryIntentAcc": 0.9407894736842105,
         "RiskCandidateF1": 0.0,
-        "RouteAcc": 0.875,
+        "RouteAcc": 0.881578947368421,
         "SecondaryIntentF1": 0.0,
         "SuppressedProtocolF1": 0.7518248175182481,
         "num_cases": 152
@@ -32,5 +32,5 @@
     "num_cases": 152
   },
   "num_cases": 152,
-  "policy": null
+  "policy": "scoring\\routing_policy_manual.yaml"
 }

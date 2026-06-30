@@ -1,10 +1,17 @@
 {
-  "predictions_path": "build\\rair_eval\\rair_test_risk-router_predictions.jsonl",
+  "data_path": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
   "num_cases": 480,
-  "avg_latency_ms": 0.0,
-  "p95_latency_ms": 0.0,
-  "max_latency_ms": 0.0,
-  "test_device": "CPU / RAM / Windows",
+  "num_measurements": 2400,
+  "warmup_cases": 20,
+  "repeat": 5,
+  "avg_latency_ms": 0.305838875,
+  "p95_latency_ms": 0.4376,
+  "max_latency_ms": 0.8679,
+  "min_latency_ms": 0.2034,
+  "measurement_status": "measured",
+  "timer": "time.perf_counter_ns",
+  "test_device": "Windows 11 / CPU cores=16",
   "gpu_used": false,
-  "embedding_precomputed": true
+  "embedding_precomputed": true,
+  "online_llm_used": false
 }

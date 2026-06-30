@@ -248,8 +248,11 @@ def compose_multi_intent_negation_case(
                 *neg_case.get("safety_boundaries", []),
             ]
         ),
-        "label_status": "template_composed",
-        "safety_note": None,
+        "label_status": "template_composed_pending_review",
+        "safety_note": (
+            "Template-composed compound perturbation. Use as an extension set; "
+            "do not describe as full consensus annotation unless independently reviewed."
+        ),
         "reference_reply": None,
     }
 

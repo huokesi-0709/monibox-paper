@@ -1,8 +1,8 @@
 {
   "data": "benchmarks\\rair_rag\\data\\test\\rair_test_negation.jsonl",
-  "method": "keyword-baseline",
+  "method": "bert-multilabel",
   "metrics": {
-    "ConstraintF1": 0.8,
+    "ConstraintF1": 1.0,
     "EvidenceTypeAcc": 0.0,
     "HRR": 0.8461538461538461,
     "NegRiskExact": 0.0,
@@ -15,7 +15,7 @@
     "SuppressedProtocolF1": 0.0,
     "by_perturbation_type": {
       "negation_conflict": {
-        "ConstraintF1": 0.8,
+        "ConstraintF1": 1.0,
         "EvidenceTypeAcc": 0.0,
         "HRR": 0.8461538461538461,
         "NegRiskExact": 0.0,

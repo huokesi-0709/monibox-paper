@@ -200,21 +200,39 @@ def predict_single_intent(case: RoutingCase) -> dict[str, Any]:
 
 
 def predict_bert_multilabel(case: RoutingCase) -> dict[str, Any]:
-    return predict_single_intent(case) | {
-        "method": "bert-multilabel",
+    router = RiskAwareInputRouter()
+    mentions = router.extract_risk_mentions(case.canonical_input)
+    positive = dedupe(
+        str(item.get("risk") or "")
+        for item in mentions
+        if str(item.get("risk") or "")
+    )
+    operational = ["low_battery"] if "low_battery" in positive else []
+    primary = positive[0] if positive else "out_of_scope"
+    secondary = positive[1:]
+    return {
+        "primary_intent": primary,
+        "secondary_intents": secondary,
+        "operational_constraints": operational,
+        "positive_risks": positive,
+        "negated_risks": [],
+        "suppressed_protocols": [],
+        "risk_mentions": mentions,
+        "risk_candidates": mentions,
+        "risk_score": 0.5 if primary != "out_of_scope" else 0.05,
         "trace": {
-            "baseline": "bert-multilabel local proxy",
+            "baseline": "bert-multilabel local proxy without explicit negation or suppressed-protocol modeling",
             "risk_context": {
-                "primary_intent": predict_single_intent(case)["primary_intent"],
-                "secondary_intents": predict_single_intent(case)["secondary_intents"],
-                "positive_risks": predict_single_intent(case)["positive_risks"],
-                "negated_risks": predict_single_intent(case)["negated_risks"],
-                "operational_constraints": predict_single_intent(case)["operational_constraints"],
+                "primary_intent": primary,
+                "secondary_intents": secondary,
+                "positive_risks": positive,
+                "negated_risks": [],
+                "operational_constraints": operational,
                 "suppressed_protocols": [],
-                "predicted_route": predict_single_intent(case).get("predicted_route"),
-                "protocol_id": predict_single_intent(case).get("protocol_id"),
-                "risk_score": predict_single_intent(case)["risk_score"],
-                "risk_candidates": predict_single_intent(case)["risk_mentions"],
+                "predicted_route": route_for_intent(primary),
+                "protocol_id": protocol_for_route(route_for_intent(primary)),
+                "risk_score": 0.5 if primary != "out_of_scope" else 0.05,
+                "risk_candidates": mentions,
             },
         },
     }
