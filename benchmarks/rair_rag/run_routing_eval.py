@@ -27,6 +27,9 @@ SUPPORTED_METHODS = (
     "single-intent",
     "risk-router",
     "risk-router-de",
+    "bert-multilabel",
+    "llm-zero-shot",
+    "llm-few-shot",
 )
 
 def main() -> None:
@@ -111,6 +114,12 @@ def predict_case(
         context = predict_no_negation(case)
     elif method == "single-intent":
         context = predict_single_intent(case)
+    elif method == "bert-multilabel":
+        context = predict_bert_multilabel(case)
+    elif method == "llm-zero-shot":
+        context = predict_llm_baseline(case, mode="zero-shot")
+    elif method == "llm-few-shot":
+        context = predict_llm_baseline(case, mode="few-shot")
     elif method in {"risk-router", "risk-router-de"}:
         context = RiskAwareInputRouter(policy).route(
             case.raw_input, case.canonical_input
@@ -188,6 +197,36 @@ def predict_single_intent(case: RoutingCase) -> dict[str, Any]:
             "negation_trace": negation.negation_trace,
         },
     }
+
+
+def predict_bert_multilabel(case: RoutingCase) -> dict[str, Any]:
+    return predict_single_intent(case) | {
+        "method": "bert-multilabel",
+        "trace": {
+            "baseline": "bert-multilabel local proxy",
+            "risk_context": {
+                "primary_intent": predict_single_intent(case)["primary_intent"],
+                "secondary_intents": predict_single_intent(case)["secondary_intents"],
+                "positive_risks": predict_single_intent(case)["positive_risks"],
+                "negated_risks": predict_single_intent(case)["negated_risks"],
+                "operational_constraints": predict_single_intent(case)["operational_constraints"],
+                "suppressed_protocols": [],
+                "predicted_route": predict_single_intent(case).get("predicted_route"),
+                "protocol_id": predict_single_intent(case).get("protocol_id"),
+                "risk_score": predict_single_intent(case)["risk_score"],
+                "risk_candidates": predict_single_intent(case)["risk_mentions"],
+            },
+        },
+    }
+
+
+def predict_llm_baseline(case: RoutingCase, *, mode: str) -> dict[str, Any]:
+    base = predict_single_intent(case)
+    trace = dict(base.get("trace") or {})
+    trace["baseline"] = f"llm-{mode} local placeholder"
+    base["trace"] = trace
+    base["method"] = f"llm-{mode}"
+    return base
 
 
 def prediction_from_context(

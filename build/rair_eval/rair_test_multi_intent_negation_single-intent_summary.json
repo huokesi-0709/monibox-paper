@@ -1,0 +1,78 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_multi_intent_negation.jsonl",
+  "method": "single-intent",
+  "metrics": {
+    "ConstraintF1": 0.4313725490196079,
+    "EvidenceTypeAcc": 1.0,
+    "HRR": 0.8532110091743119,
+    "NegRiskExact": 0.6166666666666667,
+    "NegRiskF1": 0.7671232876712328,
+    "PFTR": 0.075,
+    "PrimaryIntentAcc": 0.6833333333333333,
+    "RiskCandidateF1": 0.925754060324826,
+    "RouteAcc": 0.6833333333333333,
+    "SecondaryIntentF1": 0.0,
+    "SuppressedProtocolF1": 0.7671232876712328,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 0.0,
+        "EvidenceTypeAcc": 1.0,
+        "HRR": 1.0,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 1.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 1.0,
+        "RiskCandidateF1": 1.0,
+        "RouteAcc": 1.0,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 1.0,
+        "num_cases": 1
+      },
+      "multi_intent": {
+        "ConstraintF1": 0.4313725490196079,
+        "EvidenceTypeAcc": 1.0,
+        "HRR": 0.8532110091743119,
+        "NegRiskExact": 0.6166666666666667,
+        "NegRiskF1": 0.7671232876712328,
+        "PFTR": 0.075,
+        "PrimaryIntentAcc": 0.6833333333333333,
+        "RiskCandidateF1": 0.925754060324826,
+        "RouteAcc": 0.6833333333333333,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.7671232876712328,
+        "num_cases": 120
+      },
+      "multi_intent_negation": {
+        "ConstraintF1": 0.4313725490196079,
+        "EvidenceTypeAcc": 1.0,
+        "HRR": 0.8532110091743119,
+        "NegRiskExact": 0.6166666666666667,
+        "NegRiskF1": 0.7671232876712328,
+        "PFTR": 0.075,
+        "PrimaryIntentAcc": 0.6833333333333333,
+        "RiskCandidateF1": 0.925754060324826,
+        "RouteAcc": 0.6833333333333333,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.7671232876712328,
+        "num_cases": 120
+      },
+      "negation_conflict": {
+        "ConstraintF1": 0.4313725490196079,
+        "EvidenceTypeAcc": 1.0,
+        "HRR": 0.8532110091743119,
+        "NegRiskExact": 0.6166666666666667,
+        "NegRiskF1": 0.7671232876712328,
+        "PFTR": 0.075,
+        "PrimaryIntentAcc": 0.6833333333333333,
+        "RiskCandidateF1": 0.925754060324826,
+        "RouteAcc": 0.6833333333333333,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.7671232876712328,
+        "num_cases": 120
+      }
+    },
+    "num_cases": 120
+  },
+  "num_cases": 120,
+  "policy": null
+}

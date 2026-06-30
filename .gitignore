@@ -30,6 +30,7 @@ build/eval/perturbation_report.json
 # RAIR-RAG paper artifacts: keep final benchmark data/results uploadable.
 # Large DE scratch files are reproducible from de_trials/de_summary and stay local.
 !build/rair_eval/
+!build/rair_eval/**
 !build/rair_eval/*.json
 !build/rair_eval/*.jsonl
 !build/rair_eval/*.yaml
