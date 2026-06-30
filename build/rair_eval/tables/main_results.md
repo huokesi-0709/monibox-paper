@@ -1,4 +1,4 @@
-| Method | Offline Deployable | RouteAcc | HRR | PFTR | NegRiskF1 | SecondaryIntentF1 | ConstraintF1 | SuppressedProtocolF1 | RiskCandidateF1 |
+| Method | Offline Deployable | RouteAcc ↑ | HRR ↑ | PFTR ↓ | NegRiskF1 ↑ | SecondaryIntentF1 ↑ | ConstraintF1 ↑ | SuppressedProtocolF1 ↑ | RiskCandidateF1 ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Keyword | Yes | 0.7875 | 0.8314606741573034 | 0.008333333333333333 | 0.0 | 0.0 | 0.23762376237623764 | 0.0 | 0.0 |
 | BERT-MultiLabel | Yes | 0.7875 | 0.8314606741573034 | 0.008333333333333333 | 0.0 | 0.3488773747841105 | 0.9828571428571428 | 0.0 | 0.0 |

@@ -21,6 +21,26 @@ def test_export_rair_tables_generates_named_tables(tmp_path: Path) -> None:
     eval_dir = tmp_path / "rair_eval"
     out_dir = eval_dir / "tables"
     _write_json(
+        eval_dir / "rair_test_keyword-baseline_summary.json",
+        {
+            "data": "benchmarks/rair_rag/data/test/rair_test.jsonl",
+            "method": "keyword-baseline",
+            "metrics": {
+                "RouteAcc": 0.6,
+                "HRR": 0.7,
+                "PFTR": 0.08,
+                "NegRiskF1": 0.0,
+                "SecondaryIntentF1": 0.0,
+                "ConstraintF1": 0.4,
+                "SuppressedProtocolF1": 0.0,
+                "RiskCandidateF1": 0.5,
+                "by_perturbation_type": {},
+                "num_cases": 50,
+            },
+            "num_cases": 50,
+        },
+    )
+    _write_json(
         eval_dir / "rair_test_risk-router_summary.json",
         {
             "data": "benchmarks/rair_rag/data/test/rair_test.jsonl",
@@ -179,11 +199,12 @@ def test_export_rair_tables_generates_named_tables(tmp_path: Path) -> None:
         "RAIR w/o Multi-Intent Routing",
         "RAIR",
         "BERT-MultiLabel",
+        "Keyword",
     }
     assert next(row for row in main_rows if row["Method"] == "BERT-MultiLabel")[
         "Offline Deployable"
     ] == "Yes"
-    assert "SuppressedProtocolF1" in main_rows[0]
+    assert "SuppressedProtocolF1 \u2191" in main_rows[0]
     pert_rows = _read_csv(out_dir / "by_perturbation.csv")
     assert {row["Perturbation"] for row in pert_rows} >= {
         "clean_control",
@@ -193,7 +214,7 @@ def test_export_rair_tables_generates_named_tables(tmp_path: Path) -> None:
         "out_of_scope",
     }
     assert any(row["Method"] == "RAIR" for row in pert_rows)
-    assert any(row["Method"] == "LLM-ZeroShot" for row in main_rows)
+    assert not any(row["Method"] == "LLM-ZeroShot" for row in main_rows)
     ablation_rows = _read_csv(out_dir / "ablation_results.csv")
     assert {row["Method"] for row in ablation_rows} == {
         "RAIR w/o Negation Modeling",

@@ -109,6 +109,10 @@ uv run python -m benchmarks.rair_rag.scripts.build_runtime_latency_summary
 
 时延结果是运行环境相关的辅助分析，不作为主准确率实验指标。
 
+## 对照方法说明
+
+当前主实验表仅纳入可本地运行或可离线复现的对照方法，包括 Keyword、BERT-MultiLabel、RAIR 消融版本和 RAIR。`LLM-ZeroShot` 与 `LLM-FewShot` 可作为未来在线强基线或附录提示词设计保留；在未运行真实在线模型并生成 summary 之前，不纳入主表比较。
+
 ## 范围说明
 
 RAIR-RAG-Bench 聚焦安全关键 RAG 的检索前风险上下文构建。RAG 检索和生成是 RAIR `risk_context` 的下游消费者，不是该基准优化或直接评价的组件。

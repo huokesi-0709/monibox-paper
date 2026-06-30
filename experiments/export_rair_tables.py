@@ -22,8 +22,6 @@ METHOD_DISPLAY_NAMES = {
 MAIN_METHODS = [
     "keyword-baseline",
     "bert-multilabel",
-    "llm-zero-shot",
-    "llm-few-shot",
     "no-negation",
     "single-intent",
     "risk-router",
@@ -51,14 +49,14 @@ CANONICAL_SUMMARY_NAMES = {
 MAIN_FIELDS = [
     "Method",
     "Offline Deployable",
-    "RouteAcc",
-    "HRR",
-    "PFTR",
-    "NegRiskF1",
-    "SecondaryIntentF1",
-    "ConstraintF1",
-    "SuppressedProtocolF1",
-    "RiskCandidateF1",
+    "RouteAcc \u2191",
+    "HRR \u2191",
+    "PFTR \u2193",
+    "NegRiskF1 \u2191",
+    "SecondaryIntentF1 \u2191",
+    "ConstraintF1 \u2191",
+    "SuppressedProtocolF1 \u2191",
+    "RiskCandidateF1 \u2191",
 ]
 
 PERTURBATION_FIELDS = [
@@ -66,14 +64,14 @@ PERTURBATION_FIELDS = [
     "Offline Deployable",
     "Perturbation",
     "NumCases",
-    "RouteAcc",
-    "HRR",
-    "PFTR",
-    "NegRiskF1",
-    "SecondaryIntentF1",
-    "ConstraintF1",
-    "SuppressedProtocolF1",
-    "RiskCandidateF1",
+    "RouteAcc \u2191",
+    "HRR \u2191",
+    "PFTR \u2193",
+    "NegRiskF1 \u2191",
+    "SecondaryIntentF1 \u2191",
+    "ConstraintF1 \u2191",
+    "SuppressedProtocolF1 \u2191",
+    "RiskCandidateF1 \u2191",
 ]
 
 PERTURBATION_ORDER = [
@@ -134,14 +132,14 @@ def _table_row(summary: dict[str, Any]) -> dict[str, Any]:
         "Method": _method_display(method),
         "_method": method,
         "Offline Deployable": _offline_deployable(method),
-        "RouteAcc": _metric(summary, "RouteAcc"),
-        "HRR": _metric(summary, "HRR"),
-        "PFTR": _metric(summary, "PFTR"),
-        "NegRiskF1": _metric(summary, "NegRiskF1"),
-        "SecondaryIntentF1": _metric(summary, "SecondaryIntentF1"),
-        "ConstraintF1": _metric(summary, "ConstraintF1"),
-        "SuppressedProtocolF1": _metric(summary, "SuppressedProtocolF1"),
-        "RiskCandidateF1": _metric(summary, "RiskCandidateF1"),
+        "RouteAcc \u2191": _metric(summary, "RouteAcc"),
+        "HRR \u2191": _metric(summary, "HRR"),
+        "PFTR \u2193": _metric(summary, "PFTR"),
+        "NegRiskF1 \u2191": _metric(summary, "NegRiskF1"),
+        "SecondaryIntentF1 \u2191": _metric(summary, "SecondaryIntentF1"),
+        "ConstraintF1 \u2191": _metric(summary, "ConstraintF1"),
+        "SuppressedProtocolF1 \u2191": _metric(summary, "SuppressedProtocolF1"),
+        "RiskCandidateF1 \u2191": _metric(summary, "RiskCandidateF1"),
         "_num_cases": summary.get("num_cases", _metric(summary, "num_cases", "")),
         "_summary": summary,
         "_summary_name": summary.get("_summary_name", ""),
@@ -216,14 +214,14 @@ def _perturbation_row(
         "Offline Deployable": _offline_deployable(method),
         "Perturbation": perturbation,
         "NumCases": metrics.get("num_cases", 0),
-        "RouteAcc": metrics.get("RouteAcc", ""),
-        "HRR": metrics.get("HRR", ""),
-        "PFTR": metrics.get("PFTR", ""),
-        "NegRiskF1": metrics.get("NegRiskF1", ""),
-        "SecondaryIntentF1": metrics.get("SecondaryIntentF1", ""),
-        "ConstraintF1": metrics.get("ConstraintF1", ""),
-        "SuppressedProtocolF1": metrics.get("SuppressedProtocolF1", ""),
-        "RiskCandidateF1": metrics.get("RiskCandidateF1", ""),
+        "RouteAcc \u2191": metrics.get("RouteAcc", ""),
+        "HRR \u2191": metrics.get("HRR", ""),
+        "PFTR \u2193": metrics.get("PFTR", ""),
+        "NegRiskF1 \u2191": metrics.get("NegRiskF1", ""),
+        "SecondaryIntentF1 \u2191": metrics.get("SecondaryIntentF1", ""),
+        "ConstraintF1 \u2191": metrics.get("ConstraintF1", ""),
+        "SuppressedProtocolF1 \u2191": metrics.get("SuppressedProtocolF1", ""),
+        "RiskCandidateF1 \u2191": metrics.get("RiskCandidateF1", ""),
         "_method": method,
     }
 
@@ -292,57 +290,20 @@ def _write_md(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None
 
 def _build_error_analysis_rows(summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
+    templates = [
+        {"Error Type": "False Negation", "Description": "\u6b63\u5411\u98ce\u9669\u88ab\u9519\u8bef\u5426\u5b9a", "Example": "negation_conflict", "Possible Cause": "\u5426\u5b9a\u4f5c\u7528\u57df\u8fc7\u5bbd", "Future Fix": "\u8c03\u6574\u8fb9\u754c\u60e9\u7f5a"},
+        {"Error Type": "Missed Negation", "Description": "\u88ab\u5426\u5b9a\u98ce\u9669\u672a\u8bc6\u522b", "Example": "negation_conflict", "Possible Cause": "\u5426\u5b9a\u8868\u8fbe\u672a\u8986\u76d6", "Future Fix": "\u6269\u5c55 Q \u96c6\u5408"},
+        {"Error Type": "Wrong Primary Intent", "Description": "\u591a\u610f\u56fe\u4e3b\u8def\u7531\u9519\u8bef", "Example": "multi_intent", "Possible Cause": "\u6743\u91cd\u6216\u9ad8\u98ce\u9669\u589e\u5f3a\u4e0d\u8db3", "Future Fix": "\u6821\u51c6 beta"},
+        {"Error Type": "Constraint Hijacking", "Description": "\u64cd\u4f5c\u7ea6\u675f\u62a2\u5360\u4e3b\u8def\u7531", "Example": "multi_intent", "Possible Cause": "delta \u4e0d\u8db3", "Future Fix": "\u63d0\u9ad8\u64cd\u4f5c\u7ea6\u675f\u6291\u5236"},
+        {"Error Type": "Missing Candidate", "Description": "\u98ce\u9669\u5019\u9009\u6f0f\u62bd\u53d6", "Example": "clean_control", "Possible Cause": "\u539f\u578b\u63cf\u8ff0\u4e0d\u8db3", "Future Fix": "\u6269\u5c55 P(r)"},
+    ]
     for summary in summaries:
         method = str(summary.get("method") or "")
-        metrics = summary.get("metrics") if isinstance(summary.get("metrics"), dict) else {}
-        if not isinstance(metrics, dict):
-            metrics = {}
-        rows.extend(
-            [
-                {
-                    "Error Type": "False Negation",
-                    "Description": "正向风险被错误否定",
-                    "Example": "negation_conflict",
-                    "Possible Cause": "否定作用域过宽",
-                    "Future Fix": "调整边界惩罚",
-                    "_method": method,
-                },
-                {
-                    "Error Type": "Missed Negation",
-                    "Description": "被否定风险未识别",
-                    "Example": "negation_conflict",
-                    "Possible Cause": "否定表达未覆盖",
-                    "Future Fix": "扩展 Q 集合",
-                    "_method": method,
-                },
-                {
-                    "Error Type": "Wrong Primary Intent",
-                    "Description": "多意图主路由错误",
-                    "Example": "multi_intent",
-                    "Possible Cause": "权重或高风险增强不足",
-                    "Future Fix": "校准 beta",
-                    "_method": method,
-                },
-                {
-                    "Error Type": "Constraint Hijacking",
-                    "Description": "操作约束抢占主路由",
-                    "Example": "multi_intent",
-                    "Possible Cause": "delta 不足",
-                    "Future Fix": "提高操作约束抑制",
-                    "_method": method,
-                },
-                {
-                    "Error Type": "Missing Candidate",
-                    "Description": "风险候选漏抽取",
-                    "Example": "clean_control",
-                    "Possible Cause": "原型描述不足",
-                    "Future Fix": "扩展 P(r)",
-                    "_method": method,
-                },
-            ]
-        )
+        for template in templates:
+            row = dict(template)
+            row["_method"] = method
+            rows.append(row)
     return rows
-
 
 def export_rair_tables(
     eval_dir: str | Path = "build/rair_eval",

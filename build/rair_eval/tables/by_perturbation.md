@@ -1,4 +1,4 @@
-| Method | Offline Deployable | Perturbation | NumCases | RouteAcc | HRR | PFTR | NegRiskF1 | SecondaryIntentF1 | ConstraintF1 | SuppressedProtocolF1 | RiskCandidateF1 |
+| Method | Offline Deployable | Perturbation | NumCases | RouteAcc ↑ | HRR ↑ | PFTR ↓ | NegRiskF1 ↑ | SecondaryIntentF1 ↑ | ConstraintF1 ↑ | SuppressedProtocolF1 ↑ | RiskCandidateF1 ↑ |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Keyword | Yes | clean_control | 65 | 1.0 | 1.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 |
 | Keyword | Yes | clean_control | 0 |  |  |  |  |  |  |  |  |
