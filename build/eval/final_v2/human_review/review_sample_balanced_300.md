@@ -18696,11 +18696,12 @@
   "protocol_confidence": 0.8475,
   "protocol_id": "prot_bleeding_control",
   "secondary_intents": []
+
+
 }
 ```
 
-**标注模板**
-
+*标注模板
 ```json
 {
   "review_id": "R0300",
