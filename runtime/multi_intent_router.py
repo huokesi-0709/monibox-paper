@@ -61,7 +61,7 @@ class MultiIntentRouter:
         scored = [
             self._score_candidate(candidate)
             for candidate in candidates
-            if float(candidate.get("confidence") or 0.0)
+            if candidate_confidence(candidate)
             >= self.config.confidence_threshold
         ]
         scored.sort(
@@ -109,20 +109,25 @@ class MultiIntentRouter:
 
     def _score_candidate(self, candidate: dict[str, Any]) -> dict[str, Any]:
         intent = str(candidate.get("risk") or candidate.get("intent") or "")
-        confidence = float(candidate.get("confidence") or 0.0)
+        original_confidence = float(candidate.get("confidence") or 0.0)
+        adjusted_confidence = candidate_confidence(candidate)
         base_weight = self.config.intent_base_weights.get(intent, 0.1)
         is_operational = intent in OPERATIONAL_CONSTRAINTS
         if is_operational:
             score = min(base_weight, self.config.operational_constraint_weight)
         else:
-            score = base_weight * (0.5 + confidence * 0.5)
+            score = base_weight * (0.5 + adjusted_confidence * 0.5)
             if intent in HIGH_RISK_INTENTS:
                 score += self.config.high_risk_boost
         return {
             "intent": intent,
-            "term": candidate.get("term", ""),
-            "confidence": confidence,
+            "term": candidate.get("term", candidate.get("trigger", "")),
+            "trigger": candidate.get("trigger", candidate.get("term", "")),
+            "confidence": original_confidence,
+            "adjusted_confidence": adjusted_confidence,
+            "effective_confidence": adjusted_confidence,
             "base_weight": base_weight,
+            "evidence_type": candidate.get("evidence_type", ""),
             "score": round(score, 4),
             "is_operational": is_operational,
             "rank": self._rank(intent),
@@ -147,3 +152,10 @@ def dedupe(items: list[str]) -> list[str]:
     for item in items:
         append_unique(output, item)
     return output
+
+
+def candidate_confidence(candidate: dict[str, Any]) -> float:
+    adjusted = candidate.get("adjusted_confidence")
+    if adjusted is not None:
+        return float(adjusted or 0.0)
+    return float(candidate.get("confidence") or 0.0)

@@ -1,563 +1,1426 @@
+# candidate_annotations 用于生成 gold risk_candidates。
+# expected_negated 是 RAIR Step 2 Negation Conflict Resolution 的 gold 标注。
 - template_id: multi_resp_battery_001
-  pattern: "我{resp_term}，手机也{battery_term}"
-  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气], battery_term: [快没电了, 电量很低, 快关机了]}
-  positive_risks: [respiratory_distress]
+  pattern: 我{resp_term}，手机也{battery_term}
+  slots:
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+    battery_term:
+    - 快没电了
+    - 电量很低
+    - 快关机了
+  positive_risks:
+  - respiratory_distress
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: respiratory_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难压过电量约束。"
-
+  notes: 呼吸困难压过电量约束。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_resp_battery_002
-  pattern: "手机{battery_term}，但我现在{resp_term}"
-  slots: {battery_term: [只剩百分之五, 马上关机, 电量很低], resp_term: [喘不上气, 呼吸困难, 吸不上气]}
-  positive_risks: [respiratory_distress]
+  pattern: 手机{battery_term}，但我现在{resp_term}
+  slots:
+    battery_term:
+    - 只剩百分之五
+    - 马上关机
+    - 电量很低
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+  positive_risks:
+  - respiratory_distress
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: respiratory_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "模板把运行约束放前面，仍应选择呼吸路线。"
-
+  notes: 模板把运行约束放前面，仍应选择呼吸路线。
+  candidate_annotations:
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_resp_battery_003
-  pattern: "我{resp_term}，只能再发几句话，手机{battery_term}"
-  slots: {resp_term: [喘不过气, 憋得厉害, 缺氧], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [respiratory_distress]
+  pattern: 我{resp_term}，只能再发几句话，手机{battery_term}
+  slots:
+    resp_term:
+    - 喘不过气
+    - 憋得厉害
+    - 缺氧
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - respiratory_distress
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: respiratory_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "适合测试低电量下的短回复策略。"
-
+  notes: 适合测试低电量下的短回复策略。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_resp_battery_004
-  pattern: "{scene_term}，我{resp_term}，手机{battery_term}"
-  slots: {scene_term: [灰尘很大, 周围很闷, 这里空气不好], resp_term: [喘不上气, 吸不上气, 呼吸困难], battery_term: [快没电了, 只剩一点电, 快关机了]}
-  positive_risks: [respiratory_distress]
+  pattern: '{scene_term}，我{resp_term}，手机{battery_term}'
+  slots:
+    scene_term:
+    - 灰尘很大
+    - 周围很闷
+    - 这里空气不好
+    resp_term:
+    - 喘不上气
+    - 吸不上气
+    - 呼吸困难
+    battery_term:
+    - 快没电了
+    - 只剩一点电
+    - 快关机了
+  positive_risks:
+  - respiratory_distress
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: respiratory_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "场景词辅助呼吸风险，不新增环境标签。"
-
+  notes: 场景词辅助呼吸风险，不新增环境标签。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_bleeding_panic_001
-  pattern: "我{bleeding_term}，现在特别{panic_term}"
-  slots: {bleeding_term: [一直流血, 血止不住, 出了很多血], panic_term: [害怕, 慌, 想哭]}
-  positive_risks: [severe_bleeding_or_shock, psychological_distress]
+  pattern: 我{bleeding_term}，现在特别{panic_term}
+  slots:
+    bleeding_term:
+    - 一直流血
+    - 血止不住
+    - 出了很多血
+    panic_term:
+    - 害怕
+    - 慌
+    - 想哭
+  positive_risks:
+  - severe_bleeding_or_shock
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "严重出血压过心理压力。"
-
+  notes: 严重出血压过心理压力。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_bleeding_panic_002
-  pattern: "我很{panic_term}，因为{bleeding_term}"
-  slots: {panic_term: [害怕, 慌, 崩溃], bleeding_term: [伤口一直流血, 血止不住, 很多血]}
-  positive_risks: [severe_bleeding_or_shock, psychological_distress]
+  pattern: 我很{panic_term}，因为{bleeding_term}
+  slots:
+    panic_term:
+    - 害怕
+    - 慌
+    - 崩溃
+    bleeding_term:
+    - 伤口一直流血
+    - 血止不住
+    - 很多血
+  positive_risks:
+  - severe_bleeding_or_shock
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "心理表达在前但不改变主路由。"
-
+  notes: 心理表达在前但不改变主路由。
+  candidate_annotations:
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_bleeding_panic_003
-  pattern: "{body_part}{bleeding_term}，我脑子很乱"
-  slots: {body_part: [手上, 腿上, 胳膊上], bleeding_term: [一直流血, 出了很多血, 血止不住]}
-  positive_risks: [severe_bleeding_or_shock, psychological_distress]
+  pattern: '{body_part}{bleeding_term}，我脑子很乱'
+  slots:
+    body_part:
+    - 手上
+    - 腿上
+    - 胳膊上
+    bleeding_term:
+    - 一直流血
+    - 出了很多血
+    - 血止不住
+  positive_risks:
+  - severe_bleeding_or_shock
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "自然口语版出血+心理压力。"
-
+  notes: 自然口语版出血+心理压力。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - trigger: 脑子很乱
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_bleeding_panic_004
-  pattern: "我{bleeding_term}，手一直抖，很{panic_term}"
-  slots: {bleeding_term: [流了很多血, 伤口冒血, 血没有停], panic_term: [害怕, 慌, 紧张]}
-  positive_risks: [severe_bleeding_or_shock, psychological_distress]
+  pattern: 我{bleeding_term}，手一直抖，很{panic_term}
+  slots:
+    bleeding_term:
+    - 流了很多血
+    - 伤口冒血
+    - 血没有停
+    panic_term:
+    - 害怕
+    - 慌
+    - 紧张
+  positive_risks:
+  - severe_bleeding_or_shock
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "手抖可能来自恐慌或休克，主路由仍为出血。"
-
+  notes: 手抖可能来自恐慌或休克，主路由仍为出血。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_crush_resp_001
-  pattern: "我{crush_term}，还有点{resp_term}"
-  slots: {crush_term: [腿被压住了, 胸口被压着, 身体被卡住了], resp_term: [喘不上气, 呼吸困难, 吸不上气]}
-  positive_risks: [crush_injury, respiratory_distress]
+  pattern: 我{crush_term}，还有点{resp_term}
+  slots:
+    crush_term:
+    - 腿被压住了
+    - 胸口被压着
+    - 身体被卡住了
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+  positive_risks:
+  - crush_injury
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [crush_injury]
+  secondary_intents:
+  - crush_injury
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难优先，但保留挤压伤；胸口被压需人工筛选自然度。"
-
+  notes: 呼吸困难优先，但保留挤压伤；胸口被压需人工筛选自然度。
+  candidate_annotations:
+  - slot: crush_term
+    risk: crush_injury
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_crush_resp_002
-  pattern: "重物压着{body_part}，我{resp_term}"
-  slots: {body_part: [腿, 胸口, 肚子, 胳膊], resp_term: [喘不上气, 吸不上气, 呼吸很费力]}
-  positive_risks: [crush_injury, respiratory_distress]
+  pattern: 重物压着{body_part}，我{resp_term}
+  slots:
+    body_part:
+    - 腿
+    - 胸口
+    - 肚子
+    - 胳膊
+    resp_term:
+    - 喘不上气
+    - 吸不上气
+    - 呼吸很费力
+  positive_risks:
+  - crush_injury
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [crush_injury]
+  secondary_intents:
+  - crush_injury
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "重物压迫与呼吸困难共现。"
-
+  notes: 重物压迫与呼吸困难共现。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - trigger: 重物压着
+    risk: crush_injury
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_crush_resp_003
-  pattern: "我被{crush_term}，说话也{resp_term}"
-  slots: {crush_term: [压住, 卡住, 挤住], resp_term: [很费劲, 喘不上来, 断断续续]}
-  positive_risks: [crush_injury, respiratory_distress]
+  pattern: 我被{crush_term}，说话也{resp_term}
+  slots:
+    crush_term:
+    - 压住
+    - 卡住
+    - 挤住
+    resp_term:
+    - 很费劲
+    - 喘不上来
+    - 断断续续
+  positive_risks:
+  - crush_injury
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [crush_injury]
+  secondary_intents:
+  - crush_injury
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "口语化呼吸困难表达。"
-
+  notes: 口语化呼吸困难表达。
+  candidate_annotations:
+  - slot: crush_term
+    risk: crush_injury
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_crush_resp_004
-  pattern: "{body_part}被压住很久了，现在{resp_term}"
-  slots: {body_part: [腿, 胳膊, 手, 脚], resp_term: [喘不上气, 吸不上气, 呼吸困难]}
-  positive_risks: [crush_injury, respiratory_distress]
+  pattern: '{body_part}被压住很久了，现在{resp_term}'
+  slots:
+    body_part:
+    - 腿
+    - 胳膊
+    - 手
+    - 脚
+    resp_term:
+    - 喘不上气
+    - 吸不上气
+    - 呼吸困难
+  positive_risks:
+  - crush_injury
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [crush_injury]
+  secondary_intents:
+  - crush_injury
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "使用明确呼吸困难词，避免将单独胸闷自动等同 respiratory_distress。"
-
+  notes: 使用明确呼吸困难词，避免将单独胸闷自动等同 respiratory_distress。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - trigger: 被压住
+    risk: crush_injury
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_hypothermia_trapped_001
-  pattern: "我{trapped_term}，身上{cold_term}"
-  slots: {trapped_term: [被困住了, 出不去, 卡在里面], cold_term: [很冷, 冷得发抖, 湿透了]}
-  positive_risks: [trapped_or_entrapment, hypothermia]
+  pattern: 我{trapped_term}，身上{cold_term}
+  slots:
+    trapped_term:
+    - 被困住了
+    - 出不去
+    - 卡在里面
+    cold_term:
+    - 很冷
+    - 冷得发抖
+    - 湿透了
+  positive_risks:
+  - trapped_or_entrapment
+  - hypothermia
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [hypothermia]
+  secondary_intents:
+  - hypothermia
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "受困高于失温，保留失温上下文。"
-
+  notes: 受困高于失温，保留失温上下文。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_hypothermia_trapped_002
-  pattern: "衣服{cold_term}，我还{trapped_term}"
-  slots: {cold_term: [湿透了, 很冷, 冷得发抖], trapped_term: [被困着, 出不去, 卡住了]}
-  positive_risks: [hypothermia, trapped_or_entrapment]
+  pattern: 衣服{cold_term}，我还{trapped_term}
+  slots:
+    cold_term:
+    - 湿透了
+    - 很冷
+    - 冷得发抖
+    trapped_term:
+    - 被困着
+    - 出不去
+    - 卡住了
+  positive_risks:
+  - hypothermia
+  - trapped_or_entrapment
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [hypothermia]
+  secondary_intents:
+  - hypothermia
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "顺序变化不改变主路由。"
-
+  notes: 顺序变化不改变主路由。
+  candidate_annotations:
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_hypothermia_trapped_003
-  pattern: "我在废墟里{trapped_term}，现在{cold_term}"
-  slots: {trapped_term: [动不了, 出不去, 被困住], cold_term: [好冷, 发抖, 快冻僵了]}
-  positive_risks: [trapped_or_entrapment, hypothermia]
+  pattern: 我在废墟里{trapped_term}，现在{cold_term}
+  slots:
+    trapped_term:
+    - 动不了
+    - 出不去
+    - 被困住
+    cold_term:
+    - 好冷
+    - 发抖
+    - 快冻僵了
+  positive_risks:
+  - trapped_or_entrapment
+  - hypothermia
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [hypothermia]
+  secondary_intents:
+  - hypothermia
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "动不了需人工检查是否来自受困或伤情。"
-
+  notes: 动不了需人工检查是否来自受困或伤情。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_hypothermia_trapped_004
-  pattern: "门打不开，我{cold_term}"
-  slots: {cold_term: [冷得发抖, 浑身很冷, 衣服湿透了]}
-  positive_risks: [trapped_or_entrapment, hypothermia]
+  pattern: 门打不开，我{cold_term}
+  slots:
+    cold_term:
+    - 冷得发抖
+    - 浑身很冷
+    - 衣服湿透了
+  positive_risks:
+  - trapped_or_entrapment
+  - hypothermia
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [hypothermia]
+  secondary_intents:
+  - hypothermia
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "门打不开作为空间受困线索。"
-
+  notes: 门打不开作为空间受困线索。
+  candidate_annotations:
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
+  - trigger: 门打不开
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_head_bleeding_001
-  pattern: "我{head_term}，还{bleeding_term}"
-  slots: {head_term: [头晕想吐, 撞到头了, 眼前发黑], bleeding_term: [一直流血, 出了很多血, 血止不住]}
-  positive_risks: [altered_consciousness_or_head_injury, severe_bleeding_or_shock]
+  pattern: 我{head_term}，还{bleeding_term}
+  slots:
+    head_term:
+    - 头晕想吐
+    - 撞到头了
+    - 眼前发黑
+    bleeding_term:
+    - 一直流血
+    - 出了很多血
+    - 血止不住
+  positive_risks:
+  - altered_consciousness_or_head_injury
+  - severe_bleeding_or_shock
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [altered_consciousness_or_head_injury]
+  secondary_intents:
+  - altered_consciousness_or_head_injury
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "严重出血与头伤共现，按当前优先级出血为主。"
-
+  notes: 严重出血与头伤共现，按当前优先级出血为主。
+  candidate_annotations:
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_head_bleeding_002
-  pattern: "{bleeding_term}，还{head_term}"
-  slots: {bleeding_term: [血止不住, 流了很多血, 伤口冒血], head_term: [头很晕, 撞到头了, 撞到头后有点想吐]}
-  positive_risks: [severe_bleeding_or_shock, altered_consciousness_or_head_injury]
+  pattern: '{bleeding_term}，还{head_term}'
+  slots:
+    bleeding_term:
+    - 血止不住
+    - 流了很多血
+    - 伤口冒血
+    head_term:
+    - 头很晕
+    - 撞到头了
+    - 撞到头后有点想吐
+  positive_risks:
+  - severe_bleeding_or_shock
+  - altered_consciousness_or_head_injury
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [altered_consciousness_or_head_injury]
+  secondary_intents:
+  - altered_consciousness_or_head_injury
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "自然语序变化。"
-
+  notes: 自然语序变化。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_head_bleeding_003
-  pattern: "头被砸了，{body_part}{bleeding_term}"
-  slots: {body_part: [手上, 腿上, 胳膊上], bleeding_term: [一直流血, 出血很多, 血止不住]}
-  positive_risks: [altered_consciousness_or_head_injury, severe_bleeding_or_shock]
+  pattern: 头被砸了，{body_part}{bleeding_term}
+  slots:
+    body_part:
+    - 手上
+    - 腿上
+    - 胳膊上
+    bleeding_term:
+    - 一直流血
+    - 出血很多
+    - 血止不住
+  positive_risks:
+  - altered_consciousness_or_head_injury
+  - severe_bleeding_or_shock
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [altered_consciousness_or_head_injury]
+  secondary_intents:
+  - altered_consciousness_or_head_injury
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "头部受伤明确，但出血仍为主路由。"
-
+  notes: 头部受伤明确，但出血仍为主路由。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - trigger: 头被砸了
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_head_bleeding_004
-  pattern: "我记不清刚才发生什么，伤口还{bleeding_term}"
-  slots: {bleeding_term: [流血, 冒血, 血止不住]}
-  positive_risks: [altered_consciousness_or_head_injury, severe_bleeding_or_shock]
+  pattern: 我记不清刚才发生什么，伤口还{bleeding_term}
+  slots:
+    bleeding_term:
+    - 流血
+    - 冒血
+    - 血止不住
+  positive_risks:
+  - altered_consciousness_or_head_injury
+  - severe_bleeding_or_shock
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
-  secondary_intents: [altered_consciousness_or_head_injury]
+  secondary_intents:
+  - altered_consciousness_or_head_injury
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "记忆不清作为意识异常线索。"
-
+  notes: 记忆不清作为意识异常线索。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - trigger: 记不清
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_aftershock_trapped_001
-  pattern: "{scene_term}，我还{trapped_term}"
-  slots: {scene_term: [又有余震, 墙还在裂, 上面在掉东西], trapped_term: [被困着, 出不去, 卡在里面]}
-  positive_risks: [aftershock_or_collapse_hazard, trapped_or_entrapment]
+  pattern: '{scene_term}，我还{trapped_term}'
+  slots:
+    scene_term:
+    - 又有余震
+    - 墙还在裂
+    - 上面在掉东西
+    trapped_term:
+    - 被困着
+    - 出不去
+    - 卡在里面
+  positive_risks:
+  - aftershock_or_collapse_hazard
+  - trapped_or_entrapment
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [aftershock_or_collapse_hazard]
+  secondary_intents:
+  - aftershock_or_collapse_hazard
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "受困与环境危险共现；人工可按试标反馈调整主次。"
-
+  notes: 受困与环境危险共现；人工可按试标反馈调整主次。
+  candidate_annotations:
+  - slot: scene_term
+    risk: aftershock_or_collapse_hazard
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_aftershock_trapped_002
-  pattern: "我{trapped_term}，外面好像{scene_term}"
-  slots: {trapped_term: [出不去, 被困住, 门打不开], scene_term: [还在晃, 又震了, 有东西掉下来]}
-  positive_risks: [trapped_or_entrapment, aftershock_or_collapse_hazard]
+  pattern: 我{trapped_term}，外面好像{scene_term}
+  slots:
+    trapped_term:
+    - 出不去
+    - 被困住
+    - 门打不开
+    scene_term:
+    - 还在晃
+    - 又震了
+    - 有东西掉下来
+  positive_risks:
+  - trapped_or_entrapment
+  - aftershock_or_collapse_hazard
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [aftershock_or_collapse_hazard]
+  secondary_intents:
+  - aftershock_or_collapse_hazard
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "环境危险较不确定，受困为主。"
-
+  notes: 环境危险较不确定，受困为主。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: scene_term
+    risk: aftershock_or_collapse_hazard
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_aftershock_injury_003
-  pattern: "{scene_term}，我{injury_term}"
-  slots: {scene_term: [又有余震, 墙还在裂, 上面还在掉东西], injury_term: [腿很疼, 胳膊肿了, 脚扭伤了]}
-  positive_risks: [aftershock_or_collapse_hazard, trauma_or_fracture]
+  pattern: '{scene_term}，我{injury_term}'
+  slots:
+    scene_term:
+    - 又有余震
+    - 墙还在裂
+    - 上面还在掉东西
+    injury_term:
+    - 腿很疼
+    - 胳膊肿了
+    - 脚扭伤了
+  positive_risks:
+  - aftershock_or_collapse_hazard
+  - trauma_or_fracture
   negated_risks: []
   operational_constraints: []
   primary_intent: aftershock_or_collapse_hazard
-  secondary_intents: [trauma_or_fracture]
+  secondary_intents:
+  - trauma_or_fracture
   should_not_trigger: []
   expected_route: route_aftershock_or_collapse_hazard
-  notes: "环境危险压过普通创伤。"
-
+  notes: 环境危险压过普通创伤。
+  candidate_annotations:
+  - slot: scene_term
+    risk: aftershock_or_collapse_hazard
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: injury_term
+    risk: trauma_or_fracture
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_aftershock_resp_004
-  pattern: "{scene_term}，灰尘很大，我{resp_term}"
-  slots: {scene_term: [楼还在晃, 墙在裂, 上面掉东西], resp_term: [喘不上气, 呼吸困难, 吸不上气]}
-  positive_risks: [aftershock_or_collapse_hazard, respiratory_distress]
+  pattern: '{scene_term}，灰尘很大，我{resp_term}'
+  slots:
+    scene_term:
+    - 楼还在晃
+    - 墙在裂
+    - 上面掉东西
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+  positive_risks:
+  - aftershock_or_collapse_hazard
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [aftershock_or_collapse_hazard]
+  secondary_intents:
+  - aftershock_or_collapse_hazard
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难优先于环境危险。"
-
+  notes: 呼吸困难优先于环境危险。
+  candidate_annotations:
+  - slot: scene_term
+    risk: aftershock_or_collapse_hazard
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_dehydration_battery_001
-  pattern: "我{resource_term}，手机也{battery_term}"
-  slots: {resource_term: [很渴, 没水, 没吃的], battery_term: [快没电, 电量很低, 快关机]}
-  positive_risks: [dehydration_or_resource_deprivation]
+  pattern: 我{resource_term}，手机也{battery_term}
+  slots:
+    resource_term:
+    - 很渴
+    - 没水
+    - 没吃的
+    battery_term:
+    - 快没电
+    - 电量很低
+    - 快关机
+  positive_risks:
+  - dehydration_or_resource_deprivation
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: dehydration_or_resource_deprivation
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_dehydration_or_resource_deprivation
-  notes: "资源匮乏为主，低电量为约束。"
-
+  notes: 资源匮乏为主，低电量为约束。
+  candidate_annotations:
+  - slot: resource_term
+    risk: dehydration_or_resource_deprivation
+    evidence_type: lexical
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_dehydration_trapped_002
-  pattern: "我{trapped_term}，已经{resource_term}"
-  slots: {trapped_term: [被困很久, 出不去, 卡在里面], resource_term: [很渴了, 没水了, 没吃的了]}
-  positive_risks: [trapped_or_entrapment, dehydration_or_resource_deprivation]
+  pattern: 我{trapped_term}，已经{resource_term}
+  slots:
+    trapped_term:
+    - 被困很久
+    - 出不去
+    - 卡在里面
+    resource_term:
+    - 很渴了
+    - 没水了
+    - 没吃的了
+  positive_risks:
+  - trapped_or_entrapment
+  - dehydration_or_resource_deprivation
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [dehydration_or_resource_deprivation]
+  secondary_intents:
+  - dehydration_or_resource_deprivation
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "受困主导，资源匮乏保留。"
-
+  notes: 受困主导，资源匮乏保留。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: resource_term
+    risk: dehydration_or_resource_deprivation
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_dehydration_hypothermia_003
-  pattern: "我{resource_term}，身上还{cold_term}"
-  slots: {resource_term: [很渴, 没水, 没吃的], cold_term: [很冷, 湿透了, 冷得发抖]}
-  positive_risks: [dehydration_or_resource_deprivation, hypothermia]
+  pattern: 我{resource_term}，身上还{cold_term}
+  slots:
+    resource_term:
+    - 很渴
+    - 没水
+    - 没吃的
+    cold_term:
+    - 很冷
+    - 湿透了
+    - 冷得发抖
+  positive_risks:
+  - dehydration_or_resource_deprivation
+  - hypothermia
   negated_risks: []
   operational_constraints: []
   primary_intent: hypothermia
-  secondary_intents: [dehydration_or_resource_deprivation]
+  secondary_intents:
+  - dehydration_or_resource_deprivation
   should_not_trigger: []
   expected_route: route_hypothermia
-  notes: "失温优先于资源匮乏。"
-
+  notes: 失温优先于资源匮乏。
+  candidate_annotations:
+  - slot: resource_term
+    risk: dehydration_or_resource_deprivation
+    evidence_type: lexical
+    expected_negated: false
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_dehydration_panic_004
-  pattern: "我{resource_term}，现在很{panic_term}"
-  slots: {resource_term: [很渴, 没水, 没吃的], panic_term: [害怕, 慌, 想哭]}
-  positive_risks: [dehydration_or_resource_deprivation, psychological_distress]
+  pattern: 我{resource_term}，现在很{panic_term}
+  slots:
+    resource_term:
+    - 很渴
+    - 没水
+    - 没吃的
+    panic_term:
+    - 害怕
+    - 慌
+    - 想哭
+  positive_risks:
+  - dehydration_or_resource_deprivation
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: dehydration_or_resource_deprivation
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_dehydration_or_resource_deprivation
-  notes: "资源匮乏优先于心理压力。"
-
+  notes: 资源匮乏优先于心理压力。
+  candidate_annotations:
+  - slot: resource_term
+    risk: dehydration_or_resource_deprivation
+    evidence_type: lexical
+    expected_negated: false
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_head_panic_001
-  pattern: "我{head_term}，现在特别{panic_term}"
-  slots: {head_term: [头晕想吐, 撞到头了, 眼前发黑], panic_term: [害怕, 慌, 想哭]}
-  positive_risks: [altered_consciousness_or_head_injury, psychological_distress]
+  pattern: 我{head_term}，现在特别{panic_term}
+  slots:
+    head_term:
+    - 头晕想吐
+    - 撞到头了
+    - 眼前发黑
+    panic_term:
+    - 害怕
+    - 慌
+    - 想哭
+  positive_risks:
+  - altered_consciousness_or_head_injury
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: altered_consciousness_or_head_injury
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_head_or_consciousness
-  notes: "头伤/意识异常优先。"
-
+  notes: 头伤/意识异常优先。
+  candidate_annotations:
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_head_panic_002
-  pattern: "我很{panic_term}，还{head_term}"
-  slots: {panic_term: [害怕, 慌, 崩溃], head_term: [头很晕, 撞到头后想吐, 眼前发黑]}
-  positive_risks: [psychological_distress, altered_consciousness_or_head_injury]
+  pattern: 我很{panic_term}，还{head_term}
+  slots:
+    panic_term:
+    - 害怕
+    - 慌
+    - 崩溃
+    head_term:
+    - 头很晕
+    - 撞到头后想吐
+    - 眼前发黑
+  positive_risks:
+  - psychological_distress
+  - altered_consciousness_or_head_injury
   negated_risks: []
   operational_constraints: []
   primary_intent: altered_consciousness_or_head_injury
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_head_or_consciousness
-  notes: "心理表达在前，头部风险仍优先。"
-
+  notes: 心理表达在前，头部风险仍优先。
+  candidate_annotations:
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_head_battery_003
-  pattern: "我{head_term}，手机{battery_term}"
-  slots: {head_term: [头晕想吐, 撞到头了, 眼前发黑], battery_term: [快没电, 电量很低, 快关机]}
-  positive_risks: [altered_consciousness_or_head_injury]
+  pattern: 我{head_term}，手机{battery_term}
+  slots:
+    head_term:
+    - 头晕想吐
+    - 撞到头了
+    - 眼前发黑
+    battery_term:
+    - 快没电
+    - 电量很低
+    - 快关机
+  positive_risks:
+  - altered_consciousness_or_head_injury
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: altered_consciousness_or_head_injury
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_head_or_consciousness
-  notes: "低电量为约束，不改变头伤路线。"
-
+  notes: 低电量为约束，不改变头伤路线。
+  candidate_annotations:
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_head_trapped_004
-  pattern: "我{trapped_term}，还{head_term}"
-  slots: {trapped_term: [被困住了, 出不去, 卡住了], head_term: [头很晕, 撞到头了, 撞到头后有点想吐]}
-  positive_risks: [trapped_or_entrapment, altered_consciousness_or_head_injury]
+  pattern: 我{trapped_term}，还{head_term}
+  slots:
+    trapped_term:
+    - 被困住了
+    - 出不去
+    - 卡住了
+    head_term:
+    - 头很晕
+    - 撞到头了
+    - 撞到头后有点想吐
+  positive_risks:
+  - trapped_or_entrapment
+  - altered_consciousness_or_head_injury
   negated_risks: []
   operational_constraints: []
   primary_intent: altered_consciousness_or_head_injury
-  secondary_intents: [trapped_or_entrapment]
+  secondary_intents:
+  - trapped_or_entrapment
   should_not_trigger: []
   expected_route: route_head_or_consciousness
-  notes: "头伤优先于受困，但保留受困上下文。"
-
+  notes: 头伤优先于受困，但保留受困上下文。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_bleeding_battery_001
-  pattern: "我{bleeding_term}，手机{battery_term}"
-  slots: {bleeding_term: [一直流血, 血止不住, 出了很多血], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [severe_bleeding_or_shock]
+  pattern: 我{bleeding_term}，手机{battery_term}
+  slots:
+    bleeding_term:
+    - 一直流血
+    - 血止不住
+    - 出了很多血
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - severe_bleeding_or_shock
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: severe_bleeding_or_shock
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "出血压过低电量。"
-
+  notes: 出血压过低电量。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_crush_battery_002
-  pattern: "我{crush_term}，手机{battery_term}"
-  slots: {crush_term: [腿被压住了, 胳膊被卡住了, 身体被重物压着], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [crush_injury]
+  pattern: 我{crush_term}，手机{battery_term}
+  slots:
+    crush_term:
+    - 腿被压住了
+    - 胳膊被卡住了
+    - 身体被重物压着
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - crush_injury
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: crush_injury
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_crush_injury
-  notes: "挤压伤压过低电量。"
-
+  notes: 挤压伤压过低电量。
+  candidate_annotations:
+  - slot: crush_term
+    risk: crush_injury
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_hypothermia_battery_003
-  pattern: "我{cold_term}，手机{battery_term}"
-  slots: {cold_term: [很冷, 冷得发抖, 衣服湿透了], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [hypothermia]
+  pattern: 我{cold_term}，手机{battery_term}
+  slots:
+    cold_term:
+    - 很冷
+    - 冷得发抖
+    - 衣服湿透了
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - hypothermia
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: hypothermia
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_hypothermia
-  notes: "失温压过低电量。"
-
+  notes: 失温压过低电量。
+  candidate_annotations:
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_panic_battery_004
-  pattern: "我很{panic_term}，手机也{battery_term}"
-  slots: {panic_term: [害怕, 慌, 想哭], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [psychological_distress]
+  pattern: 我很{panic_term}，手机也{battery_term}
+  slots:
+    panic_term:
+    - 害怕
+    - 慌
+    - 想哭
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - psychological_distress
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: psychological_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_psychological_support
-  notes: "心理压力为主，低电量为约束。"
-
+  notes: 心理压力为主，低电量为约束。
+  candidate_annotations:
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_trapped_battery_005
-  pattern: "我{trapped_term}，手机{battery_term}"
-  slots: {trapped_term: [被困住了, 出不去, 门打不开], battery_term: [快没电, 电量低, 快关机]}
-  positive_risks: [trapped_or_entrapment]
+  pattern: 我{trapped_term}，手机{battery_term}
+  slots:
+    trapped_term:
+    - 被困住了
+    - 出不去
+    - 门打不开
+    battery_term:
+    - 快没电
+    - 电量低
+    - 快关机
+  positive_risks:
+  - trapped_or_entrapment
   negated_risks: []
-  operational_constraints: [low_battery]
+  operational_constraints:
+  - low_battery
   primary_intent: trapped_or_entrapment
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "受困压过低电量。"
-
+  notes: 受困压过低电量。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: battery_term
+    risk: low_battery
+    evidence_type: operational
+    expected_negated: false
 - template_id: multi_injury_panic_001
-  pattern: "我{injury_term}，现在很{panic_term}"
-  slots: {injury_term: [腿疼, 胳膊肿了, 脚扭伤了], panic_term: [害怕, 慌, 想哭]}
-  positive_risks: [trauma_or_fracture, psychological_distress]
+  pattern: 我{injury_term}，现在很{panic_term}
+  slots:
+    injury_term:
+    - 腿疼
+    - 胳膊肿了
+    - 脚扭伤了
+    panic_term:
+    - 害怕
+    - 慌
+    - 想哭
+  positive_risks:
+  - trauma_or_fracture
+  - psychological_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: trauma_or_fracture
-  secondary_intents: [psychological_distress]
+  secondary_intents:
+  - psychological_distress
   should_not_trigger: []
   expected_route: route_trauma_or_fracture
-  notes: "普通创伤优先于心理压力。"
-
+  notes: 普通创伤优先于心理压力。
+  candidate_annotations:
+  - slot: injury_term
+    risk: trauma_or_fracture
+    evidence_type: lexical
+    expected_negated: false
+  - slot: panic_term
+    risk: psychological_distress
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_injury_trapped_002
-  pattern: "我{injury_term}，还{trapped_term}"
-  slots: {injury_term: [腿疼得动不了, 胳膊肿了, 脚扭伤了], trapped_term: [出不去, 被困住, 门打不开]}
-  positive_risks: [trauma_or_fracture, trapped_or_entrapment]
+  pattern: 我{injury_term}，还{trapped_term}
+  slots:
+    injury_term:
+    - 腿疼得动不了
+    - 胳膊肿了
+    - 脚扭伤了
+    trapped_term:
+    - 出不去
+    - 被困住
+    - 门打不开
+  positive_risks:
+  - trauma_or_fracture
+  - trapped_or_entrapment
   negated_risks: []
   operational_constraints: []
   primary_intent: trapped_or_entrapment
-  secondary_intents: [trauma_or_fracture]
+  secondary_intents:
+  - trauma_or_fracture
   should_not_trigger: []
   expected_route: route_trapped_or_entrapment
-  notes: "受困优先于普通创伤。"
-
+  notes: 受困优先于普通创伤。
+  candidate_annotations:
+  - slot: injury_term
+    risk: trauma_or_fracture
+    evidence_type: lexical
+    expected_negated: false
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_injury_aftershock_003
-  pattern: "我{injury_term}，旁边{scene_term}"
-  slots: {injury_term: [腿很疼, 手腕肿了, 脚扭了], scene_term: [墙在裂, 还在掉东西, 好像又震了]}
-  positive_risks: [trauma_or_fracture, aftershock_or_collapse_hazard]
+  pattern: 我{injury_term}，旁边{scene_term}
+  slots:
+    injury_term:
+    - 腿很疼
+    - 手腕肿了
+    - 脚扭了
+    scene_term:
+    - 墙在裂
+    - 还在掉东西
+    - 好像又震了
+  positive_risks:
+  - trauma_or_fracture
+  - aftershock_or_collapse_hazard
   negated_risks: []
   operational_constraints: []
   primary_intent: aftershock_or_collapse_hazard
-  secondary_intents: [trauma_or_fracture]
+  secondary_intents:
+  - trauma_or_fracture
   should_not_trigger: []
   expected_route: route_aftershock_or_collapse_hazard
-  notes: "环境危险优先于普通创伤。"
-
+  notes: 环境危险优先于普通创伤。
+  candidate_annotations:
+  - slot: injury_term
+    risk: trauma_or_fracture
+    evidence_type: lexical
+    expected_negated: false
+  - slot: scene_term
+    risk: aftershock_or_collapse_hazard
+    evidence_type: scene_context
+    expected_negated: false
 - template_id: multi_injury_dehydration_004
-  pattern: "我{injury_term}，也{resource_term}"
-  slots: {injury_term: [腿疼, 胳膊疼, 脚扭了], resource_term: [很渴, 没水, 没吃的]}
-  positive_risks: [trauma_or_fracture, dehydration_or_resource_deprivation]
+  pattern: 我{injury_term}，也{resource_term}
+  slots:
+    injury_term:
+    - 腿疼
+    - 胳膊疼
+    - 脚扭了
+    resource_term:
+    - 很渴
+    - 没水
+    - 没吃的
+  positive_risks:
+  - trauma_or_fracture
+  - dehydration_or_resource_deprivation
   negated_risks: []
   operational_constraints: []
   primary_intent: trauma_or_fracture
-  secondary_intents: [dehydration_or_resource_deprivation]
+  secondary_intents:
+  - dehydration_or_resource_deprivation
   should_not_trigger: []
   expected_route: route_trauma_or_fracture
-  notes: "普通创伤略高于资源匮乏。"
-
+  notes: 普通创伤略高于资源匮乏。
+  candidate_annotations:
+  - slot: injury_term
+    risk: trauma_or_fracture
+    evidence_type: lexical
+    expected_negated: false
+  - slot: resource_term
+    risk: dehydration_or_resource_deprivation
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_resp_bleeding_001
-  pattern: "我{resp_term}，伤口还{bleeding_term}"
-  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气], bleeding_term: [一直流血, 血止不住, 冒血]}
-  positive_risks: [respiratory_distress, severe_bleeding_or_shock]
+  pattern: 我{resp_term}，伤口还{bleeding_term}
+  slots:
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+    bleeding_term:
+    - 一直流血
+    - 血止不住
+    - 冒血
+  positive_risks:
+  - respiratory_distress
+  - severe_bleeding_or_shock
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [severe_bleeding_or_shock]
+  secondary_intents:
+  - severe_bleeding_or_shock
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难优先于严重出血，保留出血上下文。"
-
+  notes: 呼吸困难优先于严重出血，保留出血上下文。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_resp_head_002
-  pattern: "我{resp_term}，还{head_term}"
-  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气], head_term: [头很晕, 撞到头后想吐, 眼前发黑]}
-  positive_risks: [respiratory_distress, altered_consciousness_or_head_injury]
+  pattern: 我{resp_term}，还{head_term}
+  slots:
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+    head_term:
+    - 头很晕
+    - 撞到头后想吐
+    - 眼前发黑
+  positive_risks:
+  - respiratory_distress
+  - altered_consciousness_or_head_injury
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [altered_consciousness_or_head_injury]
+  secondary_intents:
+  - altered_consciousness_or_head_injury
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难最高优先级。"
-
+  notes: 呼吸困难最高优先级。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: head_term
+    risk: altered_consciousness_or_head_injury
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_resp_hypothermia_003
-  pattern: "我{resp_term}，身上{cold_term}"
-  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气], cold_term: [很冷, 冷得发抖, 湿透了]}
-  positive_risks: [respiratory_distress, hypothermia]
+  pattern: 我{resp_term}，身上{cold_term}
+  slots:
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+    cold_term:
+    - 很冷
+    - 冷得发抖
+    - 湿透了
+  positive_risks:
+  - respiratory_distress
+  - hypothermia
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [hypothermia]
+  secondary_intents:
+  - hypothermia
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难优先，失温为次意图。"
-
+  notes: 呼吸困难优先，失温为次意图。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
+  - slot: cold_term
+    risk: hypothermia
+    evidence_type: lexical
+    expected_negated: false
 - template_id: multi_resp_trapped_004
-  pattern: "我{trapped_term}，而且{resp_term}"
-  slots: {trapped_term: [被困住, 出不去, 卡住了], resp_term: [喘不上气, 呼吸困难, 吸不上气]}
-  positive_risks: [trapped_or_entrapment, respiratory_distress]
+  pattern: 我{trapped_term}，而且{resp_term}
+  slots:
+    trapped_term:
+    - 被困住
+    - 出不去
+    - 卡住了
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+  positive_risks:
+  - trapped_or_entrapment
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
-  secondary_intents: [trapped_or_entrapment]
+  secondary_intents:
+  - trapped_or_entrapment
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "呼吸困难优先于受困。"
-
+  notes: 呼吸困难优先于受困。
+  candidate_annotations:
+  - slot: trapped_term
+    risk: trapped_or_entrapment
+    evidence_type: scene_context
+    expected_negated: false
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_boundary_risk_001
-  pattern: "别写故事了，我真的{resp_term}"
-  slots: {resp_term: [喘不上气, 呼吸困难, 吸不上气]}
-  positive_risks: [respiratory_distress]
+  pattern: 别写故事了，我真的{resp_term}
+  slots:
+    resp_term:
+    - 喘不上气
+    - 呼吸困难
+    - 吸不上气
+  positive_risks:
+  - respiratory_distress
   negated_risks: []
   operational_constraints: []
   primary_intent: respiratory_distress
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_respiratory_distress
-  notes: "域外词与真实风险共现时，风险优先。"
-
+  notes: 域外词与真实风险共现时，风险优先。
+  candidate_annotations:
+  - slot: resp_term
+    risk: respiratory_distress
+    evidence_type: protocol_alias
+    expected_negated: false
 - template_id: multi_boundary_risk_002
-  pattern: "不要闲聊，我{bleeding_term}"
-  slots: {bleeding_term: [一直流血, 血止不住, 出了很多血]}
-  positive_risks: [severe_bleeding_or_shock]
+  pattern: 不要闲聊，我{bleeding_term}
+  slots:
+    bleeding_term:
+    - 一直流血
+    - 血止不住
+    - 出了很多血
+  positive_risks:
+  - severe_bleeding_or_shock
   negated_risks: []
   operational_constraints: []
   primary_intent: severe_bleeding_or_shock
   secondary_intents: []
   should_not_trigger: []
   expected_route: route_bleeding_control
-  notes: "边界词不覆盖真实出血风险。"
+  notes: 边界词不覆盖真实出血风险。
+  candidate_annotations:
+  - slot: bleeding_term
+    risk: severe_bleeding_or_shock
+    evidence_type: protocol_alias
+    expected_negated: false

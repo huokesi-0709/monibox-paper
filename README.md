@@ -2,7 +2,7 @@
 
 MoniBox 当前论文修订主线已经收束为 **RAIR-RAG**：面向离线灾害应急 RAG 的风险感知输入路由与检索前风险上下文构建。仓库仍保留早期 **HSC-RAG-DE** 代码和实验脚本，用于历史复现、对照和兼容，但它不再是当前论文的主贡献表述。
 
-当前主实验围绕 `benchmarks/rair_rag/` 展开：构建权威指南依据驱动的风险路由基准集，重点评估 `negation_conflict` 和 `multi_intent` 两类安全关键输入扰动。`pymoo` Differential Evolution 仅用于离线校准 `RoutingPolicy` 参数，不优化底层 RAG 检索算法，也不是主要性能来源。
+当前主实验围绕 `benchmarks/rair_rag/` 展开：构建权威指南依据驱动的风险路由基准集，重点评估 `negation_conflict` 和 `multi_intent` 两类安全关键输入扰动。RAIR-RAG 不再使用 Differential Evolution；相关脚本仅作为历史归档代码保留，不进入主实验、主对比、消融或论文贡献表述。
 
 ## Paper Scope Notice
 
@@ -12,7 +12,7 @@ MoniBox 当前论文修订主线已经收束为 **RAIR-RAG**：面向离线灾�
 
 当前论文修订方向进一步聚焦于面向离线灾害应急 RAG 的风险感知输入路由。核心问题不是底层向量检索优化，而是 RAG 检索前的风险上下文构建：在协议门控和检索发生前，从用户输入中消解否定冲突、识别多意图输入，并生成更可靠的风险语义上下文。
 
-本修订把 `negation_conflict` 和 `multi_intent` 作为主研究对象。否定冲突用于降低被明确否定风险造成的协议误触发，多意图输入用于降低高风险意图漏检。Differential Evolution 仅作为离线 routing parameter calibration 工具，不是主要性能来源，也不改变 test split 的独立评估边界。
+本修订把 `negation_conflict` 和 `multi_intent` 作为主研究对象。否定冲突用于降低被明确否定风险造成的协议误触发，多意图输入用于降低高风险意图漏检。Differential Evolution is archived legacy code only：RAIR-RAG 主线不使用 DE，也不报告 `risk-router-de` 作为主结果或对比方法；历史脚本不会改变 test split 的独立评估边界。
 
 RAIR-RAG 数据与实验入口：
 
@@ -27,12 +27,11 @@ benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
 ```bash
 # RAIR-RAG test experiments
 bash scripts/run_rair_eval.sh
-
-# RAIR-RAG DE calibration on dev split only
-uv run python -m experiments.de_routing_optimize
 ```
 
-RAIR-RAG 最终实验产物位于 `build/rair_eval/`。建议上传 summary、predictions、`de_trials.jsonl`、`de_summary.json` 和 `de_best_policy.yaml`，但不要上传 `build/rair_eval/de_routing/` 里的 DE 中间候选预测文件。
+RAIR-RAG 主实验默认只运行 `keyword-baseline`、`no-negation`、`single-intent` 和 `risk-router`。DE 相关脚本已移入 `experiments/archived/`，仅用于旧产物追溯，不属于 RAIR-RAG 复现实验入口。
+
+RAIR-RAG 最终主实验产物位于 `build/rair_eval/`。建议上传主实验 summary 和 predictions。`de_trials.jsonl`、`de_summary.json`、`de_best_policy.yaml` 和 `build/rair_eval/de_routing/` 均属于历史 DE 产物，不建议作为当前 RAIR-RAG 论文证据上传或引用。
 
 ## RAIR-RAG Paper Reproduction Quickstart
 
@@ -41,9 +40,6 @@ RAIR-RAG 最终实验产物位于 `build/rair_eval/`。建议上传 summary、pr
 ```bash
 # RAIR-RAG test, negation subset, and multi-intent subset
 bash scripts/run_rair_eval.sh
-
-# RAIR-RAG DE calibration on dev split only
-uv run python -m experiments.de_routing_optimize
 ```
 
 在 Windows 环境没有 bash 时，可以直接调用 Python entry point：
@@ -53,8 +49,8 @@ uv run python -m benchmarks.rair_rag.run_routing_eval \
   --data benchmarks/rair_rag/data/test/rair_test.jsonl \
   --method risk-router \
   --policy scoring/routing_policy_manual.yaml \
-  --out build/rair_eval/rair_test_risk-router-manual_predictions.jsonl \
-  --summary build/rair_eval/rair_test_risk-router-manual_summary.json
+  --out build/rair_eval/rair_test_risk-router_predictions.jsonl \
+  --summary build/rair_eval/rair_test_risk-router_summary.json
 ```
 
 API 服务和 `frontend/` 控制台只用于演示、联调和原型验证；当前 RAIR-RAG 论文中的核心实验结果应以 `benchmarks/rair_rag/`、`scoring/routing_policy_*.yaml` 和 `build/rair_eval/` 下的离线产物为准。
@@ -79,6 +75,10 @@ monibox-de --config experiments/configs/de_hsc_rag.yaml
 ```
 
 `artifacts/paper_final_v2/` 与 `build/eval/final_v2/` 对应 HSC-DisasterBench-v2 / HSC-RAG-DE 历史归档，只能作为 legacy evidence 引用。
+
+### Archived DE Routing Scripts
+
+RAIR-RAG 不再使用 DE routing optimization。`experiments/archived/de_routing_optimize.py` 仅用于追溯旧 `risk-router-de` 产物；`experiments/de_routing_optimize.py` 只保留兼容 wrapper，避免旧命令直接失效。当前论文主实验不运行、不汇报、也不推荐引用 `risk-router-de`。
 
 MoniBox 是一个面向灾害受困场景的离线运行系统。当前仓库重点不是"功能尽量多"，而是先稳定一条可验证主链：
 

@@ -1,0 +1,30 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_multi_intent_v2.jsonl",
+  "method": "risk-router",
+  "metrics": {
+    "ConstraintF1": 0.980891719745223,
+    "HRR": 1.0,
+    "NegRiskExact": 0.9885931558935361,
+    "NegRiskF1": 0.0,
+    "PFTR": 0.0,
+    "PrimaryIntentAcc": 0.9847908745247148,
+    "RouteAcc": 0.9847908745247148,
+    "SecondaryIntentF1": 0.8757062146892655,
+    "by_perturbation_type": {
+      "multi_intent": {
+        "ConstraintF1": 0.980891719745223,
+        "HRR": 1.0,
+        "NegRiskExact": 0.9885931558935361,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.9847908745247148,
+        "RouteAcc": 0.9847908745247148,
+        "SecondaryIntentF1": 0.8757062146892655,
+        "num_cases": 263
+      }
+    },
+    "num_cases": 263
+  },
+  "num_cases": 263,
+  "policy": "scoring\\routing_policy_manual.yaml"
+}

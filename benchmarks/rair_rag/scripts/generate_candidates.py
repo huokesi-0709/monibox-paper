@@ -10,6 +10,8 @@ from typing import Any
 
 import yaml
 
+from runtime.risk_confidence import confidence_for_term
+
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_TEMPLATE_DIR = PROJECT_ROOT / "benchmarks" / "rair_rag" / "templates"
 DEFAULT_OUT = (
@@ -78,6 +80,14 @@ TEMPLATE_FILES = (
     "control_templates.yaml",
 )
 
+EVIDENCE_TYPES = {
+    "lexical",
+    "protocol_alias",
+    "operational",
+    "scene_context",
+    "unknown",
+}
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -100,11 +110,16 @@ def generate_candidates(template_dir: Path) -> list[dict[str, Any]]:
         for template in load_templates(path):
             prefix = id_prefix_for(template_file, template)
             perturbation_types = perturbation_types_for(template_file, template)
-            for variant_index, raw_input in enumerate(expand_template(template), start=1):
+            for variant_index, expanded in enumerate(
+                expand_template_with_slots(template), start=1
+            ):
+                raw_input = str(expanded["raw_input"])
+                slot_values = dict(expanded["slot_values"])
                 counters[prefix] += 1
                 candidate = build_candidate(
                     template=template,
                     raw_input=raw_input,
+                    slot_values=slot_values,
                     prefix=prefix,
                     sequence=counters[prefix],
                     variant_index=variant_index,
@@ -132,6 +147,7 @@ def validate_template(path: Path, index: int, template: dict[str, Any]) -> None:
         "template_id",
         "pattern",
         "slots",
+        "candidate_annotations",
         "positive_risks",
         "negated_risks",
         "operational_constraints",
@@ -164,9 +180,54 @@ def validate_template(path: Path, index: int, template: dict[str, Any]) -> None:
         value = template[field_name]
         if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
             raise ValueError(f"{path}: template #{index} {field_name} must be list[str]")
+    annotations = template["candidate_annotations"]
+    if not isinstance(annotations, list) or not annotations:
+        raise ValueError(
+            f"{path}: template #{index} candidate_annotations must be non-empty list[dict]"
+        )
+    for annotation_index, annotation in enumerate(annotations, start=1):
+        if not isinstance(annotation, dict):
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                "must be an object"
+            )
+        risk = annotation.get("risk")
+        evidence_type = annotation.get("evidence_type")
+        expected_negated = annotation.get("expected_negated")
+        slot = annotation.get("slot")
+        trigger = annotation.get("trigger")
+        if not isinstance(risk, str):
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                "risk must be str"
+            )
+        if evidence_type not in EVIDENCE_TYPES:
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                f"evidence_type must be one of {sorted(EVIDENCE_TYPES)}"
+            )
+        if not isinstance(expected_negated, bool):
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                "expected_negated must be bool"
+            )
+        if not isinstance(slot, str) and not isinstance(trigger, str):
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                "must define slot or trigger"
+            )
+        if isinstance(slot, str) and slot not in template["slots"]:
+            raise ValueError(
+                f"{path}: template #{index} candidate annotation #{annotation_index} "
+                f"references unknown slot {slot!r}"
+            )
 
 
 def expand_template(template: dict[str, Any]) -> list[str]:
+    return [str(expanded["raw_input"]) for expanded in expand_template_with_slots(template)]
+
+
+def expand_template_with_slots(template: dict[str, Any]) -> list[dict[str, Any]]:
     pattern = str(template["pattern"])
     field_names = [name for _, name, _, _ in Formatter().parse(pattern) if name]
     slots: dict[str, list[str]] = template["slots"]
@@ -175,20 +236,21 @@ def expand_template(template: dict[str, Any]) -> list[str]:
         template_id = template["template_id"]
         raise ValueError(f"{template_id}: missing slots for {missing_slots}")
     if not field_names:
-        return [pattern]
+        return [{"raw_input": pattern, "slot_values": {}}]
 
     unique_field_names = list(dict.fromkeys(field_names))
     values = [slots[name] for name in unique_field_names]
-    expanded: list[str] = []
+    expanded: list[dict[str, Any]] = []
     for combination in itertools.product(*values):
         mapping = dict(zip(unique_field_names, combination, strict=True))
-        expanded.append(pattern.format(**mapping))
+        expanded.append({"raw_input": pattern.format(**mapping), "slot_values": mapping})
     return expanded
 
 
 def build_candidate(
     template: dict[str, Any],
     raw_input: str,
+    slot_values: dict[str, str],
     prefix: str,
     sequence: int,
     variant_index: int,
@@ -204,6 +266,7 @@ def build_candidate(
     negated_risks = list(template["negated_risks"])
     secondary_intents = list(template["secondary_intents"])
     operational_constraints = list(template["operational_constraints"])
+    should_not_trigger = list(template["should_not_trigger"])
     tags = expected_tags(
         primary_intent=primary_intent,
         positive_risks=positive_risks,
@@ -225,7 +288,13 @@ def build_candidate(
         "operational_constraints": operational_constraints,
         "primary_intent": primary_intent,
         "secondary_intents": secondary_intents,
-        "should_not_trigger": list(template["should_not_trigger"]),
+        "risk_candidates": build_risk_candidates(
+            template=template,
+            raw_input=raw_input,
+            slot_values=slot_values,
+        ),
+        "should_not_trigger": should_not_trigger,
+        "suppressed_protocols": should_not_trigger,
         "expected_route": expected_route,
         "expected_protocol_id": expected_protocol_id,
         "risk_level": RISK_LEVEL_BY_INTENT.get(primary_intent, "medium"),
@@ -233,6 +302,47 @@ def build_candidate(
         "label_status": "candidate",
         "needs_human_review": True,
     }
+
+
+def build_risk_candidates(
+    template: dict[str, Any],
+    raw_input: str,
+    slot_values: dict[str, str],
+) -> list[dict[str, Any]]:
+    template_id = str(template["template_id"])
+    candidates: list[dict[str, Any]] = []
+    for annotation in template["candidate_annotations"]:
+        trigger = annotation.get("trigger")
+        slot = annotation.get("slot")
+        if trigger is None and isinstance(slot, str):
+            trigger = slot_values.get(slot)
+        if not isinstance(trigger, str) or not trigger:
+            raise ValueError(
+                f"{template_id}: candidate annotation could not resolve trigger "
+                f"from slot {slot!r}"
+            )
+        start = raw_input.find(trigger)
+        if start < 0:
+            raise ValueError(
+                f"{template_id}: candidate trigger {trigger!r} not found in "
+                f"raw_input {raw_input!r}"
+            )
+        end = start + len(trigger)
+        candidate: dict[str, Any] = {
+            "risk": annotation["risk"],
+            "trigger": trigger,
+            "span": [start, end],
+            "confidence": confidence_for_term(trigger),
+            "evidence_type": annotation["evidence_type"],
+            "expected_negated": annotation["expected_negated"],
+        }
+        if isinstance(slot, str):
+            candidate["slot"] = slot
+        candidates.append(candidate)
+    return candidates
+
+
+build_gold_risk_candidates = build_risk_candidates
 
 
 def apply_label_overrides(candidate: dict[str, Any]) -> dict[str, Any]:

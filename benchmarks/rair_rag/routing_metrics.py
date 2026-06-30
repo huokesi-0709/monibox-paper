@@ -47,6 +47,9 @@ def _compute_group(
         "PrimaryIntentAcc": primary_intent_accuracy(cases, predictions),
         "SecondaryIntentF1": secondary_intent_f1(cases, predictions),
         "ConstraintF1": constraint_f1(cases, predictions),
+        "RiskCandidateF1": risk_candidate_f1(cases, predictions),
+        "EvidenceTypeAcc": evidence_type_accuracy(cases, predictions),
+        "SuppressedProtocolF1": suppressed_protocol_f1(cases, predictions),
     }
 
 
@@ -128,6 +131,63 @@ def constraint_f1(
     return _micro_set_f1(cases, predictions, "operational_constraints")
 
 
+def risk_candidate_f1(
+    cases: list[RoutingCase], predictions: list[dict[str, Any]]
+) -> float:
+    tp = fp = fn = 0
+    for case, prediction in zip(cases, predictions, strict=True):
+        gold = {
+            str(item.get("risk"))
+            for item in case.risk_candidates
+            if isinstance(item, dict) and item.get("risk")
+        }
+        pred = _predicted_risk_candidates(prediction)
+        tp += len(gold & pred)
+        fp += len(pred - gold)
+        fn += len(gold - pred)
+    precision = _ratio(tp, tp + fp)
+    recall = _ratio(tp, tp + fn)
+    return _ratio(2 * precision * recall, precision + recall)
+
+
+def evidence_type_accuracy(
+    cases: list[RoutingCase], predictions: list[dict[str, Any]]
+) -> float:
+    matched = total = 0
+    for case, prediction in zip(cases, predictions, strict=True):
+        if not case.risk_candidates:
+            continue
+        gold_map = _gold_risk_candidate_map(case)
+        pred_map = _predicted_risk_candidate_map(prediction)
+        if not gold_map or not pred_map:
+            continue
+        overlap = set(gold_map) & set(pred_map)
+        if not overlap:
+            continue
+        total += len(overlap)
+        matched += sum(
+            1
+            for key in overlap
+            if _candidate_evidence_type(gold_map[key]) == _candidate_evidence_type(pred_map[key])
+        )
+    return _ratio(matched, total)
+
+
+def suppressed_protocol_f1(
+    cases: list[RoutingCase], predictions: list[dict[str, Any]]
+) -> float:
+    tp = fp = fn = 0
+    for case, prediction in zip(cases, predictions, strict=True):
+        gold = set(case.suppressed_protocols or case.should_not_trigger)
+        pred = {str(item) for item in prediction.get("suppressed_protocols") or []}
+        tp += len(gold & pred)
+        fp += len(pred - gold)
+        fn += len(gold - pred)
+    precision = _ratio(tp, tp + fp)
+    recall = _ratio(tp, tp + fn)
+    return _ratio(2 * precision * recall, precision + recall)
+
+
 def _ensure_same_length(
     cases: list[RoutingCase], predictions: list[dict[str, Any]]
 ) -> None:
@@ -166,6 +226,59 @@ def _predicted_set(prediction: dict[str, Any], field_name: str) -> set[str]:
     if not isinstance(value, list):
         raise ValueError(f"prediction {field_name} must be a list")
     return {str(item) for item in value}
+
+
+def _predicted_risk_candidates(prediction: dict[str, Any]) -> set[str]:
+    candidates = prediction.get("risk_candidates")
+    if candidates is None:
+        candidates = _trace(prediction).get("risk_candidates", [])
+    if not isinstance(candidates, list):
+        raise ValueError("prediction risk_candidates must be a list")
+    risks: set[str] = set()
+    for item in candidates:
+        if isinstance(item, dict):
+            risk = item.get("risk")
+        else:
+            risk = item
+        if risk:
+            risks.add(str(risk))
+    return risks
+
+
+def _gold_risk_candidate_map(case: RoutingCase) -> dict[tuple[str, str], dict[str, Any]]:
+    mapped: dict[tuple[str, str], dict[str, Any]] = {}
+    for candidate in case.risk_candidates:
+        if not isinstance(candidate, dict):
+            continue
+        risk = str(candidate.get("risk") or "")
+        trigger = str(candidate.get("trigger") or candidate.get("term") or "")
+        if risk and trigger:
+            mapped[(risk, trigger)] = candidate
+    return mapped
+
+
+def _predicted_risk_candidate_map(
+    prediction: dict[str, Any]
+) -> dict[tuple[str, str], dict[str, Any]]:
+    candidates = prediction.get("risk_candidates")
+    if candidates is None:
+        candidates = _trace(prediction).get("risk_candidates", [])
+    if not isinstance(candidates, list):
+        return {}
+    mapped: dict[tuple[str, str], dict[str, Any]] = {}
+    for candidate in candidates:
+        if not isinstance(candidate, dict):
+            continue
+        risk = str(candidate.get("risk") or "")
+        trigger = str(candidate.get("trigger") or candidate.get("term") or "")
+        if risk and trigger:
+            mapped[(risk, trigger)] = candidate
+    return mapped
+
+
+def _candidate_evidence_type(candidate: dict[str, Any]) -> str:
+    value = candidate.get("evidence_type")
+    return str(value or "unknown")
 
 
 def _gold_set(case: RoutingCase, field_name: str) -> set[str]:

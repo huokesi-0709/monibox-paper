@@ -7,10 +7,14 @@ from typing import Any
 
 from benchmarks.rair_rag.routing_metrics import compute_routing_metrics
 from benchmarks.rair_rag.routing_schema import RoutingCase, load_routing_cases
-from benchmarks.rair_rag.scripts.generate_candidates import PROTOCOL_BY_ROUTE
 from runtime.multi_intent_router import MultiIntentRouter
 from runtime.negation_resolver import NegationConfig, NegationResolver
-from runtime.risk_router import RiskAwareInputRouter
+from runtime.risk_router import (
+    RiskAwareInputRouter,
+    protocol_for_route,
+    route_for_intent,
+    suppressed_protocols_for_negated_risks,
+)
 from runtime.routing_policy import RoutingPolicy
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -24,21 +28,6 @@ SUPPORTED_METHODS = (
     "risk-router",
     "risk-router-de",
 )
-
-ROUTE_BY_INTENT = {
-    "respiratory_distress": "route_respiratory_distress",
-    "severe_bleeding_or_shock": "route_bleeding_control",
-    "trauma_or_fracture": "route_trauma_or_fracture",
-    "crush_injury": "route_crush_injury",
-    "altered_consciousness_or_head_injury": "route_head_or_consciousness",
-    "hypothermia": "route_hypothermia",
-    "psychological_distress": "route_psychological_support",
-    "trapped_or_entrapment": "route_trapped_or_entrapment",
-    "aftershock_or_collapse_hazard": "route_aftershock_or_collapse_hazard",
-    "dehydration_or_resource_deprivation": "route_dehydration_or_resource_deprivation",
-    "out_of_scope": "route_out_of_scope",
-}
-
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -206,16 +195,43 @@ def prediction_from_context(
 ) -> dict[str, Any]:
     context_data = context.to_dict() if hasattr(context, "to_dict") else dict(context)
     primary_intent = str(context_data.get("primary_intent") or "out_of_scope")
-    route = route_for_intent(primary_intent)
-    protocol_id = PROTOCOL_BY_ROUTE.get(route)
+    route = context_data.get("predicted_route") or route_for_intent(primary_intent)
+    protocol_id = context_data.get("protocol_id")
+    if protocol_id is None:
+        protocol_id = protocol_for_route(route)
+    negated_risks = list(context_data.get("negated_risks") or [])
+    suppressed_protocols = list(context_data.get("suppressed_protocols") or [])
+    if not suppressed_protocols:
+        suppressed_protocols = suppressed_protocols_for_negated_risks(negated_risks)
+    risk_candidates = list(
+        context_data.get("risk_candidates")
+        or context_data.get("risk_mentions")
+        or []
+    )
     trace = context_data.get("trace")
     if not isinstance(trace, dict):
         trace = {}
+    risk_score = float(context_data.get("risk_score") or 0.0)
+    risk_context = {
+        "primary_intent": primary_intent,
+        "secondary_intents": list(context_data.get("secondary_intents") or []),
+        "positive_risks": list(context_data.get("positive_risks") or []),
+        "negated_risks": negated_risks,
+        "operational_constraints": list(
+            context_data.get("operational_constraints") or []
+        ),
+        "suppressed_protocols": suppressed_protocols,
+        "predicted_route": route,
+        "protocol_id": protocol_id,
+        "risk_score": risk_score,
+        "risk_candidates": risk_candidates,
+    }
     trace.update(
         {
             "route_name": route,
             "protocol_id": protocol_id,
             "primary_intent": primary_intent,
+            "risk_context": risk_context,
         }
     )
     return {
@@ -229,17 +245,16 @@ def prediction_from_context(
             context_data.get("operational_constraints") or []
         ),
         "positive_risks": list(context_data.get("positive_risks") or []),
-        "negated_risks": list(context_data.get("negated_risks") or []),
+        "negated_risks": negated_risks,
         "predicted_route": route,
         "protocol_id": protocol_id,
-        "risk_score": float(context_data.get("risk_score") or 0.0),
+        "suppressed_protocols": suppressed_protocols,
+        "risk_score": risk_score,
+        "risk_candidates": risk_candidates,
         "risk_mentions": list(context_data.get("risk_mentions") or []),
+        "risk_context": risk_context,
         "trace": trace,
     }
-
-
-def route_for_intent(intent: str) -> str:
-    return ROUTE_BY_INTENT.get(intent, "")
 
 
 def dedupe(values: Any) -> list[str]:

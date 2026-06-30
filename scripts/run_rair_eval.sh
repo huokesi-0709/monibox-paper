@@ -3,7 +3,6 @@ set -euo pipefail
 
 OUT_DIR="build/rair_eval"
 MANUAL_POLICY="scoring/routing_policy_manual.yaml"
-DE_POLICY="scoring/routing_policy_de.yaml"
 
 mkdir -p "$OUT_DIR"
 
@@ -41,8 +40,7 @@ run_dataset() {
   run_eval "$dataset_name" "$data_path" "keyword-baseline" "keyword-baseline"
   run_eval "$dataset_name" "$data_path" "no-negation" "no-negation"
   run_eval "$dataset_name" "$data_path" "single-intent" "single-intent"
-  run_eval "$dataset_name" "$data_path" "risk-router-manual" "risk-router" "$MANUAL_POLICY"
-  run_eval "$dataset_name" "$data_path" "risk-router-de" "risk-router-de" "$DE_POLICY"
+  run_eval "$dataset_name" "$data_path" "risk-router" "risk-router" "$MANUAL_POLICY"
 }
 
 run_dataset "rair_test" "benchmarks/rair_rag/data/test/rair_test.jsonl"

@@ -1,17 +1,17 @@
 {
   "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
-  "method": "single-intent",
+  "method": "risk-router",
   "metrics": {
-    "ConstraintF1": 0.7464788732394367,
+    "ConstraintF1": 0.9828571428571428,
     "EvidenceTypeAcc": 0.0,
-    "HRR": 0.8202247191011236,
+    "HRR": 0.9831460674157303,
     "NegRiskExact": 0.8666666666666667,
     "NegRiskF1": 0.7410071942446044,
-    "PFTR": 0.0,
-    "PrimaryIntentAcc": 0.8291666666666667,
+    "PFTR": 0.00625,
+    "PrimaryIntentAcc": 0.98125,
     "RiskCandidateF1": 0.0,
-    "RouteAcc": 0.8104166666666667,
-    "SecondaryIntentF1": 0.0,
+    "RouteAcc": 0.9625,
+    "SecondaryIntentF1": 0.8541666666666667,
     "SuppressedProtocolF1": 0.7410071942446044,
     "by_perturbation_type": {
       "clean_control": {
@@ -24,34 +24,34 @@
         "PrimaryIntentAcc": 1.0,
         "RiskCandidateF1": 0.0,
         "RouteAcc": 1.0,
-        "SecondaryIntentF1": 0.0,
+        "SecondaryIntentF1": 0.9090909090909091,
         "SuppressedProtocolF1": 0.0,
         "num_cases": 65
       },
       "multi_intent": {
-        "ConstraintF1": 0.7096774193548387,
+        "ConstraintF1": 0.980891719745223,
         "EvidenceTypeAcc": 0.0,
-        "HRR": 0.7631578947368421,
+        "HRR": 1.0,
         "NegRiskExact": 0.9885931558935361,
         "NegRiskF1": 0.0,
         "PFTR": 0.0,
-        "PrimaryIntentAcc": 0.7262357414448669,
+        "PrimaryIntentAcc": 1.0,
         "RiskCandidateF1": 0.0,
-        "RouteAcc": 0.7262357414448669,
-        "SecondaryIntentF1": 0.0,
+        "RouteAcc": 1.0,
+        "SecondaryIntentF1": 0.8983050847457625,
         "SuppressedProtocolF1": 0.0,
         "num_cases": 263
       },
       "negation_conflict": {
         "ConstraintF1": 1.0,
         "EvidenceTypeAcc": 0.0,
-        "HRR": 0.8717948717948718,
+        "HRR": 0.9230769230769231,
         "NegRiskExact": 0.6052631578947368,
         "NegRiskF1": 0.7518248175182481,
-        "PFTR": 0.0,
-        "PrimaryIntentAcc": 0.9342105263157895,
+        "PFTR": 0.019736842105263157,
+        "PrimaryIntentAcc": 0.9407894736842105,
         "RiskCandidateF1": 0.0,
-        "RouteAcc": 0.875,
+        "RouteAcc": 0.881578947368421,
         "SecondaryIntentF1": 0.0,
         "SuppressedProtocolF1": 0.7518248175182481,
         "num_cases": 152
@@ -60,5 +60,5 @@
     "num_cases": 480
   },
   "num_cases": 480,
-  "policy": null
+  "policy": "scoring\\routing_policy_manual.yaml"
 }

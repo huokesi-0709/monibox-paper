@@ -52,8 +52,16 @@ def test_run_routing_eval_writes_predictions_and_summary(tmp_path: Path) -> None
     assert predictions[0]["primary_intent"] == "trauma_or_fracture"
     assert predictions[0]["negated_risks"] == ["severe_bleeding_or_shock"]
     assert predictions[0]["protocol_id"] == "prot_injury_fracture"
+    assert predictions[0]["suppressed_protocols"] == ["prot_bleeding_control"]
+    assert predictions[0]["risk_candidates"]
+    assert predictions[0]["risk_context"]["predicted_route"] == "route_trauma_or_fracture"
+    assert predictions[0]["risk_context"]["suppressed_protocols"] == [
+        "prot_bleeding_control"
+    ]
     assert predictions[1]["primary_intent"] == "respiratory_distress"
     assert predictions[1]["operational_constraints"] == ["low_battery"]
+    assert predictions[1]["risk_context"]["primary_intent"] == "respiratory_distress"
+    assert "risk_candidates" in predictions[1]["risk_context"]
     assert summary_data["metrics"]["PFTR"] == 0.0
     assert "negation_conflict" in summary_data["metrics"]["by_perturbation_type"]
 
@@ -107,6 +115,8 @@ def test_run_routing_eval_supports_policy_and_baselines(tmp_path: Path) -> None:
 
     prediction = json.loads((tmp_path / "risk-router-de.jsonl").read_text(encoding="utf-8"))
     assert prediction["primary_intent"] == "psychological_distress"
+    assert "risk_context" in prediction
+    assert prediction["risk_context"]["primary_intent"] == "psychological_distress"
 
 
 def case(
