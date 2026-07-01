@@ -113,6 +113,10 @@ uv run python -m benchmarks.rair_rag.scripts.build_runtime_latency_summary
 
 当前主实验表仅纳入可本地运行或可离线复现的对照方法，包括 Keyword、BERT-MultiLabel、RAIR 消融版本和 RAIR。`LLM-ZeroShot` 与 `LLM-FewShot` 可作为未来在线强基线或附录提示词设计保留；在未运行真实在线模型并生成 summary 之前，不纳入主表比较。
 
+## 错误分析口径
+
+`experiments.export_rair_tables` 导出的 `error_analysis.md` 不是定量错误类型统计。当前最稳妥的论文表述是“本文结合 prediction trace 对典型错误进行定性讨论”；只有在脚本后续改为从 predictions 自动聚合错误类型后，才应汇报定量错误分析表。
+
 ## 范围说明
 
 RAIR-RAG-Bench 聚焦安全关键 RAG 的检索前风险上下文构建。RAG 检索和生成是 RAIR `risk_context` 的下游消费者，不是该基准优化或直接评价的组件。

@@ -22,6 +22,7 @@ benchmarks/rair_rag/data/dev/rair_dev.jsonl
 benchmarks/rair_rag/data/test/rair_test.jsonl
 benchmarks/rair_rag/data/test/rair_test_negation.jsonl
 benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
+benchmarks/rair_rag/data/test/rair_test_multi_intent_negation.jsonl
 ```
 
 ```bash
@@ -29,16 +30,20 @@ benchmarks/rair_rag/data/test/rair_test_multi_intent.jsonl
 bash scripts/run_rair_eval.sh
 ```
 
-RAIR-RAG 主实验默认只运行 `keyword-baseline`、`no-negation`、`single-intent` 和 `risk-router`。DE 相关脚本已移入 `experiments/archived/`，仅用于旧产物追溯，不属于 RAIR-RAG 复现实验入口。
+主测试集 `rair_test.jsonl` 使用 `label_status=consensus` 与 `source_type=template_generated_human_reviewed`。复合扰动扩展集 `rair_test_multi_intent_negation.jsonl` 使用 `label_status=template_composed_pending_review` 与 `source_type=template_composed_multi_intent_negation`，只能作为“模板组合构造的复合扰动扩展集”或压力测试集描述，不能称为全量人工 consensus 标注。
 
-RAIR-RAG 最终主实验产物位于 `build/rair_eval/`。建议上传主实验 summary 和 predictions。`de_trials.jsonl`、`de_summary.json`、`de_best_policy.yaml` 和 `build/rair_eval/de_routing/` 均属于历史 DE 产物，不建议作为当前 RAIR-RAG 论文证据上传或引用。
+RAIR-RAG 主实验默认运行 `keyword-baseline`、`bert-multilabel`、`no-negation`、`single-intent` 和 `risk-router`。`LLM-ZeroShot` 与 `LLM-FewShot` 可作为未来在线强基线或附录提示词设计保留；在没有真实在线模型运行 summary 前，不纳入主表比较。DE 相关脚本已移入 `experiments/archived/`，仅用于旧产物追溯，不属于 RAIR-RAG 复现实验入口。
+
+RAIR-RAG 最终主实验产物位于 `build/rair_eval/`。建议只上传当前主实验 summary、predictions、导出表格和必要的运行时延摘要。`de_trials.jsonl`、`de_summary.json`、`de_best_policy.yaml`、`risk-router-de` 产物和 `build/rair_eval/de_routing/` 均属于历史 DE 产物，不应作为当前 RAIR-RAG 论文证据上传或引用。
+
+`build/rair_eval/tables/error_analysis.md` 仅作为定性错误讨论提示，不是从 predictions 自动统计得到的定量错误分析表。论文中应写作“本文结合 prediction trace 对典型错误进行定性讨论”；除非后续实现从 predictions 自动聚合错误类型，否则不要写“基于 prediction trace 统计得到定量错误分析表”。
 
 ## RAIR-RAG Paper Reproduction Quickstart
 
 当前论文主线默认使用 `benchmarks/rair_rag/` 数据集与 `build/rair_eval/` 实验产物。论文主表、分扰动表、否定冲突分析、多意图分析和 routing policy 校准结果都应来自 RAIR-RAG-Bench，而不是旧的 `artifacts/paper_final_v2/` 或 `build/eval/final_v2/`。
 
 ```bash
-# RAIR-RAG test, negation subset, and multi-intent subset
+# RAIR-RAG test, negation subset, multi-intent subset, and composite stress subset
 bash scripts/run_rair_eval.sh
 ```
 

@@ -27,13 +27,20 @@ build/eval/**/*.log
 build/eval/**/*_summary.json
 build/eval/perturbation_report.json
 
-# RAIR-RAG paper artifacts: keep final benchmark data/results uploadable.
-# Large DE scratch files are reproducible from de_trials/de_summary and stay local.
+# RAIR-RAG paper artifacts: keep only current benchmark data/results uploadable.
+# Historical DE optimization traces are local scratch artifacts, not paper evidence.
+build/rair_eval/*
 !build/rair_eval/
-!build/rair_eval/**
-!build/rair_eval/*.json
-!build/rair_eval/*.jsonl
-!build/rair_eval/*.yaml
+!build/rair_eval/rair_test_*_summary.json
+!build/rair_eval/rair_test_*_predictions.jsonl
+!build/rair_eval/runtime_latency_summary.json
+!build/rair_eval/schema_upgrade_warnings_test*.jsonl
+!build/rair_eval/tables/
+!build/rair_eval/tables/*.csv
+!build/rair_eval/tables/*.md
+build/rair_eval/de_*
+build/rair_eval/*risk-router-de*
+build/rair_eval/*risk-router-manual*
 build/rair_eval/de_routing/
 dist/
 node_modules/

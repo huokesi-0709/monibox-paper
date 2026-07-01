@@ -289,21 +289,25 @@ def _write_md(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> None
 
 
 def _build_error_analysis_rows(summaries: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    templates = [
-        {"Error Type": "False Negation", "Description": "\u6b63\u5411\u98ce\u9669\u88ab\u9519\u8bef\u5426\u5b9a", "Example": "negation_conflict", "Possible Cause": "\u5426\u5b9a\u4f5c\u7528\u57df\u8fc7\u5bbd", "Future Fix": "\u8c03\u6574\u8fb9\u754c\u60e9\u7f5a"},
-        {"Error Type": "Missed Negation", "Description": "\u88ab\u5426\u5b9a\u98ce\u9669\u672a\u8bc6\u522b", "Example": "negation_conflict", "Possible Cause": "\u5426\u5b9a\u8868\u8fbe\u672a\u8986\u76d6", "Future Fix": "\u6269\u5c55 Q \u96c6\u5408"},
-        {"Error Type": "Wrong Primary Intent", "Description": "\u591a\u610f\u56fe\u4e3b\u8def\u7531\u9519\u8bef", "Example": "multi_intent", "Possible Cause": "\u6743\u91cd\u6216\u9ad8\u98ce\u9669\u589e\u5f3a\u4e0d\u8db3", "Future Fix": "\u6821\u51c6 beta"},
-        {"Error Type": "Constraint Hijacking", "Description": "\u64cd\u4f5c\u7ea6\u675f\u62a2\u5360\u4e3b\u8def\u7531", "Example": "multi_intent", "Possible Cause": "delta \u4e0d\u8db3", "Future Fix": "\u63d0\u9ad8\u64cd\u4f5c\u7ea6\u675f\u6291\u5236"},
-        {"Error Type": "Missing Candidate", "Description": "\u98ce\u9669\u5019\u9009\u6f0f\u62bd\u53d6", "Example": "clean_control", "Possible Cause": "\u539f\u578b\u63cf\u8ff0\u4e0d\u8db3", "Future Fix": "\u6269\u5c55 P(r)"},
+    if not summaries:
+        return []
+    return [
+        {
+            "Error Type": "Qualitative discussion only",
+            "Description": (
+                "This export is not a quantitative error analysis table. "
+                "Current paper wording should describe prediction-trace review "
+                "as qualitative discussion unless a future script derives error "
+                "counts directly from predictions."
+            ),
+            "Example": "prediction trace examples",
+            "Possible Cause": "N/A",
+            "Future Fix": (
+                "Implement prediction-derived error aggregation before reporting "
+                "error-type counts or rates."
+            ),
+        }
     ]
-    for summary in summaries:
-        method = str(summary.get("method") or "")
-        for template in templates:
-            row = dict(template)
-            row["_method"] = method
-            rows.append(row)
-    return rows
 
 def export_rair_tables(
     eval_dir: str | Path = "build/rair_eval",
