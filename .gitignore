@@ -47,6 +47,16 @@ build/rair_eval/*risk-router-manual*
 build/rair_eval/de_routing/
 build/rair_eval/**/*_tmp.*
 build/rair_eval/**/*.log
+
+# RAIR-RAG downstream reproducible evaluation artifacts
+build/downstream_eval/
+
+# Local model weights
+models/llm/*.gguf
+models/llm/*.bin
+models/llm/*.safetensors
+!models/llm/README.md
+!models/llm/.gitkeep
 dist/
 node_modules/
 *.egg-info/

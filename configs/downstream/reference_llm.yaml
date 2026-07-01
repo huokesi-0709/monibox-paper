@@ -1,0 +1,20 @@
+# Strong reference generator configuration for downstream generation experiments.
+# Do not store API keys in this file. Set REFERENCE_LLM_API_KEY in the local
+# environment before running reference generation.
+
+generator: reference-llm
+role: stronger_reference_generator
+model:
+  name: qwen2.5-7b-instruct
+  deployment_note: >
+    This model is not the edge deployment model and is not part of the RAIR
+    method. It is used only as a stronger reference generator to test whether
+    RAIR risk context remains useful under higher generation capability.
+api:
+  style: openai-compatible
+  base_url_env: REFERENCE_LLM_BASE_URL
+  api_key_env: REFERENCE_LLM_API_KEY
+generation:
+  temperature: 0.2
+  top_p: 0.9
+  max_tokens: 512

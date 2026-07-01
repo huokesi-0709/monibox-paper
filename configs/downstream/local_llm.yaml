@@ -1,0 +1,17 @@
+# Local GGUF generator configuration for RAIR-RAG downstream generation.
+# The model file is not committed to Git. Place it manually under models/llm/
+# or set LOCAL_LLM_MODEL_PATH to another local GGUF path.
+
+generator: local-llama-cpp
+model:
+  family: Qwen1.5
+  name: Qwen1.5-0.5B-Chat-Q4_K_M
+  path: models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf
+runtime:
+  n_ctx: 2048
+  n_threads: 4
+generation:
+  temperature: 0.2
+  top_p: 0.9
+  max_tokens: 512
+  seed: 42
