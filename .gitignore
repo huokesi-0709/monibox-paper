@@ -27,21 +27,26 @@ build/eval/**/*.log
 build/eval/**/*_summary.json
 build/eval/perturbation_report.json
 
-# RAIR-RAG paper artifacts: keep only current benchmark data/results uploadable.
-# Historical DE optimization traces are local scratch artifacts, not paper evidence.
+# RAIR-RAG paper reproducible artifacts
 build/rair_eval/*
 !build/rair_eval/
-!build/rair_eval/rair_test_*_summary.json
-!build/rair_eval/rair_test_*_predictions.jsonl
-!build/rair_eval/runtime_latency_summary.json
-!build/rair_eval/schema_upgrade_warnings_test*.jsonl
 !build/rair_eval/tables/
-!build/rair_eval/tables/*.csv
 !build/rair_eval/tables/*.md
+!build/rair_eval/tables/*.csv
+!build/rair_eval/*_summary.json
+!build/rair_eval/runtime_latency_summary.json
+
+# Optional: keep selected full prediction traces for paper trace analysis.
+!build/rair_eval/rair_test_risk-router_predictions.jsonl
+!build/rair_eval/rair_test_multi_intent_negation_risk-router_predictions.jsonl
+
+# Always ignore archived DE and scratch outputs.
 build/rair_eval/de_*
 build/rair_eval/*risk-router-de*
 build/rair_eval/*risk-router-manual*
 build/rair_eval/de_routing/
+build/rair_eval/**/*_tmp.*
+build/rair_eval/**/*.log
 dist/
 node_modules/
 *.egg-info/
