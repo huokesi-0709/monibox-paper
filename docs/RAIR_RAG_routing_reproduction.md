@@ -33,18 +33,33 @@ The scripts evaluate the same method set across the configured RAIR test files:
 
 `bert-multilabel` is a real `bert-base-chinese` multilabel classifier. It no
 longer falls back to the old keyword/candidate proxy. Train it before running
-the full routing script:
+the full routing script. First prepare the BERT-only split from the RAIR dev
+pool:
+
+```bash
+uv run python -m benchmarks.rair_rag.baselines.prepare_bert_multilabel_split
+```
+
+The committed split manifest is `build/bert_multilabel/bert_split_manifest.json`.
+It records 322 dev-pool cases split by `canonical_id` into 264 training cases
+and 58 validation cases with seed 42 and train_ratio 0.8. The held-out main test
+set, `benchmarks/rair_rag/data/test/rair_test.jsonl`, contains 480 cases and is
+not used for training, threshold choice, or best-epoch/model selection. The
+current split has zero overlap with the 480-case test set by both `id` and
+`canonical_id`.
+
+Then train the BERT baseline:
 
 ```bash
 uv run --extra bert python -m benchmarks.rair_rag.baselines.train_bert_multilabel \
   --train-data build/bert_multilabel/rair_train.jsonl \
-  --dev-data benchmarks/rair_rag/data/dev/rair_dev.jsonl
+  --dev-data build/bert_multilabel/rair_validation.jsonl
 ```
 
-`--train-data` must point to a training JSONL that excludes the held-out dev and
-test cases. The training script selects `build/bert_multilabel/best_model/` on
-the dev set only. Do not use any `data/test/*.jsonl` file for model selection
-or hyperparameter tuning. Test-set evaluation is then:
+`--train-data` must point to a training JSONL that excludes the held-out test
+cases. The training script selects `build/bert_multilabel/best_model/` on the
+validation split only. Do not use any `data/test/*.jsonl` file for model
+selection or hyperparameter tuning. Test-set evaluation is then:
 
 ```bash
 uv run --extra bert python -m benchmarks.rair_rag.baselines.eval_bert_multilabel \
