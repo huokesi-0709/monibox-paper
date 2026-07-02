@@ -1,0 +1,50 @@
+{
+  "input": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\dev\\rair_dev.jsonl",
+  "label_space": [
+    "respiratory_distress",
+    "severe_bleeding_or_shock",
+    "trauma_or_fracture",
+    "crush_injury",
+    "altered_consciousness_or_head_injury",
+    "hypothermia",
+    "psychological_distress",
+    "trapped_or_entrapment",
+    "aftershock_or_collapse_hazard",
+    "dehydration_or_resource_deprivation",
+    "low_battery",
+    "out_of_scope"
+  ],
+  "leakage_rule": "held-out test ids and canonical_ids are excluded",
+  "num_input_cases": 322,
+  "num_train_canonical_ids": 28,
+  "num_train_cases": 264,
+  "num_validation_canonical_ids": 7,
+  "num_validation_cases": 58,
+  "seed": 42,
+  "test_data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "train": "D:\\projects\\monibox-Y\\monibox\\build\\bert_multilabel\\rair_train.jsonl",
+  "train_label_distribution": {
+    "<none>": 4,
+    "aftershock_or_collapse_hazard": 24,
+    "altered_consciousness_or_head_injury": 18,
+    "crush_injury": 28,
+    "hypothermia": 39,
+    "low_battery": 40,
+    "psychological_distress": 18,
+    "respiratory_distress": 61,
+    "severe_bleeding_or_shock": 18,
+    "trapped_or_entrapment": 60,
+    "trauma_or_fracture": 81
+  },
+  "train_ratio": 0.8,
+  "validation": "D:\\projects\\monibox-Y\\monibox\\build\\bert_multilabel\\rair_validation.jsonl",
+  "validation_label_distribution": {
+    "altered_consciousness_or_head_injury": 9,
+    "dehydration_or_resource_deprivation": 6,
+    "hypothermia": 9,
+    "psychological_distress": 9,
+    "respiratory_distress": 18,
+    "severe_bleeding_or_shock": 22,
+    "trapped_or_entrapment": 9
+  }
+}

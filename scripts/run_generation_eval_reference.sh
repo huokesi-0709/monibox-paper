@@ -9,7 +9,8 @@ TOPK="3"
 MAX_CASES=""
 INCLUDE_EXTENSION="0"
 REFERENCE_BASE_URL="${REFERENCE_LLM_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}"
-REFERENCE_MODEL="${REFERENCE_LLM_MODEL:-qwen2.5-7b-instruct}"
+REFERENCE_PROVIDER="${REFERENCE_LLM_PROVIDER:-dashscope_openai}"
+REFERENCE_MODEL="${REFERENCE_LLM_MODEL:-qwen-plus}"
 
 usage() {
   cat <<'EOF'
@@ -24,8 +25,9 @@ Required environment:
   REFERENCE_LLM_API_KEY    API key for the OpenAI-compatible reference endpoint.
 
 Optional environment:
+  REFERENCE_LLM_PROVIDER   Defaults to dashscope_openai
   REFERENCE_LLM_BASE_URL   Defaults to https://dashscope.aliyuncs.com/compatible-mode/v1
-  REFERENCE_LLM_MODEL      Defaults to qwen2.5-7b-instruct
+  REFERENCE_LLM_MODEL      Defaults to qwen-plus
 
 Options:
   --out-dir DIR          Output directory for generation outputs and summaries.
@@ -85,6 +87,7 @@ if [[ -z "${REFERENCE_LLM_API_KEY:-}" ]]; then
 fi
 
 export REFERENCE_LLM_BASE_URL="$REFERENCE_BASE_URL"
+export REFERENCE_LLM_PROVIDER="$REFERENCE_PROVIDER"
 export REFERENCE_LLM_MODEL="$REFERENCE_MODEL"
 
 args=(

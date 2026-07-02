@@ -81,7 +81,7 @@ def build_gold_jsonl(
     ann_a_path: Path,
     ann_b_path: Path,
     metrics_path: Path,
-    taxonomy_path: Path,
+    taxonomy_path: Path = DEFAULT_TAXONOMY,
     out_path: Path,
     distribution_path: Path,
     overwrite: bool,

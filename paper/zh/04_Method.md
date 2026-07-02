@@ -34,7 +34,7 @@ RAIR-RAG 包含五个阶段：输入规范化、风险触发识别、否定窗�
 
 ## 4.5 Constraints and Boundary Labels
 
-约束字段记录系统在回复或路由时必须遵守的边界，例如不能提供药物剂量、不能承诺救援到达、不能给出确定医学诊断，以及域外输入应进入边界处理。ConstraintF1 衡量这些约束是否被正确识别。
+约束字段记录系统在回复或路由时必须遵守的边界，例如不能提供药物剂量、不能承诺救援到达、不能给出确定医学诊断，以及域外输入应进入边界处理。安全约束重排用于在多个候选风险同时出现时保持安全优先级，ConstraintF1 衡量这些约束是否被正确识别。
 
 ## 4.6 Benchmark Construction
 
@@ -54,7 +54,7 @@ RAIR-RAG-Bench 的当前主文件是 `benchmarks/rair_rag/data/gold/rair_gold_al
 | `risk-router-manual` | 手工设定的完整风险路由策略。 |
 | `risk-router-de` | 在 dev 集上使用 Differential Evolution 搜索得到的策略。 |
 
-DE 只用于策略校准，不在 test 集上调参。当前 `risk-router-de` 与 `risk-router-manual` 指标相同，且 `de_summary.json` 显示没有找到更优可行 trial。
+DE 只使用 dev 集，不使用 test 集；它只用于策略校准，不在 test 集上调参。当前 `risk-router-de` 与 `risk-router-manual` 指标相同，且 `de_summary.json` 显示没有找到更优可行 trial。
 
 ## 4.8 Evaluation Metrics
 

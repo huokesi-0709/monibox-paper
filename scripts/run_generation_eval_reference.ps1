@@ -13,6 +13,18 @@ if (-not $env:REFERENCE_LLM_API_KEY) {
     exit 2
 }
 
+if (-not $env:REFERENCE_LLM_PROVIDER) {
+    $env:REFERENCE_LLM_PROVIDER = "dashscope_openai"
+}
+
+if (-not $env:REFERENCE_LLM_BASE_URL) {
+    $env:REFERENCE_LLM_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+}
+
+if (-not $env:REFERENCE_LLM_MODEL) {
+    $env:REFERENCE_LLM_MODEL = "qwen-plus"
+}
+
 $args = @(
     "run",
     "python",
@@ -38,7 +50,7 @@ if ($IncludeExtension) {
     $args += "--include-extension"
 }
 
-Write-Output "[generation-reference] uv run python -m benchmarks.rair_rag.downstream.generation_matrix --generator reference-llm"
+Write-Output "[generation-reference] uv run python -m benchmarks.rair_rag.downstream.generation_matrix --generator reference-llm model=$env:REFERENCE_LLM_MODEL"
 & uv @args
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE

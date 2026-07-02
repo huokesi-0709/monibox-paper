@@ -1,0 +1,16 @@
+{
+  "batch_size": 16,
+  "best_model_selection": "dev_micro_f1",
+  "dev_data": "build\\bert_multilabel\\rair_validation.jsonl",
+  "device": "cpu",
+  "epochs": 5,
+  "learning_rate": 2e-05,
+  "loss": "BCEWithLogitsLoss",
+  "max_length": 128,
+  "model_name": "bert-base-chinese",
+  "seed": 42,
+  "test_set_used_for_tuning": false,
+  "threshold": 0.5,
+  "train_data": "build\\bert_multilabel\\rair_train.jsonl",
+  "weight_decay": 0.01
+}

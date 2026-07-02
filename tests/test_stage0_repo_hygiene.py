@@ -14,7 +14,7 @@ REQUIRED_GITIGNORE_PATTERNS = [
 ]
 
 ENV_EXAMPLE_SECRET_PATTERNS = [
-    re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
+    re.compile(r"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}"),
     re.compile(r"AIza[0-9A-Za-z_-]{20,}"),
     re.compile(r"ghp_[A-Za-z0-9_]{20,}"),
     re.compile(r"hf_[A-Za-z0-9_]{20,}"),

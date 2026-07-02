@@ -46,6 +46,10 @@ json = [
 local-llm = [
   "llama-cpp-python>=0.3",
 ]
+bert = [
+  "torch>=2.2",
+  "transformers>=4.40",
+]
 paper = [
   "pymoo>=0.6.1.6",
   "pandas>=2",

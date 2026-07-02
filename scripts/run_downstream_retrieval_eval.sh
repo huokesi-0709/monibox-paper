@@ -5,11 +5,12 @@ export PATH="/usr/bin:/bin:$PATH"
 
 OUT_DIR="build/downstream_eval/retrieval"
 RAG_DB="${RAG_DB_PATH:-build/rag.db}"
+BERT_MODEL_DIR="${BERT_MULTILABEL_MODEL_DIR:-build/bert_multilabel/best_model}"
 TOPK="3"
 
 usage() {
   cat <<'EOF'
-Usage: scripts/run_downstream_retrieval_eval.sh [--out-dir DIR] [--rag-db PATH] [--topk N]
+Usage: scripts/run_downstream_retrieval_eval.sh [--out-dir DIR] [--rag-db PATH] [--bert-model-dir PATH] [--topk N]
 
 Runs RAIR-RAG downstream retrieval evaluation for:
   datasets: rair_test, rair_test_multi_intent_negation
@@ -18,6 +19,8 @@ Runs RAIR-RAG downstream retrieval evaluation for:
 Options:
   --out-dir DIR   Output directory for predictions and summaries.
   --rag-db PATH   Path to rag.db.
+  --bert-model-dir PATH
+                  Path to trained bert-multilabel best_model directory.
   --topk N        Retrieval top-k.
   -h, --help      Show this help.
 EOF
@@ -31,6 +34,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --rag-db)
       RAG_DB="$2"
+      shift 2
+      ;;
+    --bert-model-dir)
+      BERT_MODEL_DIR="$2"
       shift 2
       ;;
     --topk)
@@ -69,6 +76,7 @@ run_eval() {
     --data "$data_path" \
     --system "$system" \
     --rag-db "$RAG_DB" \
+    --bert-model-dir "$BERT_MODEL_DIR" \
     --topk "$TOPK" \
     --out "$out_path" \
     --summary "$summary_path"

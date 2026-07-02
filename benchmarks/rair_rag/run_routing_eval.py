@@ -5,6 +5,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from benchmarks.rair_rag.baselines.bert_multilabel_predictor import (
+    DEFAULT_BERT_MODEL_DIR,
+    BertMultilabelPredictor,
+)
 from benchmarks.rair_rag.routing_metrics import compute_routing_metrics
 from benchmarks.rair_rag.routing_schema import RoutingCase, load_routing_cases
 from runtime.multi_intent_router import MultiIntentRouter
@@ -25,6 +29,7 @@ SUPPORTED_METHODS = (
     "keyword-baseline",
     "no-negation",
     "single-intent",
+    "candidate-multilabel",
     "risk-router",
     "risk-router-de",
     "bert-multilabel",
@@ -39,6 +44,8 @@ def main() -> None:
     parser.add_argument("--data", type=Path, required=True)
     parser.add_argument("--method", choices=SUPPORTED_METHODS, required=True)
     parser.add_argument("--policy", type=Path)
+    parser.add_argument("--bert-model-dir", type=Path, default=DEFAULT_BERT_MODEL_DIR)
+    parser.add_argument("--bert-threshold", type=float)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--summary", type=Path, default=DEFAULT_SUMMARY)
     args = parser.parse_args()
@@ -47,6 +54,8 @@ def main() -> None:
         data_path=args.data,
         method=args.method,
         policy_path=args.policy,
+        bert_model_dir=args.bert_model_dir,
+        bert_threshold=args.bert_threshold,
         out_path=args.out,
         summary_path=args.summary,
     )
@@ -60,11 +69,15 @@ def run_routing_eval(
     policy_path: Path | None,
     out_path: Path,
     summary_path: Path,
+    bert_model_dir: Path | None = None,
+    bert_threshold: float | None = None,
 ) -> dict[str, Any]:
     summary = evaluate_routing_cases(
         data_path=data_path,
         method=method,
         policy_path=policy_path,
+        bert_model_dir=bert_model_dir,
+        bert_threshold=bert_threshold,
     )
     write_jsonl(out_path, summary["predictions"])
     summary_for_file = {key: value for key, value in summary.items() if key != "predictions"}
@@ -73,22 +86,39 @@ def run_routing_eval(
 
 
 def evaluate_routing_cases(
-    *, data_path: Path, method: str, policy_path: Path | None
+    *,
+    data_path: Path,
+    method: str,
+    policy_path: Path | None,
+    bert_model_dir: Path | None = None,
+    bert_threshold: float | None = None,
+    policy: RoutingPolicy | None = None,
 ) -> dict[str, Any]:
     if method not in SUPPORTED_METHODS:
         allowed = ", ".join(SUPPORTED_METHODS)
         raise ValueError(f"unsupported method {method}; choose one of {allowed}")
 
     cases = load_routing_cases(data_path)
-    policy = load_policy_for_method(method, policy_path)
+    active_policy = policy or load_policy_for_method(method, policy_path)
+    bert_predictor = load_bert_predictor_for_method(
+        method, bert_model_dir, bert_threshold
+    )
     predictions = [
-        predict_case(case=case, method=method, policy=policy) for case in cases
+        predict_case(
+            case=case,
+            method=method,
+            policy=active_policy,
+            bert_predictor=bert_predictor,
+        )
+        for case in cases
     ]
     metrics = compute_routing_metrics(cases, predictions)
     return {
         "data": str(data_path),
         "method": method,
         "policy": str(policy_path) if policy_path else None,
+        "bert_model_dir": str(bert_predictor.model_dir) if bert_predictor else None,
+        "bert_threshold": bert_predictor.threshold if bert_predictor else None,
         "num_cases": len(cases),
         "metrics": metrics,
         "predictions": predictions,
@@ -105,8 +135,20 @@ def load_policy_for_method(
     return RoutingPolicy()
 
 
+def load_bert_predictor_for_method(
+    method: str, model_dir: Path | None, threshold: float | None
+) -> BertMultilabelPredictor | None:
+    if method != "bert-multilabel":
+        return None
+    return BertMultilabelPredictor(model_dir=model_dir, threshold=threshold)
+
+
 def predict_case(
-    *, case: RoutingCase, method: str, policy: RoutingPolicy | None
+    *,
+    case: RoutingCase,
+    method: str,
+    policy: RoutingPolicy | None,
+    bert_predictor: BertMultilabelPredictor | None = None,
 ) -> dict[str, Any]:
     if method == "keyword-baseline":
         context = predict_keyword_baseline(case)
@@ -114,8 +156,12 @@ def predict_case(
         context = predict_no_negation(case)
     elif method == "single-intent":
         context = predict_single_intent(case)
+    elif method == "candidate-multilabel":
+        context = predict_candidate_multilabel(case)
     elif method == "bert-multilabel":
-        context = predict_bert_multilabel(case)
+        if bert_predictor is None:
+            raise RuntimeError("bert-multilabel requires a trained BERT predictor")
+        context = bert_predictor.predict_case(case)
     elif method == "llm-zero-shot":
         context = predict_llm_baseline(case, mode="zero-shot")
     elif method == "llm-few-shot":
@@ -199,7 +245,7 @@ def predict_single_intent(case: RoutingCase) -> dict[str, Any]:
     }
 
 
-def predict_bert_multilabel(case: RoutingCase) -> dict[str, Any]:
+def predict_candidate_multilabel(case: RoutingCase) -> dict[str, Any]:
     router = RiskAwareInputRouter()
     mentions = router.extract_risk_mentions(case.canonical_input)
     positive = dedupe(
@@ -221,7 +267,7 @@ def predict_bert_multilabel(case: RoutingCase) -> dict[str, Any]:
         "risk_candidates": mentions,
         "risk_score": 0.5 if primary != "out_of_scope" else 0.05,
         "trace": {
-            "baseline": "bert-multilabel local proxy without explicit negation or suppressed-protocol modeling",
+            "baseline": "candidate-multilabel local proxy without explicit negation or suppressed-protocol modeling",
             "risk_context": {
                 "primary_intent": primary,
                 "secondary_intents": secondary,

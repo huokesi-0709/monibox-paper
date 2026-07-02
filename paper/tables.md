@@ -24,6 +24,7 @@ build/rair_eval/rair_test_no-negation_summary.json
 build/rair_eval/rair_test_single-intent_summary.json
 build/rair_eval/rair_test_risk-router-manual_summary.json
 build/rair_eval/rair_test_risk-router-de_summary.json
+build/rair_eval/trace_audit_results.csv
 ```
 
 主要字段：RouteAcc、HRR、PFTR、NegRiskF1、SecondaryIntentF1、ConstraintF1。

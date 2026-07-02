@@ -3,7 +3,11 @@ param(
     [string]$RagDb = $(if ($env:RAG_DB_PATH) { $env:RAG_DB_PATH } else { "build/rag.db" }),
     [int]$TopK = 3,
     [int]$MaxCases = 0,
-    [switch]$IncludeExtension
+    [switch]$IncludeExtension,
+    [switch]$Resume,
+    [switch]$SkipExisting,
+    [switch]$Overwrite,
+    [double]$SleepBetweenCalls = -1
 )
 
 $ErrorActionPreference = "Stop"
@@ -31,6 +35,18 @@ if ($MaxCases -gt 0) {
 
 if ($IncludeExtension) {
     $args += "--include-extension"
+}
+if ($Resume) {
+    $args += "--resume"
+}
+if ($SkipExisting) {
+    $args += "--skip-existing"
+}
+if ($Overwrite) {
+    $args += "--overwrite"
+}
+if ($SleepBetweenCalls -ge 0) {
+    $args += @("--sleep-between-calls", $SleepBetweenCalls)
 }
 
 Write-Output "[generation-local] uv run python -m benchmarks.rair_rag.downstream.generation_matrix --generator local-llm"

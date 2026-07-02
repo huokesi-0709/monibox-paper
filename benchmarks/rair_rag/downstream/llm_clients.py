@@ -8,7 +8,12 @@ from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_LOCAL_MODEL_PATH = "models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf"
-DEFAULT_REFERENCE_MODEL = "qwen2.5-7b-instruct"
+DEFAULT_REFERENCE_PROVIDER = "dashscope_openai"
+DEFAULT_REFERENCE_BASE_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+DEFAULT_REFERENCE_MODEL = "qwen-plus"
+DEFAULT_REFERENCE_TOP_P = 0.8
+DEFAULT_REFERENCE_TIMEOUT_SECONDS = 120
+DEFAULT_REFERENCE_MAX_RETRIES = 2
 
 
 class BaseGenerator(ABC):
@@ -119,10 +124,16 @@ class ReferenceApiGenerator(BaseGenerator):
     temperature: float | None = None
     top_p: float | None = None
     max_tokens: int | None = None
+    timeout_seconds: float | None = None
+    max_retries: int | None = None
     _client: Any = field(default=None, init=False, repr=False)
 
     def __post_init__(self) -> None:
-        self.base_url = self.base_url or os.getenv("REFERENCE_LLM_BASE_URL") or None
+        self.base_url = (
+            self.base_url
+            or os.getenv("REFERENCE_LLM_BASE_URL")
+            or DEFAULT_REFERENCE_BASE_URL
+        )
         self.api_key = self.api_key or os.getenv("REFERENCE_LLM_API_KEY") or None
         self.model = (
             self.model or os.getenv("REFERENCE_LLM_MODEL") or DEFAULT_REFERENCE_MODEL
@@ -135,12 +146,24 @@ class ReferenceApiGenerator(BaseGenerator):
         self.top_p = float(
             self.top_p
             if self.top_p is not None
-            else _env_float("REFERENCE_LLM_TOP_P", 0.9)
+            else _env_float("REFERENCE_LLM_TOP_P", DEFAULT_REFERENCE_TOP_P)
         )
         self.max_tokens = int(
             self.max_tokens
             if self.max_tokens is not None
             else _env_int("REFERENCE_LLM_MAX_TOKENS", 512)
+        )
+        self.timeout_seconds = float(
+            self.timeout_seconds
+            if self.timeout_seconds is not None
+            else _env_float(
+                "REFERENCE_LLM_TIMEOUT_SECONDS", DEFAULT_REFERENCE_TIMEOUT_SECONDS
+            )
+        )
+        self.max_retries = int(
+            self.max_retries
+            if self.max_retries is not None
+            else _env_int("REFERENCE_LLM_MAX_RETRIES", DEFAULT_REFERENCE_MAX_RETRIES)
         )
         if not self.api_key:
             msg = (
@@ -172,7 +195,11 @@ class ReferenceApiGenerator(BaseGenerator):
             msg = "openai is not installed. Run `uv sync` before using reference-llm."
             raise RuntimeError(msg) from exc
 
-        kwargs: dict[str, str] = {"api_key": str(self.api_key)}
+        kwargs: dict[str, Any] = {
+            "api_key": str(self.api_key),
+            "timeout": self.timeout_seconds,
+            "max_retries": self.max_retries,
+        }
         if self.base_url:
             kwargs["base_url"] = self.base_url
         self._client = OpenAI(**kwargs)

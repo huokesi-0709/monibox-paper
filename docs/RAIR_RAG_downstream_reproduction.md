@@ -26,10 +26,10 @@ The final generation matrix contains four settings:
 | --- | --- | --- |
 | Edge-local | Vanilla RAG + LLM | Qwen1.5-0.5B-Chat-Q4_K_M |
 | Edge-local | RAIR-RAG + LLM | Qwen1.5-0.5B-Chat-Q4_K_M |
-| Strong reference | Vanilla RAG + LLM | Qwen2.5-7B-Instruct |
-| Strong reference | RAIR-RAG + LLM | Qwen2.5-7B-Instruct |
+| Strong reference | Vanilla RAG + LLM | qwen-plus |
+| Strong reference | RAIR-RAG + LLM | qwen-plus |
 
-The claim is not that the 0.5B local model matches the 7B reference model in language ability. The intended comparison is whether RAIR-RAG's structured risk context narrows the safety-critical metric gap between an edge-local generator and a stronger generator running ordinary RAG.
+The claim is not that the 0.5B local model matches qwen-plus in language ability. The intended comparison is whether RAIR-RAG's structured risk context narrows the safety-critical metric gap between an edge-local generator and a stronger hosted reference generator running ordinary RAG.
 
 ## Local generation
 
@@ -86,8 +86,27 @@ Defaults:
 - top-k evidence: `3`
 - output directory: `build/downstream_eval/generation/reference/`
 - base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
-- model: `qwen2.5-7b-instruct`
+- model: `qwen-plus`
 
-`reference-llm` requires `REFERENCE_LLM_API_KEY` and is not part of the default offline reproduction path. It is a stronger reference generator only; it is not the paper's edge deployment model and is not part of the RAIR method itself. Do not commit API keys or generated secrets.
+`reference-llm` requires `REFERENCE_LLM_API_KEY` and is not part of the default offline reproduction path. qwen-plus is used as a stronger hosted reference generator, not as an edge deployment model. Do not commit API keys or generated secrets.
 
 Use `--max-cases N` in bash or `-MaxCases N` in PowerShell for small smoke tests before running the full dataset.
+
+## Strong reference latency subset
+
+The completed `qwen-plus` reference generation outputs may predate per-sample
+latency logging. To avoid rerunning the full reference content generation, use a
+stratified subset benchmark for latency measurement:
+
+```bash
+export REFERENCE_LLM_API_KEY="..."
+uv run python -m benchmarks.rair_rag.downstream.run_generation_latency_subset \
+  --generator reference-llm \
+  --systems vanilla-rag rair-rag \
+  --sample-per-perturbation 20
+```
+
+Outputs are written under
+`build/downstream_eval/generation/reference_latency_subset/`. These measurements
+are subset latency measurements for `qwen-plus`; they are not full 480-case
+content-generation latency measurements.

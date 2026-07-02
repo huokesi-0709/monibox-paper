@@ -3,6 +3,7 @@ set -euo pipefail
 
 OUT_DIR="build/rair_eval"
 MANUAL_POLICY="scoring/routing_policy_manual.yaml"
+BERT_MODEL_DIR="${BERT_MULTILABEL_MODEL_DIR:-build/bert_multilabel/best_model}"
 
 mkdir -p "$OUT_DIR"
 
@@ -21,6 +22,7 @@ run_eval() {
     uv run python -m benchmarks.rair_rag.run_routing_eval \
       --data "$data_path" \
       --method "$method" \
+      --bert-model-dir "$BERT_MODEL_DIR" \
       --policy "$policy_path" \
       --out "$out_path" \
       --summary "$summary_path"
@@ -28,6 +30,7 @@ run_eval() {
     uv run python -m benchmarks.rair_rag.run_routing_eval \
       --data "$data_path" \
       --method "$method" \
+      --bert-model-dir "$BERT_MODEL_DIR" \
       --out "$out_path" \
       --summary "$summary_path"
   fi

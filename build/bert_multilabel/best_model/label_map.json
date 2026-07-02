@@ -1,0 +1,54 @@
+{
+  "excluded_training_label_fields": [
+    "negated_risks",
+    "suppressed_protocols",
+    "expected_route",
+    "expected_protocol_id"
+  ],
+  "id_to_label": {
+    "0": "respiratory_distress",
+    "1": "severe_bleeding_or_shock",
+    "10": "low_battery",
+    "11": "out_of_scope",
+    "2": "trauma_or_fracture",
+    "3": "crush_injury",
+    "4": "altered_consciousness_or_head_injury",
+    "5": "hypothermia",
+    "6": "psychological_distress",
+    "7": "trapped_or_entrapment",
+    "8": "aftershock_or_collapse_hazard",
+    "9": "dehydration_or_resource_deprivation"
+  },
+  "label_to_id": {
+    "aftershock_or_collapse_hazard": 8,
+    "altered_consciousness_or_head_injury": 4,
+    "crush_injury": 3,
+    "dehydration_or_resource_deprivation": 9,
+    "hypothermia": 5,
+    "low_battery": 10,
+    "out_of_scope": 11,
+    "psychological_distress": 6,
+    "respiratory_distress": 0,
+    "severe_bleeding_or_shock": 1,
+    "trapped_or_entrapment": 7,
+    "trauma_or_fracture": 2
+  },
+  "labels": [
+    "respiratory_distress",
+    "severe_bleeding_or_shock",
+    "trauma_or_fracture",
+    "crush_injury",
+    "altered_consciousness_or_head_injury",
+    "hypothermia",
+    "psychological_distress",
+    "trapped_or_entrapment",
+    "aftershock_or_collapse_hazard",
+    "dehydration_or_resource_deprivation",
+    "low_battery",
+    "out_of_scope"
+  ],
+  "target_source_fields": [
+    "positive_risks",
+    "operational_constraints"
+  ]
+}

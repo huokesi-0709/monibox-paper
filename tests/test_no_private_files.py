@@ -30,7 +30,7 @@ SKIP_DIRS = {
 }
 
 SECRET_PATTERNS = [
-    re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
+    re.compile(r"(?<![A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}"),
     re.compile(r"AKIA[0-9A-Z]{16}"),
     re.compile(r"AIza[0-9A-Za-z_-]{35}"),
     re.compile(r"gh[pousr]_[A-Za-z0-9_]{36,}"),

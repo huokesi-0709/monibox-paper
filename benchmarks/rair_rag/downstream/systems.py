@@ -4,6 +4,9 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any
 
+from benchmarks.rair_rag.baselines.bert_multilabel_predictor import (
+    BertMultilabelPredictor,
+)
 from benchmarks.rair_rag.downstream.schema import DownstreamCase, RetrievedEvidence
 from runtime.rag_engine import RagEngine, SearchResult
 from runtime.risk_router import (
@@ -117,34 +120,22 @@ class KeywordRagSystem(DownstreamSystem):
 @dataclass
 class BertRagSystem(DownstreamSystem):
     name: str = "bert-rag"
-    router: RiskAwareInputRouter = field(default_factory=RiskAwareInputRouter)
+    threshold: float | None = None
+    model_dir: Any = None
+    predictor: BertMultilabelPredictor = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.predictor = BertMultilabelPredictor(
+            model_dir=self.model_dir,
+            threshold=self.threshold,
+        )
 
     def build_context(self, case: DownstreamCase) -> dict[str, Any]:
-        mentions = self.router.extract_risk_mentions(case.canonical_input)
-        positive = _dedupe(
-            str(item.get("risk") or "") for item in mentions if item.get("risk")
-        )
-        primary = positive[0] if positive else "out_of_scope"
-        secondary = positive[1:]
-        operational = ["low_battery"] if "low_battery" in positive else []
-        route = route_for_intent(primary)
-        protocol_id = protocol_for_route(route)
-        return {
-            "primary_intent": primary,
-            "secondary_intents": secondary,
-            "positive_risks": positive,
-            "negated_risks": [],
-            "operational_constraints": operational,
-            "suppressed_protocols": [],
-            "predicted_route": route,
-            "protocol_id": protocol_id,
-            "risk_score": 0.5 if primary != "out_of_scope" else 0.05,
-            "trace": {
-                "system": self.name,
-                "baseline": "bert-multilabel local proxy without explicit negation or suppressed-protocol modeling",
-                "risk_mentions": mentions,
-            },
-        }
+        context = self.predictor.predict_context(case.raw_input or case.canonical_input)
+        trace = dict(context.get("trace") or {})
+        trace["system"] = self.name
+        context["trace"] = trace
+        return context
 
     def build_retrieval_query(
         self, case: DownstreamCase, context: dict[str, Any]

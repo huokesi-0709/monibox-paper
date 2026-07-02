@@ -1,6 +1,7 @@
 param(
     [string]$OutDir = "build/rair_eval",
-    [string]$ManualPolicy = "scoring/routing_policy_manual.yaml"
+    [string]$ManualPolicy = "scoring/routing_policy_manual.yaml",
+    [string]$BertModelDir = $(if ($env:BERT_MULTILABEL_MODEL_DIR) { $env:BERT_MULTILABEL_MODEL_DIR } else { "build/bert_multilabel/best_model" })
 )
 
 $ErrorActionPreference = "Stop"
@@ -23,6 +24,7 @@ function Invoke-RairEval {
         uv run python -m benchmarks.rair_rag.run_routing_eval `
             --data $DataPath `
             --method $Method `
+            --bert-model-dir $BertModelDir `
             --policy $PolicyPath `
             --out $outPath `
             --summary $summaryPath
@@ -31,6 +33,7 @@ function Invoke-RairEval {
         uv run python -m benchmarks.rair_rag.run_routing_eval `
             --data $DataPath `
             --method $Method `
+            --bert-model-dir $BertModelDir `
             --out $outPath `
             --summary $summaryPath
     }

@@ -1,0 +1,80 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "label_space": [
+    "respiratory_distress",
+    "severe_bleeding_or_shock",
+    "trauma_or_fracture",
+    "crush_injury",
+    "altered_consciousness_or_head_injury",
+    "hypothermia",
+    "psychological_distress",
+    "trapped_or_entrapment",
+    "aftershock_or_collapse_hazard",
+    "dehydration_or_resource_deprivation",
+    "low_battery",
+    "out_of_scope"
+  ],
+  "method": "bert-multilabel",
+  "metrics": {
+    "ConstraintF1": 0.29357798165137616,
+    "EvidenceTypeAcc": 0.0,
+    "HRR": 0.35674157303370785,
+    "NegRiskExact": 0.6833333333333333,
+    "NegRiskF1": 0.0,
+    "PFTR": 0.03958333333333333,
+    "PrimaryIntentAcc": 0.3770833333333333,
+    "RiskCandidateF1": 0.0,
+    "RouteAcc": 0.3770833333333333,
+    "SecondaryIntentF1": 0.0,
+    "SuppressedProtocolF1": 0.0,
+    "by_perturbation_type": {
+      "clean_control": {
+        "ConstraintF1": 0.0,
+        "EvidenceTypeAcc": 0.0,
+        "HRR": 0.52,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.46153846153846156,
+        "RiskCandidateF1": 0.0,
+        "RouteAcc": 0.46153846153846156,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.0,
+        "num_cases": 65
+      },
+      "multi_intent": {
+        "ConstraintF1": 0.32989690721649484,
+        "EvidenceTypeAcc": 0.0,
+        "HRR": 0.40350877192982454,
+        "NegRiskExact": 1.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.0,
+        "PrimaryIntentAcc": 0.41825095057034223,
+        "RiskCandidateF1": 0.0,
+        "RouteAcc": 0.41825095057034223,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.0,
+        "num_cases": 263
+      },
+      "negation_conflict": {
+        "ConstraintF1": 0.0,
+        "EvidenceTypeAcc": 0.0,
+        "HRR": 0.11538461538461539,
+        "NegRiskExact": 0.0,
+        "NegRiskF1": 0.0,
+        "PFTR": 0.125,
+        "PrimaryIntentAcc": 0.26973684210526316,
+        "RiskCandidateF1": 0.0,
+        "RouteAcc": 0.26973684210526316,
+        "SecondaryIntentF1": 0.0,
+        "SuppressedProtocolF1": 0.0,
+        "num_cases": 152
+      }
+    },
+    "num_cases": 480
+  },
+  "model": "bert-base-chinese",
+  "model_dir": "D:\\projects\\monibox-Y\\monibox\\build\\bert_multilabel\\best_model",
+  "num_cases": 480,
+  "threshold": 0.5
+}

@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from benchmarks.rair_rag.run_routing_eval import run_routing_eval
 
 
@@ -117,6 +119,66 @@ def test_run_routing_eval_supports_policy_and_baselines(tmp_path: Path) -> None:
     assert prediction["primary_intent"] == "psychological_distress"
     assert "risk_context" in prediction
     assert prediction["risk_context"]["primary_intent"] == "psychological_distress"
+
+
+def test_candidate_multilabel_is_proxy_baseline(tmp_path: Path) -> None:
+    data = tmp_path / "cases.jsonl"
+    write_jsonl(
+        data,
+        [
+            case(
+                item_id="multi_1",
+                raw_input="\u6211\u5598\u4e0d\u4e0a\u6c14\uff0c\u624b\u673a\u5feb\u6ca1\u7535\u4e86",
+                perturbation_types=["multi_intent"],
+                primary_intent="respiratory_distress",
+                positive_risks=["respiratory_distress"],
+                operational_constraints=["low_battery"],
+                expected_route="route_respiratory_distress",
+                risk_level="critical",
+            )
+        ],
+    )
+
+    result = run_routing_eval(
+        data_path=data,
+        method="candidate-multilabel",
+        policy_path=None,
+        out_path=tmp_path / "candidate.jsonl",
+        summary_path=tmp_path / "candidate.json",
+    )
+
+    prediction = json.loads((tmp_path / "candidate.jsonl").read_text(encoding="utf-8"))
+    assert result["method"] == "candidate-multilabel"
+    assert prediction["method"] == "candidate-multilabel"
+    assert "candidate-multilabel local proxy" in prediction["trace"]["baseline"]
+
+
+def test_bert_multilabel_requires_trained_model(tmp_path: Path) -> None:
+    data = tmp_path / "cases.jsonl"
+    write_jsonl(
+        data,
+        [
+            case(
+                item_id="clean_1",
+                raw_input="\u6211\u5598\u4e0d\u4e0a\u6c14",
+                perturbation_types=["clean_control"],
+                primary_intent="respiratory_distress",
+                positive_risks=["respiratory_distress"],
+                expected_route="route_respiratory_distress",
+                risk_level="critical",
+            )
+        ],
+    )
+
+    with pytest.raises(FileNotFoundError, match="Train it first"):
+        run_routing_eval(
+            data_path=data,
+            method="bert-multilabel",
+            policy_path=None,
+            out_path=tmp_path / "bert.jsonl",
+            summary_path=tmp_path / "bert.json",
+            bert_model_dir=tmp_path / "missing_best_model",
+        )
 
 
 def case(

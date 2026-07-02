@@ -1,6 +1,7 @@
 param(
     [string]$OutDir = "build/downstream_eval/retrieval",
     [string]$RagDb = $(if ($env:RAG_DB_PATH) { $env:RAG_DB_PATH } else { "build/rag.db" }),
+    [string]$BertModelDir = $(if ($env:BERT_MULTILABEL_MODEL_DIR) { $env:BERT_MULTILABEL_MODEL_DIR } else { "build/bert_multilabel/best_model" }),
     [int]$TopK = 3
 )
 
@@ -28,6 +29,7 @@ function Invoke-DownstreamRetrievalEval {
         --data $DataPath `
         --system $System `
         --rag-db $RagDb `
+        --bert-model-dir $BertModelDir `
         --topk $TopK `
         --out $outPath `
         --summary $summaryPath

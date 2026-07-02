@@ -55,6 +55,7 @@ build/downstream_eval/
 models/llm/*.gguf
 models/llm/*.bin
 models/llm/*.safetensors
+build/bert_multilabel/**/*.safetensors
 !models/llm/README.md
 !models/llm/.gitkeep
 dist/

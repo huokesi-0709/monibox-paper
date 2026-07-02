@@ -31,6 +31,29 @@ The scripts evaluate the same method set across the configured RAIR test files:
 - `single-intent`
 - `risk-router`
 
+`bert-multilabel` is a real `bert-base-chinese` multilabel classifier. It no
+longer falls back to the old keyword/candidate proxy. Train it before running
+the full routing script:
+
+```bash
+uv run --extra bert python -m benchmarks.rair_rag.baselines.train_bert_multilabel \
+  --train-data build/bert_multilabel/rair_train.jsonl \
+  --dev-data benchmarks/rair_rag/data/dev/rair_dev.jsonl
+```
+
+`--train-data` must point to a training JSONL that excludes the held-out dev and
+test cases. The training script selects `build/bert_multilabel/best_model/` on
+the dev set only. Do not use any `data/test/*.jsonl` file for model selection
+or hyperparameter tuning. Test-set evaluation is then:
+
+```bash
+uv run --extra bert python -m benchmarks.rair_rag.baselines.eval_bert_multilabel \
+  --data benchmarks/rair_rag/data/test/rair_test.jsonl
+```
+
+The archived keyword/candidate proxy is still available as
+`candidate-multilabel`, but it is not reported as BERT.
+
 ## Datasets
 
 The main test set is:

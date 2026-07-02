@@ -6,6 +6,9 @@ import os
 from pathlib import Path
 from typing import Any
 
+from benchmarks.rair_rag.baselines.bert_multilabel_predictor import (
+    DEFAULT_BERT_MODEL_DIR,
+)
 from app.config import settings
 from benchmarks.rair_rag.downstream.metrics import (
     compute_case_metrics,
@@ -42,6 +45,8 @@ def main() -> None:
     parser.add_argument("--data", type=Path, default=DEFAULT_DATA)
     parser.add_argument("--system", choices=sorted(SUPPORTED_SYSTEMS), required=True)
     parser.add_argument("--rag-db", type=Path, default=_default_rag_db_path())
+    parser.add_argument("--bert-model-dir", type=Path, default=DEFAULT_BERT_MODEL_DIR)
+    parser.add_argument("--bert-threshold", type=float)
     parser.add_argument("--topk", type=int, default=3)
     parser.add_argument("--out", type=Path)
     parser.add_argument("--summary", type=Path)
@@ -54,6 +59,8 @@ def main() -> None:
             data_path=args.data,
             system_name=args.system,
             rag_db_path=args.rag_db,
+            bert_model_dir=args.bert_model_dir,
+            bert_threshold=args.bert_threshold,
             topk=args.topk,
             out_path=out_path,
             summary_path=summary_path,
@@ -71,6 +78,8 @@ def run_retrieval_eval(
     topk: int,
     out_path: Path,
     summary_path: Path,
+    bert_model_dir: Path | None = None,
+    bert_threshold: float | None = None,
 ) -> dict[str, Any]:
     if topk <= 0:
         msg = "--topk must be a positive integer"
@@ -88,7 +97,10 @@ def run_retrieval_eval(
         raise FileNotFoundError(msg)
 
     cases = load_downstream_cases(data_path)
-    system = SUPPORTED_SYSTEMS[system_name]()
+    if system_name == "bert-rag":
+        system = BertRagSystem(model_dir=bert_model_dir, threshold=bert_threshold)
+    else:
+        system = SUPPORTED_SYSTEMS[system_name]()
     rag_engine = RagEngine(str(rag_db_path))
     predictions = [
         predict_case(case=case, system=system, rag_engine=rag_engine, topk=topk)
@@ -99,6 +111,8 @@ def run_retrieval_eval(
         "data": str(data_path),
         "system": system_name,
         "rag_db": str(rag_db_path),
+        "bert_model_dir": str(bert_model_dir) if system_name == "bert-rag" else None,
+        "bert_threshold": bert_threshold if system_name == "bert-rag" else None,
         "topk": topk,
         "num_cases": len(cases),
         "metrics": metrics,
