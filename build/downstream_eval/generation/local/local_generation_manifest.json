@@ -5,7 +5,8 @@
   "created_from_existing_outputs": false,
   "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
   "generator": "local-llm",
-  "max_cases": null,
+  "local_chat_mode": "chat_completion",
+  "max_cases": 5,
   "model": "models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf",
   "note": "The output files are written incrementally and can be resumed safely. This manifest records the runtime configuration for the completed run.",
   "overwrite": true,
@@ -15,15 +16,15 @@
   "runs": [
     {
       "latency_summary": {
-        "avg_ms": 1124.247,
-        "count": 480,
-        "max_ms": 9615.924,
-        "p50_ms": 1147.9,
-        "p95_ms": 1477.852
+        "avg_ms": 6796.694,
+        "count": 5,
+        "max_ms": 23363.464,
+        "p50_ms": 2762.516,
+        "p95_ms": 3133.79
       },
       "num_failures": 0,
-      "num_generated": 480,
-      "num_outputs": 480,
+      "num_generated": 5,
+      "num_outputs": 5,
       "num_skipped_existing": 0,
       "output": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_outputs.jsonl",
       "overwrite": true,
@@ -33,15 +34,15 @@
     },
     {
       "latency_summary": {
-        "avg_ms": 1374.927,
-        "count": 480,
-        "max_ms": 2524.716,
-        "p50_ms": 1465.6,
-        "p95_ms": 1747.917
+        "avg_ms": 3336.266,
+        "count": 5,
+        "max_ms": 4016.054,
+        "p50_ms": 3354.291,
+        "p95_ms": 3708.327
       },
       "num_failures": 0,
-      "num_generated": 480,
-      "num_outputs": 480,
+      "num_generated": 5,
+      "num_outputs": 5,
       "num_skipped_existing": 0,
       "output": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_outputs.jsonl",
       "overwrite": true,

@@ -125,6 +125,42 @@ def test_negated_candidate_keeps_original_and_adjusted_confidence() -> None:
     assert bleeding["evidence_type"] == "lexical"
 
 
+def test_zero_negation_penalty_prevents_negated_risk_suppression() -> None:
+    ctx = RiskAwareInputRouter(RoutingPolicy(negation_penalty=0.0)).route(
+        "\u6211\u817f\u75bc\uff0c\u4f46\u662f\u6ca1\u6d41\u8840"
+    )
+    bleeding = next(
+        item
+        for item in ctx.risk_mentions
+        if item["risk"] == "severe_bleeding_or_shock"
+    )
+
+    assert bleeding["negated"] is False
+    assert bleeding["negation_probability"] == 0.0
+    assert bleeding["p_neg"] == 0.0
+    assert bleeding["adjusted_confidence"] == bleeding["confidence"]
+    assert "severe_bleeding_or_shock" not in ctx.negated_risks
+    assert "prot_bleeding_control" not in ctx.suppressed_protocols
+
+
+def test_extreme_negation_penalty_bounds_confidence_and_keeps_suppression() -> None:
+    ctx = RiskAwareInputRouter(RoutingPolicy(negation_penalty=10.0)).route(
+        "\u6211\u817f\u75bc\uff0c\u4f46\u662f\u6ca1\u6d41\u8840"
+    )
+    bleeding = next(
+        item
+        for item in ctx.risk_mentions
+        if item["risk"] == "severe_bleeding_or_shock"
+    )
+
+    assert bleeding["negated"] is True
+    assert bleeding["negation_probability"] == 1.0
+    assert bleeding["p_neg"] == 1.0
+    assert bleeding["adjusted_confidence"] == 0.0
+    assert "severe_bleeding_or_shock" in ctx.negated_risks
+    assert "prot_bleeding_control" in ctx.suppressed_protocols
+
+
 def test_routing_context_builds_pre_retrieval_risk_context() -> None:
     ctx = RiskAwareInputRouter().route("\u6211\u817f\u75bc\uff0c\u4f46\u662f\u6ca1\u6d41\u8840")
     retrieval_context = ctx.to_retrieval_context()
@@ -234,6 +270,7 @@ def test_policy_can_load_from_json_and_yaml(tmp_path: Path) -> None:
     assert loaded_json.negation_window == 8
     assert loaded_json.high_risk_boost == 0.07
     assert loaded_json.intent_base_weights["psychological_distress"] == 0.99
+    assert RoutingPolicy.from_dict({"negation_penalty": 0.0}).negation_penalty == 0.0
 
     yaml_policy = tmp_path / "policy.yaml"
     yaml_policy.write_text(

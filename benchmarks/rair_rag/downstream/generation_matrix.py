@@ -43,6 +43,10 @@ def main() -> None:
     parser.add_argument("--max-retries", type=int)
     parser.add_argument("--case-start", type=int)
     parser.add_argument("--case-end", type=int)
+    parser.add_argument(
+        "--local-chat-template",
+        choices=["chat_completion", "qwen_manual", "completion"],
+    )
     args = parser.parse_args()
 
     out_dir = args.out_dir or _default_out_dir(args.generator)
@@ -63,6 +67,7 @@ def main() -> None:
             max_retries=args.max_retries,
             case_start=args.case_start,
             case_end=args.case_end,
+            local_chat_template=args.local_chat_template,
         )
     except (FileExistsError, FileNotFoundError, RuntimeError, ValueError) as exc:
         parser.exit(2, f"error: {exc}\n")
@@ -86,6 +91,7 @@ def run_generation_matrix(
     max_retries: int | None = None,
     case_start: int | None = None,
     case_end: int | None = None,
+    local_chat_template: str | None = None,
 ) -> dict[str, Any]:
     if generator_name not in SUPPORTED_GENERATORS:
         allowed = ", ".join(SUPPORTED_GENERATORS)
@@ -161,6 +167,7 @@ def run_generation_matrix(
                 max_retries=max_retries,
                 case_start=case_start,
                 case_end=case_end,
+                local_chat_template=local_chat_template,
             )
             runs.append(summary)
 
@@ -191,6 +198,11 @@ def run_generation_matrix(
         "case_start": case_start,
         "case_end": case_end,
         "max_cases": max_cases,
+        "local_chat_mode": (
+            local_chat_template
+            or os.getenv("LOCAL_LLM_CHAT_MODE")
+            or ("chat_completion" if generator_name == "local-llm" else None)
+        ),
         "created_from_existing_outputs": any(
             int(run.get("num_skipped_existing") or 0) > 0 for run in runs
         ),
@@ -241,6 +253,9 @@ def run_generation_matrix(
         "max_retries": max_retries,
         "case_start": case_start,
         "case_end": case_end,
+        "local_chat_mode": local_chat_template
+        or os.getenv("LOCAL_LLM_CHAT_MODE")
+        or ("chat_completion" if generator_name == "local-llm" else None),
         "runs": runs,
     }
 

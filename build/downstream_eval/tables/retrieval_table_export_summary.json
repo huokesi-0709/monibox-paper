@@ -10,22 +10,22 @@
     "rair-rag"
   ],
   "outputs": {
-    "extension_csv": "build\\downstream_eval\\tables\\retrieval_extension_results.csv",
-    "extension_markdown": "build\\downstream_eval\\tables\\retrieval_extension_results.md",
-    "main_csv": "build\\downstream_eval\\tables\\retrieval_main_results.csv",
-    "main_markdown": "build\\downstream_eval\\tables\\retrieval_main_results.md"
+    "extension_csv": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\retrieval_extension_results.csv",
+    "extension_markdown": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\retrieval_extension_results.md",
+    "main_csv": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\retrieval_main_results.csv",
+    "main_markdown": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\retrieval_main_results.md"
   },
   "read_files": [
-    "build\\downstream_eval\\retrieval\\rair_test_bert-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_keyword-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_bert-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_keyword-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_rair-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_vanilla-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_rair-rag_summary.json",
-    "build\\downstream_eval\\retrieval\\rair_test_vanilla-rag_summary.json"
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_bert-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_keyword-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_bert-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_keyword-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_rair-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_multi_intent_negation_vanilla-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_rair-rag_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval\\rair_test_vanilla-rag_summary.json"
   ],
-  "retrieval_dir": "build\\downstream_eval\\retrieval",
+  "retrieval_dir": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\retrieval",
   "skipped_files": [],
-  "tables_dir": "build\\downstream_eval\\tables"
+  "tables_dir": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables"
 }

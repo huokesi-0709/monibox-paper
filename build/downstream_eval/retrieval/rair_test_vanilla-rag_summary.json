@@ -1,40 +1,58 @@
 {
+  "bert_model_dir": null,
+  "bert_threshold": null,
   "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
   "metrics": {
     "AvgRetrieved": 3.0,
-    "EvidenceHit@1": 0.004166666666666667,
-    "EvidenceHit@3": 0.00625,
     "HRR": 0.008426966292134831,
     "PFTR": 0.0,
     "ProtocolAcc": 0.004166666666666667,
+    "ProtocolEvidenceHit@1": 0.004166666666666667,
+    "ProtocolEvidenceHit@3": 0.00625,
+    "SourceEvidenceHit@1": 0.0,
+    "SourceEvidenceHit@3": 0.0,
+    "StrictEvidenceHit@1": 0.004166666666666667,
+    "StrictEvidenceHit@3": 0.00625,
     "by_perturbation_type": {
       "clean_control": {
         "AvgRetrieved": 3.0,
-        "EvidenceHit@1": 0.03076923076923077,
-        "EvidenceHit@3": 0.03076923076923077,
         "HRR": 0.04,
         "PFTR": 0.0,
         "ProtocolAcc": 0.03076923076923077,
+        "ProtocolEvidenceHit@1": 0.03076923076923077,
+        "ProtocolEvidenceHit@3": 0.03076923076923077,
+        "SourceEvidenceHit@1": 0.0,
+        "SourceEvidenceHit@3": 0.0,
+        "StrictEvidenceHit@1": 0.03076923076923077,
+        "StrictEvidenceHit@3": 0.03076923076923077,
         "num_cases": 65,
         "num_high_risk_cases": 50
       },
       "multi_intent": {
         "AvgRetrieved": 3.0,
-        "EvidenceHit@1": 0.0,
-        "EvidenceHit@3": 0.0,
         "HRR": 0.0,
         "PFTR": 0.0,
         "ProtocolAcc": 0.0,
+        "ProtocolEvidenceHit@1": 0.0,
+        "ProtocolEvidenceHit@3": 0.0,
+        "SourceEvidenceHit@1": 0.0,
+        "SourceEvidenceHit@3": 0.0,
+        "StrictEvidenceHit@1": 0.0,
+        "StrictEvidenceHit@3": 0.0,
         "num_cases": 263,
         "num_high_risk_cases": 228
       },
       "negation_conflict": {
         "AvgRetrieved": 3.0,
-        "EvidenceHit@1": 0.0,
-        "EvidenceHit@3": 0.006578947368421052,
         "HRR": 0.01282051282051282,
         "PFTR": 0.0,
         "ProtocolAcc": 0.0,
+        "ProtocolEvidenceHit@1": 0.0,
+        "ProtocolEvidenceHit@3": 0.006578947368421052,
+        "SourceEvidenceHit@1": 0.0,
+        "SourceEvidenceHit@3": 0.0,
+        "StrictEvidenceHit@1": 0.0,
+        "StrictEvidenceHit@3": 0.006578947368421052,
         "num_cases": 152,
         "num_high_risk_cases": 78
       }
@@ -43,7 +61,7 @@
     "num_high_risk_cases": 356
   },
   "num_cases": 480,
-  "rag_db": "build\\rag.db",
+  "rag_db": "D:\\projects\\monibox-Y\\monibox\\build\\rag.db",
   "system": "vanilla-rag",
   "topk": 3
 }

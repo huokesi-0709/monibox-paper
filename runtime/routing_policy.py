@@ -45,8 +45,8 @@ class RoutingPolicy:
             }
         )
         return RoutingPolicy(
-            negation_window=int(data.get("negation_window") or 6),
-            negation_penalty=float(data.get("negation_penalty") or 0.45),
+            negation_window=int(value_or_default(data, "negation_window", 6)),
+            negation_penalty=float(value_or_default(data, "negation_penalty", 0.45)),
             negation_words=tuple(
                 str(item) for item in data.get("negation_words", NEGATION_WORDS)
             ),
@@ -54,14 +54,16 @@ class RoutingPolicy:
                 str(item) for item in data.get("boundary_terms", NEGATION_BOUNDARIES)
             ),
             intent_base_weights=weights,
-            confidence_threshold=float(data.get("confidence_threshold") or 0.25),
+            confidence_threshold=float(
+                value_or_default(data, "confidence_threshold", 0.25)
+            ),
             confidence_thresholds={
                 str(key): float(value)
                 for key, value in dict(data.get("confidence_thresholds") or {}).items()
             },
-            high_risk_boost=float(data.get("high_risk_boost") or 0.05),
+            high_risk_boost=float(value_or_default(data, "high_risk_boost", 0.05)),
             operational_constraint_weight=float(
-                data.get("operational_constraint_weight") or 0.20
+                value_or_default(data, "operational_constraint_weight", 0.20)
             ),
         )
 
@@ -118,6 +120,11 @@ def strip_comment(line: str) -> str:
             break
         output.append(char)
     return "".join(output)
+
+
+def value_or_default(data: dict[str, Any], key: str, default: Any) -> Any:
+    value = data.get(key, default)
+    return default if value is None else value
 
 
 def parse_scalar(value: str) -> Any:

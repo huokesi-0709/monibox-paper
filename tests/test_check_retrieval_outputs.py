@@ -44,8 +44,14 @@ def test_check_retrieval_outputs_reports_metrics_and_old_bert_warning(
     assert "must be rerun" in bert_row["Notes"]
     assert bert_row["NumCases"] == "2"
     assert bert_row["ProtocolAcc"] == "0.5000"
+    assert bert_row["StrictEvidenceHit@1"] == "0.2500"
+    assert bert_row["ProtocolEvidenceHit@3"] == "0.5000"
+    assert bert_row["SourceEvidenceHit@3"] == "0.7500"
     assert report.exists()
-    assert "BERT-RAG must be rerun" in report.read_text(encoding="utf-8")
+    text = report.read_text(encoding="utf-8")
+    assert "BERT-RAG must be rerun" in text
+    assert "StrictEvidenceHit@1" in text
+    assert "EvidenceHit@1 | EvidenceHit@3" not in text
 
 
 def _write_summary(path: Path, system: str) -> None:
@@ -58,8 +64,12 @@ def _write_summary(path: Path, system: str) -> None:
                 "metrics": {
                     "num_cases": 2,
                     "ProtocolAcc": 0.5,
-                    "EvidenceHit@1": 0.25,
-                    "EvidenceHit@3": 0.75,
+                    "StrictEvidenceHit@1": 0.25,
+                    "StrictEvidenceHit@3": 0.75,
+                    "ProtocolEvidenceHit@1": 0.25,
+                    "ProtocolEvidenceHit@3": 0.5,
+                    "SourceEvidenceHit@1": 0.25,
+                    "SourceEvidenceHit@3": 0.75,
                     "PFTR": 0.0,
                     "HRR": 1.0,
                 },

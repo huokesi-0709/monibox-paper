@@ -204,8 +204,24 @@ def write_retrieval_results_table(summary_dir: Path, tables_dir: Path) -> None:
                 "dataset": Path(str(summary.get("data") or "")).stem,
                 "system": str(summary.get("system") or ""),
                 "ProtocolAcc": float(metrics.get("ProtocolAcc") or 0.0),
-                "EvidenceHit@1": float(metrics.get("EvidenceHit@1") or 0.0),
-                "EvidenceHit@3": float(metrics.get("EvidenceHit@3") or 0.0),
+                "StrictEvidenceHit@1": float(
+                    metrics.get("StrictEvidenceHit@1") or 0.0
+                ),
+                "StrictEvidenceHit@3": float(
+                    metrics.get("StrictEvidenceHit@3") or 0.0
+                ),
+                "ProtocolEvidenceHit@1": float(
+                    metrics.get("ProtocolEvidenceHit@1") or 0.0
+                ),
+                "ProtocolEvidenceHit@3": float(
+                    metrics.get("ProtocolEvidenceHit@3") or 0.0
+                ),
+                "SourceEvidenceHit@1": float(
+                    metrics.get("SourceEvidenceHit@1") or 0.0
+                ),
+                "SourceEvidenceHit@3": float(
+                    metrics.get("SourceEvidenceHit@3") or 0.0
+                ),
                 "PFTR": float(metrics.get("PFTR") or 0.0),
                 "HRR": float(metrics.get("HRR") or 0.0),
                 "AvgRetrieved": float(metrics.get("AvgRetrieved") or 0.0),
@@ -215,15 +231,19 @@ def write_retrieval_results_table(summary_dir: Path, tables_dir: Path) -> None:
     tables_dir.mkdir(parents=True, exist_ok=True)
     table_path = tables_dir / "retrieval_results.md"
     header = (
-        "| Dataset | System | ProtocolAcc | EvidenceHit@1 | EvidenceHit@3 | "
-        "PFTR | HRR | AvgRetrieved |\n"
-        "|---|---:|---:|---:|---:|---:|---:|---:|"
+        "| Dataset | System | ProtocolAcc | StrictEvidenceHit@1 | "
+        "StrictEvidenceHit@3 | ProtocolEvidenceHit@1 | ProtocolEvidenceHit@3 | "
+        "SourceEvidenceHit@1 | SourceEvidenceHit@3 | PFTR | HRR | AvgRetrieved |\n"
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"
     )
     lines = [header]
     lines.extend(
         (
-            "| {dataset} | {system} | {ProtocolAcc:.4f} | {EvidenceHit@1:.4f} | "
-            "{EvidenceHit@3:.4f} | {PFTR:.4f} | {HRR:.4f} | {AvgRetrieved:.2f} |".format(
+            "| {dataset} | {system} | {ProtocolAcc:.4f} | "
+            "{StrictEvidenceHit@1:.4f} | {StrictEvidenceHit@3:.4f} | "
+            "{ProtocolEvidenceHit@1:.4f} | {ProtocolEvidenceHit@3:.4f} | "
+            "{SourceEvidenceHit@1:.4f} | {SourceEvidenceHit@3:.4f} | "
+            "{PFTR:.4f} | {HRR:.4f} | {AvgRetrieved:.2f} |".format(
                 **row
             )
         )

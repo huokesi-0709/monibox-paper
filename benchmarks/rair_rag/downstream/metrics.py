@@ -22,8 +22,12 @@ def compute_case_metrics(
     evidence = _retrieved_evidence(prediction)
     return {
         "ProtocolAcc": protocol_acc(case, prediction),
-        "EvidenceHit@1": evidence_hit_at(case, evidence, k=1),
-        "EvidenceHit@3": evidence_hit_at(case, evidence, k=3),
+        "StrictEvidenceHit@1": strict_evidence_hit_at(case, evidence, k=1),
+        "StrictEvidenceHit@3": strict_evidence_hit_at(case, evidence, k=3),
+        "ProtocolEvidenceHit@1": protocol_evidence_hit_at(case, evidence, k=1),
+        "ProtocolEvidenceHit@3": protocol_evidence_hit_at(case, evidence, k=3),
+        "SourceEvidenceHit@1": source_evidence_hit_at(case, evidence, k=1),
+        "SourceEvidenceHit@3": source_evidence_hit_at(case, evidence, k=3),
         "PFTR": pftr(case, prediction),
         "HRR": hrr_hit(case, prediction),
         "AvgRetrieved": float(len(evidence)),
@@ -56,13 +60,39 @@ def protocol_acc(case: DownstreamCase, prediction: dict[str, Any]) -> float:
     return _hit(expected and predicted and expected == predicted)
 
 
-def evidence_hit_at(
+def strict_evidence_hit_at(
     case: DownstreamCase, evidence: list[dict[str, Any]], *, k: int
 ) -> float:
     for item in evidence[:k]:
         if _evidence_matches_gold(case, item):
             return 1.0
     return 0.0
+
+
+def protocol_evidence_hit_at(
+    case: DownstreamCase, evidence: list[dict[str, Any]], *, k: int
+) -> float:
+    expected = case.expected_protocol_id
+    if not expected:
+        return 0.0
+    return _hit(
+        any(item.get("protocol_id") == expected for item in evidence[:k])
+    )
+
+
+def source_evidence_hit_at(
+    case: DownstreamCase, evidence: list[dict[str, Any]], *, k: int
+) -> float:
+    expected_sources = {
+        str(ref.get("source_id") or "")
+        for ref in case.guideline_refs
+        if str(ref.get("source_id") or "")
+    }
+    if not expected_sources:
+        return 0.0
+    return _hit(
+        any(str(item.get("source_id") or "") in expected_sources for item in evidence[:k])
+    )
 
 
 def pftr(case: DownstreamCase, prediction: dict[str, Any]) -> float:
@@ -100,12 +130,28 @@ def _compute_group(
             protocol_acc(case, prediction)
             for case, prediction in zip(cases, predictions, strict=True)
         ),
-        "EvidenceHit@1": _mean(
-            evidence_hit_at(case, _retrieved_evidence(prediction), k=1)
+        "StrictEvidenceHit@1": _mean(
+            strict_evidence_hit_at(case, _retrieved_evidence(prediction), k=1)
             for case, prediction in zip(cases, predictions, strict=True)
         ),
-        "EvidenceHit@3": _mean(
-            evidence_hit_at(case, _retrieved_evidence(prediction), k=3)
+        "StrictEvidenceHit@3": _mean(
+            strict_evidence_hit_at(case, _retrieved_evidence(prediction), k=3)
+            for case, prediction in zip(cases, predictions, strict=True)
+        ),
+        "ProtocolEvidenceHit@1": _mean(
+            protocol_evidence_hit_at(case, _retrieved_evidence(prediction), k=1)
+            for case, prediction in zip(cases, predictions, strict=True)
+        ),
+        "ProtocolEvidenceHit@3": _mean(
+            protocol_evidence_hit_at(case, _retrieved_evidence(prediction), k=3)
+            for case, prediction in zip(cases, predictions, strict=True)
+        ),
+        "SourceEvidenceHit@1": _mean(
+            source_evidence_hit_at(case, _retrieved_evidence(prediction), k=1)
+            for case, prediction in zip(cases, predictions, strict=True)
+        ),
+        "SourceEvidenceHit@3": _mean(
+            source_evidence_hit_at(case, _retrieved_evidence(prediction), k=3)
             for case, prediction in zip(cases, predictions, strict=True)
         ),
         "PFTR": _mean(

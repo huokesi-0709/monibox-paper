@@ -7,6 +7,8 @@ from typing import Any
 from runtime.intent_extractor import NEGATION_BOUNDARIES, NEGATION_WORDS
 
 
+DEFAULT_NEGATION_PENALTY = 0.45
+
 TRAPPED_AFFIRMING_RIGHT_CONTEXTS = (
     "出不去",
     "出不来",
@@ -25,6 +27,7 @@ class NegationConfig:
     negation_words: tuple[str, ...] = NEGATION_WORDS
     boundary_terms: tuple[str, ...] = NEGATION_BOUNDARIES
     negation_penalty: float = 0.45
+    negation_threshold: float = 0.5
     non_negatable_risks: tuple[str, ...] = ("low_battery", "out_of_scope")
 
 
@@ -85,13 +88,14 @@ class NegationResolver:
             adjusted["negation_probability"] = round(
                 decision.negation_probability, 4
             )
+            adjusted["p_neg"] = adjusted["negation_probability"]
             adjusted["negation_strength"] = round(decision.negation_strength, 4)
             adjusted["distance_decay"] = round(decision.distance_decay, 4)
             adjusted["boundary_penalty"] = round(decision.boundary_penalty, 4)
             base_confidence = float(adjusted.get("confidence") or 0.0)
             if negated:
                 adjusted["adjusted_confidence"] = round(
-                    base_confidence * (1.0 - self.config.negation_penalty), 4
+                    base_confidence * (1.0 - self._confidence_penalty()), 4
                 )
                 append_unique(negated_risks, risk)
             else:
@@ -114,6 +118,7 @@ class NegationResolver:
                     "boundary_blocked": decision.boundary_blocked,
                     "counterfactual": decision.counterfactual,
                     "negation_probability": round(decision.negation_probability, 4),
+                    "p_neg": round(decision.negation_probability, 4),
                     "negation_strength": round(decision.negation_strength, 4),
                     "distance_decay": round(decision.distance_decay, 4),
                     "boundary_penalty": round(decision.boundary_penalty, 4),
@@ -149,6 +154,9 @@ class NegationResolver:
         negation_probability = self._negation_probability(
             negation_strength, distance_decay, boundary_penalty
         )
+        negation_connected = (
+            negation_probability >= self.config.negation_threshold
+        )
         if any(phrase in right for phrase in TRAPPED_AFFIRMING_RIGHT_CONTEXTS):
             return NegationDecision(
                 negated=False,
@@ -162,7 +170,7 @@ class NegationResolver:
                 distance_decay=distance_decay,
                 boundary_penalty=boundary_penalty,
             )
-        if self._has_negation_word(left):
+        if self._has_negation_word(left) and negation_connected:
             return NegationDecision(
                 negated=True,
                 negation_reason="negation_word_in_left_window",
@@ -175,7 +183,7 @@ class NegationResolver:
                 distance_decay=distance_decay,
                 boundary_penalty=boundary_penalty,
             )
-        if self._has_negation_word(right):
+        if self._has_negation_word(right) and negation_connected:
             return NegationDecision(
                 negated=True,
                 negation_reason="negation_word_in_right_window",
@@ -245,8 +253,18 @@ class NegationResolver:
     def _negation_probability(
         self, negation_strength: float, distance_decay: float, boundary_penalty: float
     ) -> float:
+        if negation_strength <= 0:
+            return 0.0
         raw = 0.15 + 1.8 * negation_strength + 0.9 * distance_decay - 1.4 * boundary_penalty
-        return 1.0 / (1.0 + exp(-raw))
+        base_probability = 1.0 / (1.0 + exp(-raw))
+        penalty_scale = self._bounded_negation_penalty() / DEFAULT_NEGATION_PENALTY
+        return min(1.0, max(0.0, base_probability * penalty_scale))
+
+    def _bounded_negation_penalty(self) -> float:
+        return max(0.0, float(self.config.negation_penalty))
+
+    def _confidence_penalty(self) -> float:
+        return min(1.0, self._bounded_negation_penalty())
 
 
 def append_unique(items: list[str], value: str) -> None:

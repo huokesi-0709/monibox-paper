@@ -17,8 +17,12 @@ DEFAULT_REPORT = (
 REQUIRED_SYSTEMS = ("vanilla-rag", "keyword-rag", "bert-rag", "rair-rag")
 METRIC_FIELDS = (
     "ProtocolAcc",
-    "EvidenceHit@1",
-    "EvidenceHit@3",
+    "StrictEvidenceHit@1",
+    "StrictEvidenceHit@3",
+    "ProtocolEvidenceHit@1",
+    "ProtocolEvidenceHit@3",
+    "SourceEvidenceHit@1",
+    "SourceEvidenceHit@3",
     "PFTR",
     "HRR",
 )
@@ -104,15 +108,16 @@ def write_markdown_report(
         f"- Dataset: `{dataset}`",
         f"- Retrieval directory: `{retrieval_dir}`",
         "",
-        "| System | Status | NumCases | ProtocolAcc | EvidenceHit@1 | EvidenceHit@3 | PFTR | HRR | Summary | Notes |",
-        "|---|---|---:|---:|---:|---:|---:|---:|---|---|",
+        "| System | Status | NumCases | ProtocolAcc | StrictEvidenceHit@1 | StrictEvidenceHit@3 | ProtocolEvidenceHit@1 | ProtocolEvidenceHit@3 | SourceEvidenceHit@1 | SourceEvidenceHit@3 | PFTR | HRR | Summary | Notes |",
+        "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|---|",
     ]
     for row in rows:
         lines.append(
-            "| {System} | {Status} | {NumCases} | {ProtocolAcc} | {EvidenceHit@1} | "
-            "{EvidenceHit@3} | {PFTR} | {HRR} | {Summary} | {Notes} |".format(
-                **row
-            )
+            "| {System} | {Status} | {NumCases} | {ProtocolAcc} | "
+            "{StrictEvidenceHit@1} | {StrictEvidenceHit@3} | "
+            "{ProtocolEvidenceHit@1} | {ProtocolEvidenceHit@3} | "
+            "{SourceEvidenceHit@1} | {SourceEvidenceHit@3} | {PFTR} | {HRR} | "
+            "{Summary} | {Notes} |".format(**row)
         )
     if warnings:
         lines.extend(["", "## Warnings", ""])
@@ -131,8 +136,20 @@ def _row_from_summary(
         "Status": "OK",
         "NumCases": _format_int(summary.get("num_cases") or metrics.get("num_cases")),
         "ProtocolAcc": _format_float(metrics.get("ProtocolAcc")),
-        "EvidenceHit@1": _format_float(metrics.get("EvidenceHit@1")),
-        "EvidenceHit@3": _format_float(metrics.get("EvidenceHit@3")),
+        "StrictEvidenceHit@1": _format_float(
+            _metric_value(metrics, "StrictEvidenceHit@1")
+        ),
+        "StrictEvidenceHit@3": _format_float(
+            _metric_value(metrics, "StrictEvidenceHit@3")
+        ),
+        "ProtocolEvidenceHit@1": _format_float(
+            metrics.get("ProtocolEvidenceHit@1")
+        ),
+        "ProtocolEvidenceHit@3": _format_float(
+            metrics.get("ProtocolEvidenceHit@3")
+        ),
+        "SourceEvidenceHit@1": _format_float(metrics.get("SourceEvidenceHit@1")),
+        "SourceEvidenceHit@3": _format_float(metrics.get("SourceEvidenceHit@3")),
         "PFTR": _format_float(metrics.get("PFTR")),
         "HRR": _format_float(metrics.get("HRR")),
         "Summary": str(summary_path),
@@ -146,8 +163,12 @@ def _missing_row(*, system: str, summary_path: Path) -> dict[str, str]:
         "Status": "MISSING",
         "NumCases": "",
         "ProtocolAcc": "",
-        "EvidenceHit@1": "",
-        "EvidenceHit@3": "",
+        "StrictEvidenceHit@1": "",
+        "StrictEvidenceHit@3": "",
+        "ProtocolEvidenceHit@1": "",
+        "ProtocolEvidenceHit@3": "",
+        "SourceEvidenceHit@1": "",
+        "SourceEvidenceHit@3": "",
         "PFTR": "",
         "HRR": "",
         "Summary": str(summary_path),
@@ -185,6 +206,15 @@ def _first_marker(text: str) -> str | None:
 def _read_json(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8-sig"))
     return payload if isinstance(payload, dict) else {}
+
+
+def _metric_value(metrics: dict[str, Any], key: str) -> Any:
+    if key in metrics:
+        return metrics.get(key)
+    if key.startswith("StrictEvidenceHit@"):
+        legacy_key = key.replace("StrictEvidenceHit@", "EvidenceHit@", 1)
+        return metrics.get(legacy_key)
+    return None
 
 
 def _format_float(value: Any) -> str:

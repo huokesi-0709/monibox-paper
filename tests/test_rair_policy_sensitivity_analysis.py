@@ -46,12 +46,50 @@ def test_run_sensitivity_eval_writes_expected_rows(
     data.write_text("", encoding="utf-8")
 
     def fake_evaluate_with_policy(*, data_path, policy):
+        negated = ["severe_bleeding_or_shock"] if policy.negation_penalty >= 0.45 else []
+        suppressed = ["prot_bleeding_control"] if negated else []
         return {
-            "num_cases": 2,
-            "NegRiskF1": policy.negation_penalty,
-            "PFTR": 0.1,
-            "HRR": 0.9 + policy.high_risk_boost,
-            "RouteAcc": 0.8,
+            "metrics": {
+                "num_cases": 2,
+                "NegRiskF1": policy.negation_penalty,
+                "PFTR": 0.1,
+                "HRR": 0.9 + policy.high_risk_boost,
+                "RouteAcc": 0.8,
+            },
+            "predictions": [
+                {
+                    "id": "x1",
+                    "primary_intent": "trauma_or_fracture",
+                    "predicted_route": "route_trauma_or_fracture",
+                    "protocol_id": "prot_injury_fracture",
+                    "negated_risks": negated,
+                    "suppressed_protocols": suppressed,
+                    "risk_score": policy.high_risk_boost,
+                    "trace": {
+                        "negation_trace": [
+                            {"negation_probability": policy.negation_penalty}
+                        ]
+                    },
+                },
+                {
+                    "id": "x2",
+                    "primary_intent": (
+                        "respiratory_distress"
+                        if policy.high_risk_boost >= 1.0
+                        else "trauma_or_fracture"
+                    ),
+                    "predicted_route": "route_respiratory_distress",
+                    "protocol_id": "prot_respiratory_distress",
+                    "negated_risks": [],
+                    "suppressed_protocols": [],
+                    "risk_score": policy.high_risk_boost,
+                    "trace": {
+                        "negation_trace": [
+                            {"negation_probability": policy.negation_penalty}
+                        ]
+                    },
+                },
+            ],
         }
 
     monkeypatch.setattr(
@@ -61,11 +99,15 @@ def test_run_sensitivity_eval_writes_expected_rows(
 
     result = run_sensitivity_eval(data_path=data, policy_path=policy, out_dir=out_dir)
 
-    assert result["num_rows"] == 10
+    assert result["num_rows"] == 11
     csv_text = (out_dir / "routing_sensitivity.csv").read_text(encoding="utf-8")
-    assert "negation_penalty,0.2000,2,0.2000" in csv_text
-    assert "high_risk_boost,0.1000,2" in csv_text
-    assert (out_dir / "routing_sensitivity.md").exists()
+    assert "negation_penalty,0.0000,2,0.0000" in csv_text
+    assert "negation_penalty,10.0000,2,10.0000" in csv_text
+    assert "high_risk_boost,10.0000,2" in csv_text
+    assert "primary_intent_changed_count" in csv_text
+    markdown = (out_dir / "routing_sensitivity.md").read_text(encoding="utf-8")
+    assert "decision path" in markdown
+    assert "avg_negation_probability_delta" in markdown
 
 
 def test_analyze_negation_failures_reports_mismatches(tmp_path: Path) -> None:

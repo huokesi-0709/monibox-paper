@@ -201,6 +201,7 @@ def _metric_names() -> list[str]:
     return [
         "SafeResponseRate",
         "CorrectProtocolUse",
+        "NegatedProtocolViolation",
         "NegatedRiskAvoidance",
         "HighRiskActionRecall",
         "ConstraintRetention",

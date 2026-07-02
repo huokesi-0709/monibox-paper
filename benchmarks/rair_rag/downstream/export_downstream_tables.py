@@ -17,8 +17,12 @@ TABLE_FIELDS = (
     "ProtocolAcc",
     "HRR",
     "PFTR",
-    "EvidenceHit@1",
-    "EvidenceHit@3",
+    "StrictEvidenceHit@1",
+    "StrictEvidenceHit@3",
+    "ProtocolEvidenceHit@1",
+    "ProtocolEvidenceHit@3",
+    "SourceEvidenceHit@1",
+    "SourceEvidenceHit@3",
     "NumCases",
 )
 
@@ -158,8 +162,24 @@ def rows_for_dataset(
                 "ProtocolAcc": format_metric(metrics.get("ProtocolAcc")),
                 "HRR": format_metric(metrics.get("HRR")),
                 "PFTR": format_metric(metrics.get("PFTR")),
-                "EvidenceHit@1": format_metric(metrics.get("EvidenceHit@1")),
-                "EvidenceHit@3": format_metric(metrics.get("EvidenceHit@3")),
+                "StrictEvidenceHit@1": format_metric(
+                    metric_value(metrics, "StrictEvidenceHit@1")
+                ),
+                "StrictEvidenceHit@3": format_metric(
+                    metric_value(metrics, "StrictEvidenceHit@3")
+                ),
+                "ProtocolEvidenceHit@1": format_metric(
+                    metrics.get("ProtocolEvidenceHit@1")
+                ),
+                "ProtocolEvidenceHit@3": format_metric(
+                    metrics.get("ProtocolEvidenceHit@3")
+                ),
+                "SourceEvidenceHit@1": format_metric(
+                    metrics.get("SourceEvidenceHit@1")
+                ),
+                "SourceEvidenceHit@3": format_metric(
+                    metrics.get("SourceEvidenceHit@3")
+                ),
                 "NumCases": str(item["num_cases"]),
             }
         )
@@ -174,14 +194,16 @@ def write_markdown_table(
         lines.extend([f"> {note}", ""])
     lines.extend(
         [
-            "| System | ProtocolAcc | HRR | PFTR | EvidenceHit@1 | EvidenceHit@3 | NumCases |",
-            "|---|---:|---:|---:|---:|---:|---:|",
+            "| System | ProtocolAcc | HRR | PFTR | StrictEvidenceHit@1 | StrictEvidenceHit@3 | ProtocolEvidenceHit@1 | ProtocolEvidenceHit@3 | SourceEvidenceHit@1 | SourceEvidenceHit@3 | NumCases |",
+            "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )
     lines.extend(
         (
             "| {System} | {ProtocolAcc} | {HRR} | {PFTR} | "
-            "{EvidenceHit@1} | {EvidenceHit@3} | {NumCases} |"
+            "{StrictEvidenceHit@1} | {StrictEvidenceHit@3} | "
+            "{ProtocolEvidenceHit@1} | {ProtocolEvidenceHit@3} | "
+            "{SourceEvidenceHit@1} | {SourceEvidenceHit@3} | {NumCases} |"
         ).format(**row)
         for row in rows
     )
@@ -208,10 +230,23 @@ def empty_row(system: str) -> dict[str, str]:
         "ProtocolAcc": "",
         "HRR": "",
         "PFTR": "",
-        "EvidenceHit@1": "",
-        "EvidenceHit@3": "",
+        "StrictEvidenceHit@1": "",
+        "StrictEvidenceHit@3": "",
+        "ProtocolEvidenceHit@1": "",
+        "ProtocolEvidenceHit@3": "",
+        "SourceEvidenceHit@1": "",
+        "SourceEvidenceHit@3": "",
         "NumCases": "",
     }
+
+
+def metric_value(metrics: dict[str, Any], key: str) -> Any:
+    if key in metrics:
+        return metrics.get(key)
+    if key.startswith("StrictEvidenceHit@"):
+        legacy_key = key.replace("StrictEvidenceHit@", "EvidenceHit@", 1)
+        return metrics.get(legacy_key)
+    return None
 
 
 def format_metric(value: Any) -> str:

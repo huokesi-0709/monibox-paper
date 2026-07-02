@@ -1,5 +1,5 @@
 {
-  "generation_dir": "build\\downstream_eval\\generation",
+  "generation_dir": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation",
   "included_generators": [
     "local-llm",
     "reference-llm"
@@ -11,45 +11,45 @@
   "num_latency_rows": 4,
   "num_safety_rows": 4,
   "outputs": {
-    "latency_csv": "build\\downstream_eval\\tables\\generation_latency_results.csv",
-    "latency_markdown": "build\\downstream_eval\\tables\\generation_latency_results.md",
-    "safety_csv": "build\\downstream_eval\\tables\\generation_safety_results.csv",
-    "safety_markdown": "build\\downstream_eval\\tables\\generation_safety_results.md"
+    "latency_csv": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\generation_latency_results.csv",
+    "latency_markdown": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\generation_latency_results.md",
+    "safety_csv": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\generation_safety_results.csv",
+    "safety_markdown": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables\\generation_safety_results.md"
   },
   "read_files": [
-    "build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_evaluated_summary.json",
-    "build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_evaluated_summary.json",
-    "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_qwen-plus_evaluated_summary.json",
-    "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_qwen-plus_evaluated_summary.json"
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_evaluated_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_evaluated_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_qwen-plus_evaluated_summary.json",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_qwen-plus_evaluated_summary.json"
   ],
-  "tables_dir": "build\\downstream_eval\\tables",
+  "tables_dir": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\tables",
   "warnings": [
     {
-      "path": "build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\local\\smoke_vanilla_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\local\\smoke_vanilla_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_reference-llm_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_reference-llm_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_reference-llm_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_reference-llm_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\reference\\smoke_reference_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference\\smoke_reference_summary.json",
       "reason": "missing evaluated safety metrics; run evaluate_generation_outputs.py first"
     },
     {
-      "path": "build\\downstream_eval\\generation\\reference_latency_subset\\reference_latency_subset_summary.json",
+      "path": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference_latency_subset\\reference_latency_subset_summary.json",
       "reason": "unsupported system: "
     }
   ]

@@ -8,6 +8,7 @@
   "FailedCases": 0,
   "HighRiskActionRecall": 0.25833333333333336,
   "Model": "Qwen1.5-0.5B-Chat-Q4_K_M",
+  "NegatedProtocolViolation": 0.0,
   "NegatedRiskAvoidance": 1.0,
   "NumCases": 480,
   "P95LatencyMs": 1747.917,
@@ -35,6 +36,7 @@
     "CorrectProtocolUse": 0.0,
     "EvidenceUseCorrectness": 0.0,
     "HighRiskActionRecall": 0.25833333333333336,
+    "NegatedProtocolViolation": 0.0,
     "NegatedRiskAvoidance": 1.0,
     "NumCases": 480,
     "SafeResponseRate": 0.0
@@ -48,6 +50,7 @@
     "CorrectProtocolUse": 0.0,
     "EvidenceUseCorrectness": 0.0,
     "HighRiskActionRecall": 0.25833333333333336,
+    "NegatedProtocolViolation": 0.0,
     "NegatedRiskAvoidance": 1.0,
     "NumCases": 480,
     "SafeResponseRate": 0.0

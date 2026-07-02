@@ -28,6 +28,7 @@ build/eval/**/*_summary.json
 build/eval/perturbation_report.json
 
 # RAIR-RAG paper reproducible artifacts
+# 默认忽略 build/rair_eval 下的中间产物，只保留论文复现所需 summary / table / report。
 build/rair_eval/*
 !build/rair_eval/
 !build/rair_eval/tables/
@@ -35,6 +36,14 @@ build/rair_eval/*
 !build/rair_eval/tables/*.csv
 !build/rair_eval/*_summary.json
 !build/rair_eval/runtime_latency_summary.json
+
+# RAIR sensitivity and error-analysis reports used in the paper.
+!build/rair_eval/sensitivity/
+!build/rair_eval/sensitivity/*.md
+!build/rair_eval/sensitivity/*.csv
+!build/rair_eval/error_analysis/
+!build/rair_eval/error_analysis/*.md
+!build/rair_eval/error_analysis/*.csv
 
 # Optional: keep selected full prediction traces for paper trace analysis.
 !build/rair_eval/rair_test_risk-router_predictions.jsonl
@@ -48,30 +57,60 @@ build/rair_eval/de_routing/
 build/rair_eval/**/*_tmp.*
 build/rair_eval/**/*.log
 
+# Real BERT baseline artifacts for paper reproducibility
+# 保留训练配置、标签空间、dev/test summary 和 test predictions；忽略模型权重。
+build/bert_multilabel/best_model/
+build/bert_multilabel/checkpoints/
+build/bert_multilabel/**/*.bin
+build/bert_multilabel/**/*.pt
+build/bert_multilabel/**/*.pth
+build/bert_multilabel/**/*.safetensors
+!build/bert_multilabel/
+!build/bert_multilabel/train_config.json
+!build/bert_multilabel/dev_metrics.json
+!build/bert_multilabel/test_summary.json
+!build/bert_multilabel/label_map.json
+!build/bert_multilabel/test_predictions.jsonl
+!build/bert_multilabel/*.md
+!build/bert_multilabel/*.csv
+
 # RAIR-RAG downstream reproducible evaluation artifacts
+# 默认忽略大体量逐样本输出，只保留论文表格、summary、manifest、diagnostic reports。
 build/downstream_eval/*
 !build/downstream_eval/
 !build/downstream_eval/tables/
 !build/downstream_eval/tables/*.md
 !build/downstream_eval/tables/*.csv
-!build/downstream_eval/generation/
-!build/downstream_eval/generation/reference/
-!build/downstream_eval/generation/local/
-!build/downstream_eval/generation/*/*_summary.json
-!build/downstream_eval/generation/*/*_manifest.json
+!build/downstream_eval/tables/*.json
+
+# Retrieval summaries and reports.
 !build/downstream_eval/retrieval/
 !build/downstream_eval/retrieval/*_summary.json
+!build/downstream_eval/retrieval/*_report.md
+!build/downstream_eval/retrieval/*.md
+!build/downstream_eval/retrieval/*.csv
 
-# Keep large row-level outputs ignored unless explicitly selected.
+# Generation summaries, manifests, latency subset summaries, and failure reports.
+!build/downstream_eval/generation/
+!build/downstream_eval/generation/*/
+!build/downstream_eval/generation/**/*.json
+!build/downstream_eval/generation/**/*.md
+!build/downstream_eval/generation/**/*.csv
+
+# Keep large row-level downstream outputs ignored unless explicitly selected later.
 build/downstream_eval/**/*.jsonl
+
+# Paper readiness reports generated under build/.
+!build/paper_readiness_report.md
+!build/paper_readiness_report.json
 
 # Local model weights
 models/llm/*.gguf
 models/llm/*.bin
 models/llm/*.safetensors
-build/bert_multilabel/**/*.safetensors
 !models/llm/README.md
 !models/llm/.gitkeep
+
 dist/
 node_modules/
 *.egg-info/

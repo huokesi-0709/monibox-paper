@@ -14,6 +14,11 @@ DEFAULT_REFERENCE_MODEL = "qwen-plus"
 DEFAULT_REFERENCE_TOP_P = 0.8
 DEFAULT_REFERENCE_TIMEOUT_SECONDS = 120
 DEFAULT_REFERENCE_MAX_RETRIES = 2
+LOCAL_CHAT_MODES = {"chat_completion", "qwen_manual", "completion"}
+LOCAL_QWEN_SYSTEM_PROMPT = (
+    "You are a concise safety-critical emergency assistant. Output valid JSON only."
+)
+LOCAL_QWEN_STOP_TOKENS = ["<|im_end|>", "<|endoftext|>"]
 
 
 class BaseGenerator(ABC):
@@ -31,9 +36,12 @@ class LocalLlamaCppGenerator(BaseGenerator):
     top_p: float | None = None
     max_tokens: int | None = None
     seed: int | None = None
+    chat_mode: str | None = None
     verbose: bool = False
     stop: list[str] = field(default_factory=list)
     _llm: Any = field(default=None, init=False, repr=False)
+    last_reason: str = field(default="", init=False)
+    last_chat_mode: str = field(default="", init=False)
 
     def __post_init__(self) -> None:
         self.model_path = resolve_model_path(
@@ -65,21 +73,78 @@ class LocalLlamaCppGenerator(BaseGenerator):
         self.seed = int(
             self.seed if self.seed is not None else _env_int("LOCAL_LLM_SEED", 42)
         )
+        self.chat_mode = (
+            self.chat_mode or os.getenv("LOCAL_LLM_CHAT_MODE") or "chat_completion"
+        )
+        if self.chat_mode not in LOCAL_CHAT_MODES:
+            allowed = ", ".join(sorted(LOCAL_CHAT_MODES))
+            msg = f"unsupported LOCAL_LLM_CHAT_MODE {self.chat_mode!r}; choose one of {allowed}"
+            raise ValueError(msg)
+        self.stop = _merge_stop_tokens(self.stop)
         self._ensure_model_file()
 
     def generate(self, prompt: str) -> str:
         text = str(prompt or "").strip()
+        self.last_reason = ""
+        self.last_chat_mode = str(self.chat_mode or "")
         if not text:
             return ""
         llm = self._load_model()
-        result = llm(
-            text,
+        if self.chat_mode == "completion":
+            return self._generate_completion(llm, text)
+        if self.chat_mode == "qwen_manual":
+            return self._generate_qwen_manual(llm, text)
+        try:
+            return self._generate_chat_completion(llm, text)
+        except Exception:
+            return self._generate_qwen_manual(llm, text)
+
+    def _generate_chat_completion(self, llm: Any, prompt: str) -> str:
+        if not hasattr(llm, "create_chat_completion"):
+            raise AttributeError("llama-cpp-python create_chat_completion is unavailable")
+        self.last_chat_mode = "chat_completion"
+        result = llm.create_chat_completion(
+            messages=[
+                {"role": "system", "content": LOCAL_QWEN_SYSTEM_PROMPT},
+                {"role": "user", "content": prompt},
+            ],
             max_tokens=self.max_tokens,
             temperature=self.temperature,
             top_p=self.top_p,
-            stop=self.stop or None,
+            stop=self.stop,
         )
-        return _completion_text(result)
+        output = _choice_text(result)
+        if not output:
+            self.last_reason = "empty_generation_after_chat_template"
+        return output
+
+    def _generate_qwen_manual(self, llm: Any, prompt: str) -> str:
+        self.last_chat_mode = "qwen_manual"
+        result = llm(
+            qwen_chat_prompt(prompt),
+            max_tokens=self.max_tokens,
+            temperature=self.temperature,
+            top_p=self.top_p,
+            stop=self.stop,
+        )
+        output = _choice_text(result)
+        if not output:
+            self.last_reason = "empty_generation_after_chat_template"
+        return output
+
+    def _generate_completion(self, llm: Any, prompt: str) -> str:
+        self.last_chat_mode = "completion"
+        result = llm(
+            prompt,
+            max_tokens=self.max_tokens,
+            temperature=self.temperature,
+            top_p=self.top_p,
+            stop=self.stop,
+        )
+        output = _choice_text(result)
+        if not output:
+            self.last_reason = "empty_generation_after_completion"
+        return output
 
     def _load_model(self) -> Any:
         if self._llm is not None:
@@ -213,35 +278,60 @@ def resolve_model_path(path: str | Path) -> Path:
     return (PROJECT_ROOT / resolved).resolve()
 
 
+def qwen_chat_prompt(prompt: str) -> str:
+    return (
+        "<|im_start|>system\n"
+        f"{LOCAL_QWEN_SYSTEM_PROMPT}\n"
+        "<|im_end|>\n"
+        "<|im_start|>user\n"
+        f"{prompt}\n"
+        "<|im_end|>\n"
+        "<|im_start|>assistant\n"
+    )
+
+
 def _completion_text(result: Any) -> str:
+    return _choice_text(result)
+
+
+def _choice_text(result: Any) -> str:
+    choices = getattr(result, "choices", None)
+    if choices:
+        return _choice_item_text(choices[0])
     if isinstance(result, dict):
         choices = result.get("choices")
         if isinstance(choices, list) and choices:
-            first = choices[0]
-            if isinstance(first, dict):
-                return str(first.get("text") or "").strip()
+            return _choice_item_text(choices[0])
         return str(result.get("text") or "").strip()
     return str(result).strip()
 
 
+def _choice_item_text(first: Any) -> str:
+    message = getattr(first, "message", None)
+    content = getattr(message, "content", None)
+    if content:
+        return str(content).strip()
+    text = getattr(first, "text", None)
+    if text:
+        return str(text).strip()
+    if isinstance(first, dict):
+        message = first.get("message")
+        if isinstance(message, dict):
+            return str(message.get("content") or "").strip()
+        return str(first.get("text") or "").strip()
+    return ""
+
+
 def _chat_completion_text(response: Any) -> str:
-    choices = getattr(response, "choices", None)
-    if choices:
-        first = choices[0]
-        message = getattr(first, "message", None)
-        content = getattr(message, "content", None)
-        if content:
-            return str(content).strip()
-    if isinstance(response, dict):
-        choices = response.get("choices")
-        if isinstance(choices, list) and choices:
-            first = choices[0]
-            if isinstance(first, dict):
-                message = first.get("message")
-                if isinstance(message, dict):
-                    return str(message.get("content") or "").strip()
-                return str(first.get("text") or "").strip()
-    return str(response).strip()
+    return _choice_text(response)
+
+
+def _merge_stop_tokens(stop: list[str]) -> list[str]:
+    merged = list(stop or [])
+    for token in LOCAL_QWEN_STOP_TOKENS:
+        if token not in merged:
+            merged.append(token)
+    return merged
 
 
 def _env_int(name: str, default: int) -> int:

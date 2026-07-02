@@ -62,6 +62,10 @@ def main() -> None:
     parser.add_argument("--sleep-between-calls", type=float, default=0.0)
     parser.add_argument("--case-start", type=int)
     parser.add_argument("--case-end", type=int)
+    parser.add_argument(
+        "--local-chat-template",
+        choices=["chat_completion", "qwen_manual", "completion"],
+    )
     args = parser.parse_args()
 
     out_path = args.out or _default_out_path(args.data, args.system, args.generator)
@@ -86,6 +90,7 @@ def main() -> None:
             sleep_between_calls=args.sleep_between_calls,
             case_start=args.case_start,
             case_end=args.case_end,
+            local_chat_template=args.local_chat_template,
         )
     except (FileExistsError, FileNotFoundError, RuntimeError, ValueError) as exc:
         parser.exit(2, f"error: {exc}\n")
@@ -111,6 +116,7 @@ def run_generation_eval(
     sleep_between_calls: float = 0.0,
     case_start: int | None = None,
     case_end: int | None = None,
+    local_chat_template: str | None = None,
 ) -> dict[str, Any]:
     if topk <= 0:
         msg = "--topk must be a positive integer"
@@ -193,6 +199,7 @@ def run_generation_eval(
                 generator_name,
                 timeout_seconds=timeout_seconds,
                 max_retries=max_retries,
+                local_chat_template=local_chat_template,
             )
             runtime_meta = _generator_runtime_metadata(active_generator, generator_name)
         started = time.perf_counter()
@@ -285,6 +292,8 @@ def generate_case(
     )
     raw_output = generator.generate(prompt)
     parsed_output = parse_generation_output(raw_output)
+    generator_reason = str(getattr(generator, "last_reason", "") or "")
+    generator_chat_mode = str(getattr(generator, "last_chat_mode", "") or "")
     return {
         "id": case.id,
         "system": system.name,
@@ -294,6 +303,7 @@ def generate_case(
         "prompt_hash": prompt_hash(prompt),
         "prompt": prompt,
         "raw_output": raw_output,
+        "reason": generator_reason,
         "parsed_output": parsed_output,
         "risk_context": risk_context,
         "retrieved_evidence": [item.to_dict() for item in evidence],
@@ -303,6 +313,8 @@ def generate_case(
             "prompt_builder": system.name,
             "topk": topk,
             "parse_ok": bool(parsed_output.get("_parse_ok")),
+            "generation_reason": generator_reason,
+            "local_chat_mode": generator_chat_mode,
         },
     }
 
@@ -327,9 +339,10 @@ def build_generator(
     *,
     timeout_seconds: float | None = None,
     max_retries: int | None = None,
+    local_chat_template: str | None = None,
 ) -> BaseGenerator:
     if generator_name == "local-llm":
-        return LocalLlamaCppGenerator()
+        return LocalLlamaCppGenerator(chat_mode=local_chat_template)
     if generator_name == "reference-llm":
         return ReferenceApiGenerator(
             timeout_seconds=timeout_seconds,
@@ -448,6 +461,7 @@ def _generator_runtime_metadata(
         "generator_model": label,
         "generator_provider": "local-llm",
         "generator_base_url": None,
+        "local_chat_mode": str(getattr(generator, "chat_mode", "") or ""),
     }
 
 
@@ -466,6 +480,7 @@ def _default_runtime_metadata(generator_name: str) -> dict[str, Any]:
         "generator_model": "Qwen1.5-0.5B-Chat-Q4_K_M",
         "generator_provider": "local-llm",
         "generator_base_url": None,
+        "local_chat_mode": os.getenv("LOCAL_LLM_CHAT_MODE") or "chat_completion",
     }
 
 
