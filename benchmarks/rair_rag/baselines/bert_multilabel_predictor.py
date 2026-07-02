@@ -145,9 +145,23 @@ def context_from_scores(
         "risk_mentions": candidates,
         "trace": {
             "baseline": "bert-base-chinese multilabel classifier",
+            "route_derivation": {
+                "rule": (
+                    "select labels with probability >= threshold; if none, use the "
+                    "highest-probability label; drop out_of_scope when other labels "
+                    "are selected; take the highest-probability non-operational "
+                    "label as primary_intent; map primary_intent to route and "
+                    "protocol_id with the shared RAIR route table"
+                ),
+                "primary_intent": primary,
+                "predicted_route": route,
+                "protocol_id": protocol_id,
+                "selected_labels": list(selected),
+                "operational_labels": list(operational),
+            },
             "model_dir": str(model_dir),
             "threshold": threshold,
-            "label_scores": {label: score for label, score in scored},
+            "label_scores": dict(scored),
         },
     }
 

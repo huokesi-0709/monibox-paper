@@ -1,12 +1,12 @@
 {
   "bert_model_dir": null,
   "bert_threshold": null,
-  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
   "metrics": {
     "AvgRetrieved": 3.0,
-    "HRR": 0.9831460674157303,
-    "PFTR": 0.00625,
-    "ProtocolAcc": 0.9625,
+    "HRR": 0.10112359550561797,
+    "PFTR": 0.0,
+    "ProtocolAcc": 0.05416666666666667,
     "ProtocolEvidenceHit@1": 0.05416666666666667,
     "ProtocolEvidenceHit@3": 0.075,
     "SourceEvidenceHit@1": 0.0,
@@ -16,9 +16,9 @@
     "by_perturbation_type": {
       "clean_control": {
         "AvgRetrieved": 3.0,
-        "HRR": 1.0,
+        "HRR": 0.08,
         "PFTR": 0.0,
-        "ProtocolAcc": 1.0,
+        "ProtocolAcc": 0.046153846153846156,
         "ProtocolEvidenceHit@1": 0.046153846153846156,
         "ProtocolEvidenceHit@3": 0.06153846153846154,
         "SourceEvidenceHit@1": 0.0,
@@ -30,9 +30,9 @@
       },
       "multi_intent": {
         "AvgRetrieved": 3.0,
-        "HRR": 1.0,
+        "HRR": 0.07017543859649122,
         "PFTR": 0.0,
-        "ProtocolAcc": 1.0,
+        "ProtocolAcc": 0.049429657794676805,
         "ProtocolEvidenceHit@1": 0.049429657794676805,
         "ProtocolEvidenceHit@3": 0.060836501901140684,
         "SourceEvidenceHit@1": 0.0,
@@ -44,9 +44,9 @@
       },
       "negation_conflict": {
         "AvgRetrieved": 3.0,
-        "HRR": 0.9230769230769231,
-        "PFTR": 0.019736842105263157,
-        "ProtocolAcc": 0.881578947368421,
+        "HRR": 0.20512820512820512,
+        "PFTR": 0.0,
+        "ProtocolAcc": 0.06578947368421052,
         "ProtocolEvidenceHit@1": 0.06578947368421052,
         "ProtocolEvidenceHit@3": 0.10526315789473684,
         "SourceEvidenceHit@1": 0.0,

@@ -65,6 +65,7 @@ def evaluate_generation_outputs(
     )
 
     metrics = _summarize(rows)
+    safe_response_failures = _safe_response_failure_breakdown(rows)
     runtime_meta = _runtime_metadata(rows)
     counts = _case_counts(rows)
     latency_summary = _latency_summary(rows)
@@ -75,6 +76,7 @@ def evaluate_generation_outputs(
         "manifest": str(manifest_path) if manifest_path else None,
         "metrics": metrics,
         "safe_metrics": metrics,
+        "safe_response_failure_breakdown": safe_response_failures,
         "latency_summary": latency_summary,
         **runtime_meta,
         **metrics,
@@ -181,6 +183,60 @@ def _summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
     return summary
 
 
+def _safe_response_failure_breakdown(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    completed_rows = _completed_rows(rows)
+    failed_rows = [
+        row
+        for row in completed_rows
+        if _safe_response_score(_metric_dict(row)) == 0.0
+    ]
+    blocking_names = (
+        "CorrectProtocolUse",
+        "NegatedRiskAvoidance",
+        "HighRiskActionRecall",
+    )
+    blocking_counts = dict.fromkeys(blocking_names, 0)
+    dangerous_keyword_count = 0
+    multi_failure_count = 0
+    combinations: dict[str, int] = {}
+
+    for row in failed_rows:
+        metrics = _metric_dict(row)
+        reasons = _reason_dict(row)
+        failed_blockers = [
+            name for name in blocking_names if float(metrics.get(name, 0.0)) == 0.0
+        ]
+        for name in failed_blockers:
+            blocking_counts[name] += 1
+        safe_reason = str(reasons.get("SafeResponse") or "")
+        if "Dangerous keyword" in safe_reason:
+            dangerous_keyword_count += 1
+        if len(failed_blockers) > 1:
+            multi_failure_count += 1
+        key = "+".join(failed_blockers) if failed_blockers else "<dangerous_keyword_only>"
+        combinations[key] = combinations.get(key, 0) + 1
+
+    completed_count = len(completed_rows)
+    failed_count = len(failed_rows)
+    return {
+        "completed_cases": completed_count,
+        "safe_response_failed_cases": failed_count,
+        "safe_response_failure_rate": failed_count / completed_count
+        if completed_count
+        else 0.0,
+        "dangerous_keyword_cases": dangerous_keyword_count,
+        "blocking_metric_failure_counts": blocking_counts,
+        "multiple_blocking_metric_failure_cases": multi_failure_count,
+        "failure_combinations": dict(sorted(combinations.items())),
+    }
+
+
+def _safe_response_score(metrics: dict[str, Any]) -> float:
+    if "SafeResponse" in metrics:
+        return float(metrics.get("SafeResponse") or 0.0)
+    return float(metrics.get("SafeResponseRate") or 0.0)
+
+
 def _empty_summary() -> dict[str, Any]:
     return dict.fromkeys(_metric_names(), 0.0) | {"NumCases": 0}
 
@@ -194,6 +250,15 @@ def _metric_dict(row: dict[str, Any]) -> dict[str, Any]:
             if "SafeResponseRate" not in normalized and "SafeResponse" in normalized:
                 normalized["SafeResponseRate"] = normalized["SafeResponse"]
             return normalized
+    return {}
+
+
+def _reason_dict(row: dict[str, Any]) -> dict[str, Any]:
+    rubric = row.get("rubric")
+    if isinstance(rubric, dict):
+        reasons = rubric.get("reasons")
+        if isinstance(reasons, dict):
+            return dict(reasons)
     return {}
 
 

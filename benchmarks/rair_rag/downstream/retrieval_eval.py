@@ -6,10 +6,10 @@ import os
 from pathlib import Path
 from typing import Any
 
+from app.config import settings
 from benchmarks.rair_rag.baselines.bert_multilabel_predictor import (
     DEFAULT_BERT_MODEL_DIR,
 )
-from app.config import settings
 from benchmarks.rair_rag.downstream.metrics import (
     compute_case_metrics,
     compute_retrieval_metrics,
@@ -131,8 +131,9 @@ def predict_case(
     risk_context = _dict_value(trace.get("risk_context"))
     retrieval_query = str(trace.get("retrieval_query") or case.raw_input)
     predicted_protocol_id = _predicted_protocol_id(
-        system=system, risk_context=risk_context, evidence=evidence
+        evidence=evidence
     )
+    routed_protocol_id = _optional_str(risk_context.get("protocol_id"))
     prediction = {
         "id": case.id,
         "system": system.name,
@@ -141,8 +142,13 @@ def predict_case(
         "risk_context": risk_context,
         "retrieved_evidence": [item.to_dict() for item in evidence],
         "predicted_protocol_id": predicted_protocol_id,
+        "routed_protocol_id": routed_protocol_id,
         "trace": {
             **trace,
+            "protocol_prediction_source": "retrieval_top1",
+            "retrieval_top1_protocol_id": predicted_protocol_id,
+            "routed_protocol_id": routed_protocol_id,
+            "source_id_diagnostics": _source_id_diagnostics(evidence, case),
             "matching_mode": _matching_mode(evidence, case),
             "gold": {
                 "expected_protocol_id": case.expected_protocol_id,
@@ -254,16 +260,11 @@ def write_retrieval_results_table(summary_dir: Path, tables_dir: Path) -> None:
 
 def _predicted_protocol_id(
     *,
-    system: DownstreamSystem,
-    risk_context: dict[str, Any],
     evidence: list[RetrievedEvidence],
 ) -> str | None:
-    context_protocol = risk_context.get("protocol_id")
-    if system.name != "vanilla-rag" and context_protocol:
-        return str(context_protocol)
     if evidence and evidence[0].protocol_id:
         return evidence[0].protocol_id
-    return str(context_protocol) if context_protocol else None
+    return None
 
 
 def _matching_mode(evidence: list[RetrievedEvidence], case: DownstreamCase) -> str:
@@ -276,8 +277,35 @@ def _matching_mode(evidence: list[RetrievedEvidence], case: DownstreamCase) -> s
     return "no_gold_match"
 
 
+def _source_id_diagnostics(
+    evidence: list[RetrievedEvidence], case: DownstreamCase
+) -> dict[str, Any]:
+    expected = sorted(
+        {
+            str(ref.get("source_id") or "")
+            for ref in case.guideline_refs
+            if str(ref.get("source_id") or "")
+        }
+    )
+    retrieved = sorted({item.source_id for item in evidence if item.source_id})
+    overlap = sorted(set(expected) & set(retrieved))
+    return {
+        "expected_source_ids": expected,
+        "retrieved_source_ids": retrieved,
+        "matched_source_ids": overlap,
+        "source_id_namespace_mismatch": bool(expected and retrieved and not overlap),
+    }
+
+
 def _dict_value(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
+
+
+def _optional_str(value: Any) -> str | None:
+    if value is None:
+        return None
+    text = str(value)
+    return text if text else None
 
 
 def _default_rag_db_path() -> Path:
