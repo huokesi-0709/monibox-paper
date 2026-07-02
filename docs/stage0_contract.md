@@ -1,4 +1,7 @@
-# 阶段 0 论文复现契约测试说明
+﻿# 阶段 0 论文复现契约测试说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 `tests/test_stage0_paper_contract.py` 是阶段 0 的轻量契约测试。它不是功能测试，也不运行完整 clean、robust、DE、ablation 或 table export 实验。
 

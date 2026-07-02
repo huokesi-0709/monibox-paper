@@ -1,4 +1,7 @@
-# Formal Evaluation Calibration Notes
+﻿# Formal Evaluation Calibration Notes
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文件记录正式实验中的 dev-only 校准流程，避免后续论文写作时混淆 dev/test 使用边界。
 

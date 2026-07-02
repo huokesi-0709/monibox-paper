@@ -1,4 +1,7 @@
-# 阶段 0 复现边界验收清单
+﻿# 阶段 0 复现边界验收清单
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文档记录阶段 0：论文级工程基线与研究边界确认的当前验收状态。阶段 0 的目标是让仓库能够明确区分论文主实验链路和 demo/原型链路，并为后续 SCI 实验扩展保留清晰入口。
 

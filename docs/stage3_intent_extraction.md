@@ -1,4 +1,7 @@
-# 阶段 3 风险感知多意图抽取说明
+﻿# 阶段 3 风险感知多意图抽取说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 3 位于论文 pipeline 的前段：输入归一化之后，协议匹配和 RAG 检索之前。该模块接收的是 `canonical_text`，不是原始 `raw_text`。输出为 `IntentContext`，供协议置信度、RAG 标签、trace 解释和后续指标分析使用。
 

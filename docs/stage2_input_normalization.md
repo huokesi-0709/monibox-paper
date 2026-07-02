@@ -1,4 +1,7 @@
-# 阶段 2 输入归一化说明
+﻿# 阶段 2 输入归一化说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 输入归一化模块位于 MoniBox / HSC-RAG-DE 主链路的前段，在 intent extraction、protocol matching 和 RAG search 之前执行。它的目标是把用户原始输入转换为更稳定的 `canonical_text`，同时保留可审计 trace，便于后续解释鲁棒性实验中的输入变化。
 

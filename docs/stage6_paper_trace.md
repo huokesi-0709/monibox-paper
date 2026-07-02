@@ -1,4 +1,7 @@
-# 阶段 6 论文 Trace Schema 说明
+﻿# 阶段 6 论文 Trace Schema 说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 6 的目标是把 MoniBox / HSC-RAG-DE 主链路中的关键中间结果串成可审计记录。paper trace 覆盖输入归一化、意图抽取、协议匹配、HSC-RAG 重排、低证据路由、安全 guard 和最终输出，用于论文实验复现、错误分析和表格导出。
 

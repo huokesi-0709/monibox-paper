@@ -1,4 +1,7 @@
-# HSC-RAG-DE 论文与代码阶段进度教程
+﻿# HSC-RAG-DE 论文与代码阶段进度教程
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 > 用途：给杨老师确认论文写作方向、代码工作空间设计、阶段任务和 Codex 修改提示词。  
 > 当前论文方向：**面向灾害受困场景的鲁棒启发式安全约束离线 RAG 应急回复生成方法**。  

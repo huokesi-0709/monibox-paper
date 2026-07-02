@@ -1,4 +1,7 @@
-# 阶段 8：鲁棒性扰动数据生成器
+﻿# 阶段 8：鲁棒性扰动数据生成器
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 8 的目标是为 robust evaluation 提供可复现的数据生成流程。生成器从 clean benchmark JSONL 读取样本，按固定规则生成扰动样本，并输出满足阶段 7 `BenchmarkCase` schema 的 robustness JSONL。
 

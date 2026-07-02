@@ -1,4 +1,7 @@
-# 实验协议
+﻿# 实验协议
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文实验用于评估 HSC-RAG 在灾害受困文本输入下的离线回复生成能力。所有实验必须通过配置和脚本运行，不通过手工修改源码完成。
 

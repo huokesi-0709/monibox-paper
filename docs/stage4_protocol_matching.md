@@ -1,4 +1,7 @@
-# 阶段 4 协议匹配置信度说明
+﻿# 阶段 4 协议匹配置信度说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 4 位于论文 pipeline 的中前段：输入归一化和意图抽取之后，协议执行和 RAG 检索之前。该阶段接收 `canonical_text`、`routed_tags`、`events` 和 `IntentContext`，输出 `ProtocolMatchResult`。
 

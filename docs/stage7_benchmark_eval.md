@@ -1,4 +1,7 @@
-# 阶段 7：benchmark schema、metrics 与运行输出
+﻿# 阶段 7：benchmark schema、metrics 与运行输出
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文档说明 MoniBox / HSC-RAG-DE 论文复现实验中 benchmark 数据、预测输出、指标计算和结果表的工程边界。阶段 7 的目标是使 clean evaluation、robust evaluation、ablation 和后续表格导出具备稳定的输入输出契约，而不是扩充数据集或改变主实验方法。
 

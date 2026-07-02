@@ -1,4 +1,7 @@
-# 阶段 9：baselines 与 ablations
+﻿# 阶段 9：baselines 与 ablations
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 9 的目标是定义论文实验中的主方法、对照方法和模块消融，使 clean/robust/dev 评估能够复现并解释。该阶段只固定 benchmark 配置和输出语义，不改变 runtime 主链路，不修改 metrics，也不引入远端 LLM。
 

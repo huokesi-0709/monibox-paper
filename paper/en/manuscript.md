@@ -1,4 +1,7 @@
-# Manuscript Draft
+﻿# Manuscript Draft
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 This file is the English manuscript placeholder. The project writes the Chinese draft first, then translates and polishes it into an English journal-style manuscript.
 

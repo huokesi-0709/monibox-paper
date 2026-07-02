@@ -1,4 +1,7 @@
-# 阶段 10：DE 离线权重优化
+﻿# 阶段 10：DE 离线权重优化
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 10 的作用是离线搜索 HSC-RAG rerank 的 scoring weight coefficients。当前实现使用 `pymoo` 提供的 Differential Evolution，在开发集上搜索一组重排权重，并输出 `scoring/policy_de.json`。
 

@@ -1,4 +1,7 @@
-# final_v2 论文第 4 章回填指南
+﻿# final_v2 论文第 4 章回填指南
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 > Legacy notice: this guide is only for the old HSC-RAG-DE / HSC-DisasterBench-v2 paper line. It must not be used to fill the current RAIR-RAG paper main result tables. Current RAIR-RAG tables should be derived from `benchmarks/rair_rag/` and `build/rair_eval/`.
 

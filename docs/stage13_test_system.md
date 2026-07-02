@@ -1,4 +1,7 @@
-# 阶段 13：测试体系与质量门禁
+﻿# 阶段 13：测试体系与质量门禁
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 13 的目标是把阶段 0 到阶段 12 的测试纳入统一质量门禁，使论文工程仓库具备可运行、可解释、可持续维护的测试入口。
 

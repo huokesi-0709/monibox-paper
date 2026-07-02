@@ -1,4 +1,7 @@
-# 阶段 1 论文专用 Profile 与配置契约
+﻿# 阶段 1 论文专用 Profile 与配置契约
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 `profiles/paper_eval.yaml` 是 MoniBox / HSC-RAG-DE 论文复现实验的专用配置契约。它用于 clean evaluation、robust evaluation、DE weight optimization、ablation 和 table export 等离线实验，不用于 API、frontend、voice、hardware 或本地 demo 调试。
 

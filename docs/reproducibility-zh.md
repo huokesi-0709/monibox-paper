@@ -1,4 +1,7 @@
-# 复现实验说明
+﻿# 复现实验说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文档记录 MoniBox / HSC-RAG-DE 论文实验的可复现运行方式。HSC-RAG 是主方法；pymoo Differential Evolution 只用于离线校准 `scoring/policy_de.json` 权重；MoniBox 是 prototype validation platform。
 

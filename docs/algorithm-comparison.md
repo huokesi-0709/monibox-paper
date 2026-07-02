@@ -1,4 +1,7 @@
-# MoniBox 场景下各类优化算法的适用性与 SCI 发表潜力对比分析
+﻿# MoniBox 场景下各类优化算法的适用性与 SCI 发表潜力对比分析
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 > 基于 MoniBox 端侧离线约束（ARM Cortex-A53、1GB RAM、秒级响应、昂贵黑箱评估），筛选 **SCI 潜力 ≥ 4 星且适用性 ≥ 4 星** 的优化算法，聚焦快速发表 SCI 二区/三区。
 

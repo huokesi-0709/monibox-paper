@@ -1,4 +1,7 @@
-# 论文研究边界说明
+﻿# 论文研究边界说明
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 本文档用于说明 MoniBox / HSC-RAG-DE 仓库中与论文主实验相关的工程边界。其目的不是描述完整产品形态，而是帮助审稿人和复现实验者区分论文方法、离线实验入口、系统原型模块和当前不作声称的内容。
 

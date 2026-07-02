@@ -1,4 +1,7 @@
-# 阶段 12：论文中文稿与 paper 文档目录
+﻿# 阶段 12：论文中文稿与 paper 文档目录
+
+> [!WARNING]
+> OBSOLETE / HISTORICAL: This document is retained only as project history. Do not use it as the current RAIR-RAG paper or reproduction source. Current canonical entry points are `docs/RAIR_RAG_routing_reproduction.md`, `docs/RAIR_RAG_downstream_reproduction.md`, `models/README.md`, and `models/llm/README.md`.
 
 阶段 12 新增 `paper/` 顶层论文工作目录，用于承接阶段 0 到阶段 11 的工程基线、复现实验流程、表格导出和论文写作。
 
