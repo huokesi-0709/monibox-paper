@@ -1,0 +1,11 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "generator": "local-llm",
+  "max_cases": 1,
+  "num_cases": 1,
+  "num_outputs": 1,
+  "output": "build\\downstream_eval\\generation\\local\\smoke_vanilla_outputs.jsonl",
+  "rag_db": "build\\rag.db",
+  "system": "vanilla-rag",
+  "topk": 1
+}

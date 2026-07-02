@@ -1,0 +1,131 @@
+{
+  "AvgLatencyMs": 2459.7,
+  "FailedCases": 0,
+  "MaxLatencyMs": 15455.852,
+  "NumCases": 120,
+  "P50LatencyMs": 2165.771,
+  "P95LatencyMs": 3602.832,
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "generator": "reference-llm",
+  "latency_measurement": "stratified_subset",
+  "model": "qwen-plus",
+  "note": "qwen-plus generation latency is measured on a stratified subset; it is not the full 480-case content-generation latency.",
+  "outputs": [
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference_latency_subset\\rair_test_vanilla-rag_reference-llm_latency_subset.jsonl",
+    "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference_latency_subset\\rair_test_rair-rag_reference-llm_latency_subset.jsonl"
+  ],
+  "provider": "dashscope_openai",
+  "runs": [
+    {
+      "AvgLatencyMs": 2538.447,
+      "CompletedCases": 60,
+      "FailedCases": 0,
+      "MaxLatencyMs": 15455.852,
+      "NumCases": 60,
+      "P50LatencyMs": 2078.363,
+      "P95LatencyMs": 3636.283,
+      "output": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference_latency_subset\\rair_test_vanilla-rag_reference-llm_latency_subset.jsonl",
+      "system": "vanilla-rag"
+    },
+    {
+      "AvgLatencyMs": 2380.953,
+      "CompletedCases": 60,
+      "FailedCases": 0,
+      "MaxLatencyMs": 4044.123,
+      "NumCases": 60,
+      "P50LatencyMs": 2274.906,
+      "P95LatencyMs": 3261.89,
+      "output": "D:\\projects\\monibox-Y\\monibox\\build\\downstream_eval\\generation\\reference_latency_subset\\rair_test_rair-rag_reference-llm_latency_subset.jsonl",
+      "system": "rair-rag"
+    }
+  ],
+  "sample_per_perturbation": 20,
+  "seed": 42,
+  "setting": "strong_hosted_reference",
+  "strata": {
+    "clean_control": {
+      "available": 65,
+      "sampled": 20,
+      "sampled_ids": [
+        "clean_0002",
+        "clean_0003",
+        "clean_0004",
+        "clean_0019",
+        "clean_0020",
+        "clean_0022",
+        "clean_0027",
+        "clean_0028",
+        "clean_0029",
+        "clean_0070",
+        "clean_0089",
+        "clean_0105",
+        "clean_0108",
+        "clean_0114",
+        "clean_0118",
+        "clean_0123",
+        "clean_0131",
+        "clean_0133",
+        "clean_0136",
+        "clean_0138"
+      ]
+    },
+    "multi_intent": {
+      "available": 263,
+      "sampled": 20,
+      "sampled_ids": [
+        "multi_0004",
+        "multi_0014",
+        "multi_0084",
+        "multi_0086",
+        "multi_0089",
+        "multi_0176",
+        "multi_0178",
+        "multi_0207",
+        "multi_0225",
+        "multi_0227",
+        "multi_0267",
+        "multi_0306",
+        "multi_0308",
+        "multi_0310",
+        "multi_0317",
+        "multi_0337",
+        "multi_0357",
+        "multi_0359",
+        "multi_0372",
+        "multi_0419"
+      ]
+    },
+    "negation_conflict": {
+      "available": 152,
+      "sampled": 20,
+      "sampled_ids": [
+        "neg_0012",
+        "neg_0018",
+        "neg_0021",
+        "neg_0026",
+        "neg_0050",
+        "neg_0086",
+        "neg_0107",
+        "neg_0108",
+        "neg_0116",
+        "neg_0120",
+        "neg_0123",
+        "neg_0124",
+        "neg_0153",
+        "neg_0160",
+        "neg_0161",
+        "neg_0201",
+        "neg_0202",
+        "neg_0231",
+        "neg_0235",
+        "neg_0241"
+      ]
+    }
+  },
+  "systems": [
+    "vanilla-rag",
+    "rair-rag"
+  ],
+  "topk": 3
+}

@@ -1,0 +1,51 @@
+{
+  "bert_model_dir": "build\\bert_multilabel\\best_model",
+  "bert_threshold": null,
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "metrics": {
+    "AvgRetrieved": 3.0,
+    "EvidenceHit@1": 0.041666666666666664,
+    "EvidenceHit@3": 0.052083333333333336,
+    "HRR": 0.36235955056179775,
+    "PFTR": 0.04583333333333333,
+    "ProtocolAcc": 0.3770833333333333,
+    "by_perturbation_type": {
+      "clean_control": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.046153846153846156,
+        "EvidenceHit@3": 0.046153846153846156,
+        "HRR": 0.52,
+        "PFTR": 0.0,
+        "ProtocolAcc": 0.46153846153846156,
+        "num_cases": 65,
+        "num_high_risk_cases": 50
+      },
+      "multi_intent": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.06463878326996197,
+        "EvidenceHit@3": 0.07604562737642585,
+        "HRR": 0.40350877192982454,
+        "PFTR": 0.0,
+        "ProtocolAcc": 0.41825095057034223,
+        "num_cases": 263,
+        "num_high_risk_cases": 228
+      },
+      "negation_conflict": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.0,
+        "EvidenceHit@3": 0.013157894736842105,
+        "HRR": 0.14102564102564102,
+        "PFTR": 0.14473684210526316,
+        "ProtocolAcc": 0.26973684210526316,
+        "num_cases": 152,
+        "num_high_risk_cases": 78
+      }
+    },
+    "num_cases": 480,
+    "num_high_risk_cases": 356
+  },
+  "num_cases": 480,
+  "rag_db": "build\\rag.db",
+  "system": "bert-rag",
+  "topk": 3
+}

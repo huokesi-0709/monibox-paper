@@ -49,7 +49,21 @@ build/rair_eval/**/*_tmp.*
 build/rair_eval/**/*.log
 
 # RAIR-RAG downstream reproducible evaluation artifacts
-build/downstream_eval/
+build/downstream_eval/*
+!build/downstream_eval/
+!build/downstream_eval/tables/
+!build/downstream_eval/tables/*.md
+!build/downstream_eval/tables/*.csv
+!build/downstream_eval/generation/
+!build/downstream_eval/generation/reference/
+!build/downstream_eval/generation/local/
+!build/downstream_eval/generation/*/*_summary.json
+!build/downstream_eval/generation/*/*_manifest.json
+!build/downstream_eval/retrieval/
+!build/downstream_eval/retrieval/*_summary.json
+
+# Keep large row-level outputs ignored unless explicitly selected.
+build/downstream_eval/**/*.jsonl
 
 # Local model weights
 models/llm/*.gguf

@@ -1,0 +1,15 @@
+{
+  "dedupe": true,
+  "duplicate_count": 0,
+  "generator": "reference-llm",
+  "input": "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_reference-llm_outputs.jsonl",
+  "input_count": 480,
+  "model": "qwen-plus",
+  "normalized_count": 480,
+  "note": "No LLM was called; the original outputs JSONL was not modified.",
+  "output": "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_qwen-plus_outputs.normalized.jsonl",
+  "setting": "strong_hosted_reference",
+  "systems": [
+    "rair-rag"
+  ]
+}

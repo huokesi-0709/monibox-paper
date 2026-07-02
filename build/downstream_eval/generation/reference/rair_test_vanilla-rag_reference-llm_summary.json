@@ -1,0 +1,25 @@
+{
+  "created_from_existing_outputs": true,
+  "data": "D:\\projects\\monibox-Y\\monibox\\benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "dataset": "rair_test",
+  "generator": "reference-llm",
+  "generator_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "generator_model": "qwen-plus",
+  "generator_provider": "dashscope_openai",
+  "latency_summary": {
+    "count": 0,
+    "missing_count": 480,
+    "note": "latency_ms was not recorded in the original completed run."
+  },
+  "max_cases": null,
+  "metadata_backfilled": true,
+  "model": "qwen-plus",
+  "num_cases": 480,
+  "num_failures": 0,
+  "num_outputs": 480,
+  "output": "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_reference-llm_outputs.jsonl",
+  "rag_db": "D:\\projects\\monibox-Y\\monibox\\build\\rag.db",
+  "setting": "strong_hosted_reference",
+  "system": "vanilla-rag",
+  "topk": 3
+}

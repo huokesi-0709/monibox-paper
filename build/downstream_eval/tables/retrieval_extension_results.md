@@ -1,0 +1,10 @@
+# Table B. Composite Perturbation Extension Stress Test Results (not the core consensus-gold main metric)
+
+> This table reports the multi-intent + negation extension stress test; it should not be interpreted as the core gold main-test metric.
+
+| System | ProtocolAcc | HRR | PFTR | EvidenceHit@1 | EvidenceHit@3 | NumCases |
+|---|---:|---:|---:|---:|---:|---:|
+| vanilla-rag | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 120 |
+| keyword-rag | 0.6750 | 0.6514 | 0.0917 | 0.0333 | 0.0667 | 120 |
+| bert-rag | 0.5167 | 0.5229 | 0.0833 | 0.0667 | 0.1167 | 120 |
+| rair-rag | 0.8333 | 0.8532 | 0.0917 | 0.0250 | 0.0583 | 120 |

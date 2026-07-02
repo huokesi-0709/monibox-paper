@@ -1,0 +1,18 @@
+{
+  "generator": "reference-llm",
+  "model": "qwen-plus",
+  "provider": "dashscope_openai",
+  "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "setting": "strong_hosted_reference",
+  "outputs": [
+    "rair_test_vanilla-rag_reference-llm_outputs.jsonl",
+    "rair_test_rair-rag_reference-llm_outputs.jsonl"
+  ],
+  "summaries": [
+    "rair_test_vanilla-rag_reference-llm_summary.json",
+    "rair_test_rair-rag_reference-llm_summary.json"
+  ],
+  "created_from_existing_outputs": true,
+  "warnings": [],
+  "note": "Original outputs were generated before model metadata was written into each row."
+}

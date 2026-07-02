@@ -1,0 +1,59 @@
+{
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test_multi_intent_negation.jsonl",
+  "metrics": {
+    "AvgRetrieved": 3.0,
+    "EvidenceHit@1": 0.025,
+    "EvidenceHit@3": 0.058333333333333334,
+    "HRR": 0.8532110091743119,
+    "PFTR": 0.09166666666666666,
+    "ProtocolAcc": 0.8333333333333334,
+    "by_perturbation_type": {
+      "clean_control": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.0,
+        "EvidenceHit@3": 0.0,
+        "HRR": 1.0,
+        "PFTR": 0.0,
+        "ProtocolAcc": 1.0,
+        "num_cases": 1,
+        "num_high_risk_cases": 1
+      },
+      "multi_intent": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.025,
+        "EvidenceHit@3": 0.058333333333333334,
+        "HRR": 0.8532110091743119,
+        "PFTR": 0.09166666666666666,
+        "ProtocolAcc": 0.8333333333333334,
+        "num_cases": 120,
+        "num_high_risk_cases": 109
+      },
+      "multi_intent_negation": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.025,
+        "EvidenceHit@3": 0.058333333333333334,
+        "HRR": 0.8532110091743119,
+        "PFTR": 0.09166666666666666,
+        "ProtocolAcc": 0.8333333333333334,
+        "num_cases": 120,
+        "num_high_risk_cases": 109
+      },
+      "negation_conflict": {
+        "AvgRetrieved": 3.0,
+        "EvidenceHit@1": 0.025,
+        "EvidenceHit@3": 0.058333333333333334,
+        "HRR": 0.8532110091743119,
+        "PFTR": 0.09166666666666666,
+        "ProtocolAcc": 0.8333333333333334,
+        "num_cases": 120,
+        "num_high_risk_cases": 109
+      }
+    },
+    "num_cases": 120,
+    "num_high_risk_cases": 109
+  },
+  "num_cases": 120,
+  "rag_db": "build\\rag.db",
+  "system": "rair-rag",
+  "topk": 3
+}

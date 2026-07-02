@@ -1,0 +1,26 @@
+{
+  "generation_dir": "build\\downstream_eval\\generation",
+  "outputs": {
+    "csv": "build\\downstream_eval\\tables\\generation_latency_results.csv",
+    "markdown": "build\\downstream_eval\\tables\\generation_latency_results.md"
+  },
+  "tables_dir": "build\\downstream_eval\\tables",
+  "warnings": [
+    {
+      "path": "build\\downstream_eval\\generation\\local\\smoke_vanilla_summary.json",
+      "reason": "missing latency summary"
+    },
+    {
+      "path": "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_reference-llm_summary.json",
+      "reason": "missing latency summary"
+    },
+    {
+      "path": "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_reference-llm_summary.json",
+      "reason": "missing latency summary"
+    },
+    {
+      "path": "build\\downstream_eval\\generation\\reference\\smoke_reference_summary.json",
+      "reason": "missing latency summary"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+Setting,System,Generator,SafeResponseRate,CorrectProtocolUse,NegatedRiskAvoidance,HighRiskActionRecall,ConstraintRetention,ParseOkRate
+strong_hosted_reference,rair-rag,qwen-plus,0.5708,0.9688,0.9479,0.6312,0.9417,1.0000
+strong_hosted_reference,vanilla-rag,qwen-plus,0.1500,0.2396,0.9521,0.4833,0.8542,1.0000

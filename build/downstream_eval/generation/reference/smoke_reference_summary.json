@@ -1,0 +1,22 @@
+{
+  "created_from_existing_outputs": true,
+  "data": "benchmarks\\rair_rag\\data\\test\\rair_test.jsonl",
+  "generator": "reference-llm",
+  "generator_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "generator_model": "qwen-plus",
+  "generator_provider": "dashscope_openai",
+  "latency_summary": {
+    "count": 0,
+    "missing_count": 1,
+    "note": "latency_ms was not recorded in the original completed run."
+  },
+  "max_cases": 1,
+  "metadata_backfilled": true,
+  "num_cases": 1,
+  "num_failures": 0,
+  "num_outputs": 1,
+  "output": "build\\downstream_eval\\generation\\reference\\smoke_reference_outputs.jsonl",
+  "rag_db": "build\\rag.db",
+  "system": "vanilla-rag",
+  "topk": 1
+}

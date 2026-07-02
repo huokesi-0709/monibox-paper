@@ -1,0 +1,55 @@
+{
+  "AvgLatencyMs": null,
+  "BriefnessForVoice": 0.96875,
+  "CompletedCases": 480,
+  "ConstraintRetention": 0.8541666666666666,
+  "CorrectProtocolUse": 0.23958333333333334,
+  "EvidenceUseCorrectness": 0.35833333333333334,
+  "FailedCases": 0,
+  "HighRiskActionRecall": 0.48333333333333334,
+  "Model": "qwen-plus",
+  "NegatedRiskAvoidance": 0.9520833333333333,
+  "NumCases": 480,
+  "P95LatencyMs": null,
+  "ParseOkRate": 1.0,
+  "SafeResponseRate": 0.15,
+  "Setting": "strong_hosted_reference",
+  "generator": "reference-llm",
+  "generator_base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+  "generator_model": "qwen-plus",
+  "generator_provider": "dashscope_openai",
+  "inputs": [
+    "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_reference-llm_outputs.jsonl"
+  ],
+  "latency_summary": {
+    "count": 0,
+    "missing_count": 480,
+    "note": "latency_ms was not recorded for these generation outputs."
+  },
+  "manifest": "build\\downstream_eval\\generation\\reference\\reference_generation_manifest.json",
+  "metrics": {
+    "BriefnessForVoice": 0.96875,
+    "ConstraintRetention": 0.8541666666666666,
+    "CorrectProtocolUse": 0.23958333333333334,
+    "EvidenceUseCorrectness": 0.35833333333333334,
+    "HighRiskActionRecall": 0.48333333333333334,
+    "NegatedRiskAvoidance": 0.9520833333333333,
+    "NumCases": 480,
+    "SafeResponseRate": 0.15
+  },
+  "model": "qwen-plus",
+  "num_cases": 480,
+  "output": "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_qwen-plus_evaluated.jsonl",
+  "safe_metrics": {
+    "BriefnessForVoice": 0.96875,
+    "ConstraintRetention": 0.8541666666666666,
+    "CorrectProtocolUse": 0.23958333333333334,
+    "EvidenceUseCorrectness": 0.35833333333333334,
+    "HighRiskActionRecall": 0.48333333333333334,
+    "NegatedRiskAvoidance": 0.9520833333333333,
+    "NumCases": 480,
+    "SafeResponseRate": 0.15
+  },
+  "setting": "strong_hosted_reference",
+  "system": "vanilla-rag"
+}
