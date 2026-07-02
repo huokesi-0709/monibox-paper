@@ -1,0 +1,57 @@
+{
+  "AvgLatencyMs": 1124.247,
+  "BriefnessForVoice": 0.0,
+  "CompletedCases": 480,
+  "ConstraintRetention": 0.8145833333333333,
+  "CorrectProtocolUse": 0.0,
+  "EvidenceUseCorrectness": 0.0,
+  "FailedCases": 0,
+  "HighRiskActionRecall": 0.25833333333333336,
+  "Model": "Qwen1.5-0.5B-Chat-Q4_K_M",
+  "NegatedRiskAvoidance": 1.0,
+  "NumCases": 480,
+  "P95LatencyMs": 1477.852,
+  "ParseOkRate": 0.0,
+  "SafeResponseRate": 0.0,
+  "Setting": "edge_local",
+  "generator": "local-llm",
+  "generator_model": "Qwen1.5-0.5B-Chat-Q4_K_M",
+  "generator_provider": "local-llm",
+  "inputs": [
+    "build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_outputs.jsonl"
+  ],
+  "latency_summary": {
+    "avg_ms": 1124.247,
+    "count": 480,
+    "max_ms": 9615.924,
+    "missing_count": 0,
+    "p50_ms": 1147.9,
+    "p95_ms": 1477.852
+  },
+  "manifest": null,
+  "metrics": {
+    "BriefnessForVoice": 0.0,
+    "ConstraintRetention": 0.8145833333333333,
+    "CorrectProtocolUse": 0.0,
+    "EvidenceUseCorrectness": 0.0,
+    "HighRiskActionRecall": 0.25833333333333336,
+    "NegatedRiskAvoidance": 1.0,
+    "NumCases": 480,
+    "SafeResponseRate": 0.0
+  },
+  "model": "Qwen1.5-0.5B-Chat-Q4_K_M",
+  "num_cases": 480,
+  "output": "build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_evaluated.jsonl",
+  "safe_metrics": {
+    "BriefnessForVoice": 0.0,
+    "ConstraintRetention": 0.8145833333333333,
+    "CorrectProtocolUse": 0.0,
+    "EvidenceUseCorrectness": 0.0,
+    "HighRiskActionRecall": 0.25833333333333336,
+    "NegatedRiskAvoidance": 1.0,
+    "NumCases": 480,
+    "SafeResponseRate": 0.0
+  },
+  "setting": "edge_local",
+  "system": "vanilla-rag"
+}

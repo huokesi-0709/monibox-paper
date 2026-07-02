@@ -8,8 +8,8 @@
     "vanilla-rag",
     "rair-rag"
   ],
-  "num_latency_rows": 2,
-  "num_safety_rows": 2,
+  "num_latency_rows": 4,
+  "num_safety_rows": 4,
   "outputs": {
     "latency_csv": "build\\downstream_eval\\tables\\generation_latency_results.csv",
     "latency_markdown": "build\\downstream_eval\\tables\\generation_latency_results.md",
@@ -17,6 +17,8 @@
     "safety_markdown": "build\\downstream_eval\\tables\\generation_safety_results.md"
   },
   "read_files": [
+    "build\\downstream_eval\\generation\\local\\rair_test_rair-rag_local-llm_evaluated_summary.json",
+    "build\\downstream_eval\\generation\\local\\rair_test_vanilla-rag_local-llm_evaluated_summary.json",
     "build\\downstream_eval\\generation\\reference\\rair_test_rair-rag_qwen-plus_evaluated_summary.json",
     "build\\downstream_eval\\generation\\reference\\rair_test_vanilla-rag_qwen-plus_evaluated_summary.json"
   ],

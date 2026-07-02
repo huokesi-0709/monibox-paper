@@ -35,6 +35,7 @@ SKIP_DIRS = {
     ".mypy_cache",
     ".pytest_cache",
     ".ruff_cache",
+    ".uv-cache",
     ".venv",
     "__pycache__",
     ".npm-cache",
