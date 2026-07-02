@@ -110,3 +110,22 @@ Outputs are written under
 `build/downstream_eval/generation/reference_latency_subset/`. These measurements
 are subset latency measurements for `qwen-plus`; they are not full 480-case
 content-generation latency measurements.
+
+The paper-level latency table is exported to:
+
+- `build/downstream_eval/tables/generation_latency_subset_results.md`
+- `build/downstream_eval/tables/generation_latency_subset_results.csv`
+
+Do not use `build/downstream_eval/tables/generation_latency_results.md` as the
+paper-level latency result; that table is retained only as a deprecated legacy
+export.
+
+## Local LLM diagnostic status
+
+The local 0.5B generator is tracked as a diagnostic path rather than as a main
+paper generation result. The diagnostic history is recorded in
+`build/downstream_eval/generation/local/local_llm_diagnostic_history.md`.
+
+In short, the local path moved from a pre-repair `empty_generation` failure mode
+to a post-repair smoke-test `invalid_json` failure mode. This means the local
+model can produce text, but JSON format control is still unstable.

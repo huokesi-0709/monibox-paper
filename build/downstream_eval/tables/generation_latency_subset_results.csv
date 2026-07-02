@@ -1,0 +1,4 @@
+Setting,System,Generator,LatencyMeasurement,NumCases,FailedCases,AvgLatencyMs,P95LatencyMs,Scope
+strong_hosted_reference,all,qwen-plus,stratified_subset,120,0,2459.700,3602.832,qwen-plus cloud strong-reference generation latency on a stratified subset; not edge deployment latency and not full 480-case generation latency
+strong_hosted_reference,vanilla-rag,qwen-plus,stratified_subset,60,0,2538.447,3636.283,qwen-plus cloud strong-reference generation latency on a stratified subset; not edge deployment latency and not full 480-case generation latency
+strong_hosted_reference,rair-rag,qwen-plus,stratified_subset,60,0,2380.953,3261.890,qwen-plus cloud strong-reference generation latency on a stratified subset; not edge deployment latency and not full 480-case generation latency
