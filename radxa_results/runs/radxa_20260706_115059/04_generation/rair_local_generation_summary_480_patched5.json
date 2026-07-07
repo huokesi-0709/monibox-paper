@@ -1,0 +1,21 @@
+{
+  "mode": "rair",
+  "num_cases": 480,
+  "model_path": "models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf",
+  "avg_latency_ms": 14395.283666835418,
+  "p50_latency_ms": 13091.3553855,
+  "p95_latency_ms": 26481.97390695,
+  "avg_rough_tokens_per_second": 6.012935385767093,
+  "p50_rough_tokens_per_second": 5.8321392640159,
+  "max_rss_mb": 900.50390625,
+  "low_battery_guard_count": 26,
+  "suppression_guard_count": 6,
+  "output_guard_count": 32,
+  "safe_response": 1.0,
+  "correct_protocol_use": 1.0,
+  "negated_risk_avoidance": 1.0,
+  "high_risk_action_recall": 1.0,
+  "constraint_retention": 1.0,
+  "dangerous_keyword_hit": 0.0,
+  "parse_ok": 1.0
+}

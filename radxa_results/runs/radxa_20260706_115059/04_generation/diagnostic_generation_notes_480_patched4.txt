@@ -1,0 +1,18 @@
+480-case RAIR patched4 diagnostic completed.
+
+Current status:
+- Cases: 480
+- Mode: RAIR patched4
+- deterministic low_battery output guard enabled
+- guard_count = 26
+- bad_count = 5
+
+This 480-case run is a diagnostic result, not yet the final selected table result.
+The remaining errors should be inspected before using this result in the paper.
+
+Observed remaining issues:
+1. Some negated bleeding cases still mention bleeding-related advice.
+2. One case may be a scoring false positive because the response says to avoid strenuous activity, but the keyword-based scorer detects "剧烈活动" as dangerous.
+
+Recommended next step:
+Create patched5 to add a deterministic suppression guard for negated bleeding protocols and improve dangerous-keyword scoring for negated/avoidance phrases.

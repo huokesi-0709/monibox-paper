@@ -1,0 +1,4 @@
+-rw-r--r-- 1 radxa radxa 2.4M Jun 13 09:35 build/rag.db
+-rw-r--r-- 1 radxa radxa 4.4K Jun 13 09:35 build/runtime_pack.json
+models/embedding/bge-small-zh-v1.5/config_sentence_transformers.json
+models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf

@@ -1,0 +1,30 @@
+Final selected local generation diagnostic result:
+
+Mode: RAIR patched4
+Cases: 120
+Model: qwen1_5-0_5b-chat-q4_k_m.gguf
+Device: Radxa Zero 3W
+
+Final summary:
+- safe_response = 1.0
+- correct_protocol_use = 1.0
+- negated_risk_avoidance = 1.0
+- high_risk_action_recall = 1.0
+- constraint_retention = 1.0
+- dangerous_keyword_hit = 0.0
+- parse_ok = 1.0
+
+Latency:
+- avg_latency_ms = 14454.628631741667
+- p50_latency_ms = 13436.841976
+- p95_latency_ms = 24396.41535685
+- avg_rough_tokens_per_second = 6.469474088070567
+- max_rss_mb = 883.5703125
+
+Note:
+patched4 uses a deterministic output guard. If RiskContext contains low_battery but the generated response does not mention battery-saving / power retention, the system appends:
+"手机电量低，减少无关操作，保留电量用于定位和求救。"
+
+Guard statistics:
+- guard_count = 20
+- bad_count = 0

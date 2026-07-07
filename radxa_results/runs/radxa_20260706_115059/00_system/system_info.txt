@@ -1,0 +1,68 @@
+RUN_ID=radxa_20260706_115059
+PROJECT=/home/radxa/rair_edge/monibox
+DATE=2026-07-06T11:52:31+00:00
+HOSTNAME=radxa-zero3
+USER=radxa
+PWD=/home/radxa/rair_edge/monibox
+
+--- uname ---
+Linux radxa-zero3 5.10.160-26-rk356x #bfb9351f3 SMP Wed Jan 10 07:01:50 UTC 2024 aarch64 GNU/Linux
+
+--- os-release ---
+PRETTY_NAME="Debian GNU/Linux 11 (bullseye)"
+NAME="Debian GNU/Linux"
+VERSION_ID="11"
+VERSION="11 (bullseye)"
+VERSION_CODENAME=bullseye
+ID=debian
+HOME_URL="https://www.debian.org/"
+SUPPORT_URL="https://www.debian.org/support"
+BUG_REPORT_URL="https://bugs.debian.org/"
+
+--- CPU ---
+Architecture:                    aarch64
+CPU op-mode(s):                  32-bit, 64-bit
+Byte Order:                      Little Endian
+CPU(s):                          4
+On-line CPU(s) list:             0-3
+Thread(s) per core:              1
+Core(s) per socket:              4
+Socket(s):                       1
+Vendor ID:                       ARM
+Model:                           0
+Model name:                      Cortex-A55
+Stepping:                        r2p0
+CPU max MHz:                     1800.0000
+CPU min MHz:                     408.0000
+BogoMIPS:                        48.00
+Vulnerability Itlb multihit:     Not affected
+Vulnerability L1tf:              Not affected
+Vulnerability Mds:               Not affected
+Vulnerability Meltdown:          Not affected
+Vulnerability Mmio stale data:   Not affected
+Vulnerability Retbleed:          Not affected
+Vulnerability Spec store bypass: Not affected
+Vulnerability Spectre v1:        Mitigation; __user pointer sanitization
+Vulnerability Spectre v2:        Not affected
+Vulnerability Srbds:             Not affected
+Vulnerability Tsx async abort:   Not affected
+Flags:                           fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp
+
+--- Memory ---
+               total        used        free      shared  buff/cache   available
+Mem:           7.5Gi       382Mi       3.6Gi       5.0Mi       3.5Gi       7.0Gi
+Swap:          3.8Gi          0B       3.8Gi
+
+--- Disk ---
+Filesystem      Size  Used Avail Use% Mounted on
+udev            3.8G  8.0K  3.8G   1% /dev
+tmpfs           770M  1.4M  769M   1% /run
+/dev/mmcblk1p3  115G   17G   94G  15% /
+tmpfs           3.8G     0  3.8G   0% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+/dev/mmcblk1p2  300M  4.0K  300M   1% /boot/efi
+/dev/mmcblk1p1   16M  2.5K   16M   1% /config
+tmpfs           770M   48K  770M   1% /run/user/1000
+
+--- Python ---
+Python 3.9.2

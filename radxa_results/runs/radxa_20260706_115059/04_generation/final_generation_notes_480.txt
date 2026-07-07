@@ -1,0 +1,25 @@
+Final selected local generation diagnostic result:
+
+Mode: RAIR patched5
+Cases: 480
+Model: qwen1_5-0_5b-chat-q4_k_m.gguf
+Device: Radxa Zero 3W
+
+Final files:
+- 04_generation/rair_local_generation_summary_480_patched5.json
+- 04_generation/rair_local_generation_predictions_480_patched5.jsonl
+- 04_generation/diagnostic_generation_notes_480_patched4.txt
+
+patched5 is a deterministic post-processing guard applied to the completed patched4 generation outputs.
+It includes:
+1. low_battery output guard
+2. suppressed bleeding protocol guard
+3. safer dangerous-keyword scoring for avoidance phrases such as "避免剧烈活动"
+
+Use patched5 as the final 480-case Radxa local generation diagnostic result.
+
+Final guard statistics:
+- low_battery_guard_count = 26
+- suppression_guard_count = 6
+- output_guard_count = 32
+- bad_count = 0

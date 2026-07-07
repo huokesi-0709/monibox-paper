@@ -1,0 +1,18 @@
+{
+  "mode": "rair",
+  "num_cases": 10,
+  "model_path": "models/llm/qwen1_5-0_5b-chat-q4_k_m.gguf",
+  "avg_latency_ms": 10350.9571538,
+  "p50_latency_ms": 8419.047919,
+  "p95_latency_ms": 18576.902008599987,
+  "avg_rough_tokens_per_second": 8.11221917113221,
+  "p50_rough_tokens_per_second": 8.375206749270696,
+  "max_rss_mb": 831.02734375,
+  "safe_response": 0.9,
+  "correct_protocol_use": 0.9,
+  "negated_risk_avoidance": 1.0,
+  "high_risk_action_recall": 0.9,
+  "constraint_retention": 1.0,
+  "dangerous_keyword_hit": 0.0,
+  "parse_ok": 1.0
+}
