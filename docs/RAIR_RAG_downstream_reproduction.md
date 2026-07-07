@@ -94,9 +94,7 @@ Use `--max-cases N` in bash or `-MaxCases N` in PowerShell for small smoke tests
 
 ## Strong reference latency subset
 
-The completed `qwen-plus` reference generation outputs may predate per-sample
-latency logging. To avoid rerunning the full reference content generation, use a
-stratified subset benchmark for latency measurement:
+The completed `qwen-plus` reference generation outputs may predate per-sample latency logging. To avoid rerunning the full reference content generation, use a stratified subset benchmark for latency measurement:
 
 ```bash
 export REFERENCE_LLM_API_KEY="..."
@@ -106,26 +104,44 @@ uv run python -m benchmarks.rair_rag.downstream.run_generation_latency_subset \
   --sample-per-perturbation 20
 ```
 
-Outputs are written under
-`build/downstream_eval/generation/reference_latency_subset/`. These measurements
-are subset latency measurements for `qwen-plus`; they are not full 480-case
-content-generation latency measurements.
+Outputs are written under `build/downstream_eval/generation/reference_latency_subset/`. These measurements are subset latency measurements for `qwen-plus`; they are not full 480-case content-generation latency measurements.
 
 The paper-level latency table is exported to:
 
 - `build/downstream_eval/tables/generation_latency_subset_results.md`
 - `build/downstream_eval/tables/generation_latency_subset_results.csv`
 
-Do not use `build/downstream_eval/tables/generation_latency_results.md` as the
-paper-level latency result; that table is retained only as a deprecated legacy
-export.
+Do not use `build/downstream_eval/tables/generation_latency_results.md` as the paper-level latency result; that table is retained only as a deprecated legacy export.
 
 ## Local LLM diagnostic status
 
-The local 0.5B generator is tracked as a diagnostic path rather than as a main
-paper generation result. The diagnostic history is recorded in
-`build/downstream_eval/generation/local/local_llm_diagnostic_history.md`.
+The earlier local 0.5B path moved from a pre-repair `empty_generation` failure mode to a post-repair JSON-format diagnostic stage. The final paper hardware-side result is now the Radxa Zero 3W 480-case text generation diagnostic under:
 
-In short, the local path moved from a pre-repair `empty_generation` failure mode
-to a post-repair smoke-test `invalid_json` failure mode. This means the local
-model can produce text, but JSON format control is still unstable.
+- `radxa_results/runs/radxa_20260706_115059/04_generation/rair_local_generation_summary_480_patched5.json`
+- `radxa_results/runs/radxa_20260706_115059/04_generation/rair_local_generation_predictions_480_patched5.jsonl`
+- `radxa_results/runs/radxa_20260706_115059/04_generation/final_generation_notes_480.txt`
+
+Use `RAIR patched5` as the final local Radxa diagnostic result:
+
+| Metric | Value |
+|---|---:|
+| cases | 480 |
+| avg_latency_ms | 14395.2837 |
+| p50_latency_ms | 13091.3554 |
+| p95_latency_ms | 26481.9739 |
+| avg_rough_tokens_per_second | 6.0129 |
+| p50_rough_tokens_per_second | 5.8321 |
+| max_rss_mb | 900.5039 |
+| safe_response | 1.0000 |
+| correct_protocol_use | 1.0000 |
+| negated_risk_avoidance | 1.0000 |
+| high_risk_action_recall | 1.0000 |
+| constraint_retention | 1.0000 |
+| dangerous_keyword_hit | 0.0000 |
+| parse_ok | 1.0000 |
+| low_battery_guard_count | 26 |
+| suppression_guard_count | 6 |
+| output_guard_count | 32 |
+| bad_count | 0 |
+
+This result should be described as an edge-side text pipeline diagnostic. It does not include ASR/TTS, OLED/LED feedback, buzzer/haptics, IMU sensing loop, or ESP32 linked actuation. Per-sample CPU usage was not recorded in the final patched5 run, so CPU usage should not be reported as a completed quantitative metric.
